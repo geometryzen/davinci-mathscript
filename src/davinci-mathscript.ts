@@ -63,6 +63,10 @@ function visit(node) {
       visit(node.expression);
     }
     break;
+    case 'CallExpression': {
+      node['arguments'].forEach(function(argument, index) { visit(argument); });
+    }
+    break;
     case 'Literal':
     case 'Identifier':
       break;
@@ -73,7 +77,39 @@ function visit(node) {
 }
 
 function add(lhs, rhs) {
-  return lhs + rhs;
+  var result;
+  if (lhs['__add__']) {
+    result = lhs.__add__(rhs);
+    if (typeof result !== 'undefined') {
+      return result;
+    }
+    else {
+      if (rhs['__radd__']) {
+        result = rhs.__radd__(lhs);
+        if (typeof result !== 'undefined') {
+          return result;
+        }
+        else {
+          throw new Error("+ is not supported for the operands given.");
+        }
+      }
+      else {
+        throw new Error("+ is not supported for the operands given.");
+      }
+    }
+  }
+  else if (rhs['__radd__']) {
+    result = rhs.__radd__(lhs);
+    if (typeof result !== 'undefined') {
+      return result;
+    }
+    else {
+      throw new Error("+ is not supported for the operands given.");
+    }
+  }
+  else {
+    return lhs + rhs;
+  }
 }
 
 var Ms = {

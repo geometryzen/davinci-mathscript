@@ -1,4 +1,5 @@
 /*
+  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
   Copyright (C) 2013-2014 Yusuke Suzuki <utatane.tea@gmail.com>
   Copyright (C) 2014 Ivan Nikulin <ifaaan@gmail.com>
 
@@ -112,7 +113,9 @@ define(["require", "exports"], function (require, exports) {
         isIdentifierStartES5: isIdentifierStartES5,
         isIdentifierPartES5: isIdentifierPartES5,
         isIdentifierStartES6: isIdentifierStartES6,
-        isIdentifierPartES6: isIdentifierPartES6
+        isIdentifierPartES6: isIdentifierPartES6,
+        isIdentifierStart: isIdentifierStartES6,
+        isIdentifierPart: isIdentifierPartES6
     };
     return code;
 });

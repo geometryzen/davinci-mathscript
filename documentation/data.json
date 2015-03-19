@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-mathscript",
         "description": "MathScript transcompiler to JavaScript.",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -48,19 +48,19 @@
     "classitems": [
         {
             "file": "amd/davinci-mathscript/escodegen.js",
-            "line": 412,
+            "line": 413,
             "description": "flatten an array to a string, where the array can contain\neither strings or nested arrays",
             "class": ""
         },
         {
             "file": "amd/davinci-mathscript/escodegen.js",
-            "line": 424,
+            "line": 425,
             "description": "convert generated to a SourceNode when source maps are enabled.",
             "class": ""
         },
         {
             "file": "amd/davinci-mathscript/esprima.js",
-            "line": 1803,
+            "line": 1804,
             "name": "expectCommaSeparator",
             "description": "Quietly expect a comma when in tolerant mode, otherwise delegates\nto <code>expect(value)</code>",
             "since": "2.0",
@@ -70,19 +70,19 @@
     "warnings": [
         {
             "message": "unknown tag: name",
-            "line": " amd/davinci-mathscript/esprima.js:1803"
+            "line": " amd/davinci-mathscript/esprima.js:1804"
         },
         {
             "message": "Missing item type\nflatten an array to a string, where the array can contain\neither strings or nested arrays",
-            "line": " amd/davinci-mathscript/escodegen.js:412"
+            "line": " amd/davinci-mathscript/escodegen.js:413"
         },
         {
             "message": "Missing item type\nconvert generated to a SourceNode when source maps are enabled.",
-            "line": " amd/davinci-mathscript/escodegen.js:424"
+            "line": " amd/davinci-mathscript/escodegen.js:425"
         },
         {
             "message": "Missing item type\nQuietly expect a comma when in tolerant mode, otherwise delegates\nto <code>expect(value)</code>",
-            "line": " amd/davinci-mathscript/esprima.js:1803"
+            "line": " amd/davinci-mathscript/esprima.js:1804"
         }
     ]
 }

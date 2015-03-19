@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.1</em>
+            <em>API Docs for: 0.0.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -79,20 +79,82 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&#x27;, &#x27;davinci-mathscript/esprima&#x27;, &#x27;davinci-mathscript/escodegen&#x27;, &#x27;davinci-mathscript/estraverse&#x27;, &#x27;davinci-mathscript/esutils&#x27;], function (require, exports, core, esprima, escodegen, estraverse, esutils) {
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&#x27;, &#x27;davinci-mathscript/esprima&#x27;, &#x27;davinci-mathscript/escodegen&#x27;], function (require, exports, core, esprima, escodegen) {
     /**
      * Provides the MathScript module
      *
      * @module mathscript
      */
-    var mathscript = {
-        &#x27;VERSION&#x27;: core.VERSION,
-        esprima: esprima,
-        escodegen: escodegen,
-        estraverse: estraverse,
-        esutils: esutils
+    // This should match the global namespace (in build.js).
+    var MATHSCRIPT_NAMESPACE = &quot;Ms&quot;;
+    var funcNames = {
+        &#x27;+&#x27;: &#x27;add&#x27;,
+        &#x27;*&#x27;: &#x27;mul&#x27;,
+        &#x27;&lt;&lt;&#x27;: &#x27;lco&#x27;
     };
-    return mathscript;
+    function transform(code, options) {
+        var tree = esprima.parse(code, options);
+        visit(tree);
+        return escodegen.generate(tree, null);
+    }
+    function visit(node) {
+        switch (node.type) {
+            case &#x27;Program&#x27;:
+                {
+                    node.body.forEach(function (node, index) {
+                        visit(node);
+                    });
+                }
+                break;
+            case &#x27;BinaryExpression&#x27;:
+            case &#x27;LogicalExpression&#x27;:
+                {
+                    if (node.operator &amp;&amp; funcNames[node.operator]) {
+                        node.type = &#x27;CallExpression&#x27;;
+                        node.callee = {
+                            &#x27;type&#x27;: &#x27;MemberExpression&#x27;,
+                            &#x27;computed&#x27;: false,
+                            &#x27;object&#x27;: {
+                                &#x27;type&#x27;: &#x27;Identifier&#x27;,
+                                &#x27;name&#x27;: MATHSCRIPT_NAMESPACE
+                            },
+                            &#x27;property&#x27;: {
+                                &#x27;type&#x27;: &#x27;Identifier&#x27;,
+                                &#x27;name&#x27;: funcNames[node.operator]
+                            }
+                        };
+                        visit(node.left);
+                        visit(node.right);
+                        node[&#x27;arguments&#x27;] = [node.left, node.right];
+                    }
+                    else {
+                        visit(node.left);
+                        visit(node.right);
+                    }
+                }
+                break;
+            case &#x27;ExpressionStatement&#x27;:
+                {
+                    visit(node.expression);
+                }
+                break;
+            case &#x27;Literal&#x27;:
+            case &#x27;Identifier&#x27;:
+                break;
+            default: {
+                console.log(JSON.stringify(node));
+            }
+        }
+    }
+    function add(lhs, rhs) {
+        return lhs + rhs;
+    }
+    var Ms = {
+        &#x27;VERSION&#x27;: core.VERSION,
+        transform: transform,
+        add: add
+    };
+    return Ms;
 });
 
     </pre>

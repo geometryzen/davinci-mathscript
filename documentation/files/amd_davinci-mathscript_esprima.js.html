@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.1</em>
+            <em>API Docs for: 0.0.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -80,6 +80,7 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 /*
+  Copyright (C) 2015 David Holmes &lt;david.geo.holmes@gmail.com&gt;
   Copyright (C) 2013 Ariya Hidayat &lt;ariya.hidayat@gmail.com&gt;
   Copyright (C) 2013 Thaddee Tyl &lt;thaddee.tyl@gmail.com&gt;
   Copyright (C) 2013 Mathias Bynens &lt;mathias@qiwi.be&gt;
@@ -2362,8 +2363,6 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             case &#x27;in&#x27;:
                 prec = allowIn ? 7 : 0;
                 break;
-            case &#x27;&lt;&lt;&#x27;:
-            case &#x27;&gt;&gt;&#x27;:
             case &#x27;&gt;&gt;&gt;&#x27;:
                 prec = 8;
                 break;
@@ -2375,6 +2374,10 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             case &#x27;/&#x27;:
             case &#x27;%&#x27;:
                 prec = 11;
+                break;
+            case &#x27;&lt;&lt;&#x27;:
+            case &#x27;&gt;&gt;&#x27;:
+                prec = 12;
                 break;
             default:
                 break;

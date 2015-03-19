@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.1</em>
+            <em>API Docs for: 0.0.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -80,6 +80,7 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 /*
+  Copyright (C) 2015 David Holmes &lt;david.geo.holmes@gmail.com&gt;
   Copyright (C) 2012-2014 Yusuke Suzuki &lt;utatane.tea@gmail.com&gt;
   Copyright (C) 2015 Ingvar Stepanyan &lt;me@rreverser.com&gt;
   Copyright (C) 2014 Ivan Nikulin &lt;ifaaan@gmail.com&gt;
@@ -115,8 +116,8 @@
 */
 /*global exports:true, require:true, global:true*/
 &#x27;use strict&#x27;;
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estraverse&#x27;], function (require, exports, estraverse) {
-    var Syntax, Precedence, BinaryPrecedence, SourceNode, esutils, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estraverse&#x27;, &#x27;davinci-mathscript/esutils&#x27;], function (require, exports, estraverse, esutils) {
+    var Syntax, Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
     //esutils = require(&#x27;esutils&#x27;);
     Syntax = estraverse.Syntax;
     // Generation is done by generateExpression.

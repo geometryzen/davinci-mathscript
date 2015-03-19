@@ -2692,8 +2692,6 @@ function binaryPrecedence(token, allowIn) {
         prec = allowIn ? 7 : 0;
         break;
 
-    case '<<':
-    case '>>':
     case '>>>':
         prec = 8;
         break;
@@ -2707,6 +2705,11 @@ function binaryPrecedence(token, allowIn) {
     case '/':
     case '%':
         prec = 11;
+        break;
+
+    case '<<':
+    case '>>':
+        prec = 12;
         break;
 
     default:

@@ -38,12 +38,12 @@
 'use strict';
 
 import estraverse = require('davinci-mathscript/estraverse');
+import esutils = require('davinci-mathscript/esutils');
 
 var Syntax,
     Precedence,
     BinaryPrecedence,
     SourceNode,
-    esutils,
     isArray,
     base,
     indent,

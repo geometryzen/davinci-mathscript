@@ -1,4 +1,5 @@
 /*
+  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
   Copyright (C) 2013 Ariya Hidayat <ariya.hidayat@gmail.com>
   Copyright (C) 2013 Thaddee Tyl <thaddee.tyl@gmail.com>
   Copyright (C) 2013 Mathias Bynens <mathias@qiwi.be>
@@ -2280,8 +2281,6 @@ function binaryPrecedence(token, allowIn) {
         case 'in':
             prec = allowIn ? 7 : 0;
             break;
-        case '<<':
-        case '>>':
         case '>>>':
             prec = 8;
             break;
@@ -2293,6 +2292,10 @@ function binaryPrecedence(token, allowIn) {
         case '/':
         case '%':
             prec = 11;
+            break;
+        case '<<':
+        case '>>':
+            prec = 12;
             break;
         default:
             break;

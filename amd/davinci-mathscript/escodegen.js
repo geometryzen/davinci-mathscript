@@ -1,4 +1,5 @@
 /*
+  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
   Copyright (C) 2012-2014 Yusuke Suzuki <utatane.tea@gmail.com>
   Copyright (C) 2015 Ingvar Stepanyan <me@rreverser.com>
   Copyright (C) 2014 Ivan Nikulin <ifaaan@gmail.com>
@@ -34,8 +35,8 @@
 */
 /*global exports:true, require:true, global:true*/
 'use strict';
-define(["require", "exports", 'davinci-mathscript/estraverse'], function (require, exports, estraverse) {
-    var Syntax, Precedence, BinaryPrecedence, SourceNode, esutils, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
+define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscript/esutils'], function (require, exports, estraverse, esutils) {
+    var Syntax, Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
     //esutils = require('esutils');
     Syntax = estraverse.Syntax;
     // Generation is done by generateExpression.

@@ -17,6 +17,8 @@ declare var esutils: {
         isIdentifierPartES5: (ch: any) => any;
         isIdentifierStartES6: (ch: any) => any;
         isIdentifierPartES6: (ch: any) => any;
+        isIdentifierStart: (ch: any) => any;
+        isIdentifierPart: (ch: any) => any;
     };
     keyword: {
         isKeywordES5: (id: any, strict: any) => boolean;

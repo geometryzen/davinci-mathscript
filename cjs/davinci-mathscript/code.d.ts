@@ -8,5 +8,7 @@ declare var code: {
     isIdentifierPartES5: (ch: any) => any;
     isIdentifierStartES6: (ch: any) => any;
     isIdentifierPartES6: (ch: any) => any;
+    isIdentifierStart: (ch: any) => any;
+    isIdentifierPart: (ch: any) => any;
 };
 export = code;

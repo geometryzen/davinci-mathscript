@@ -129,7 +129,10 @@ var code = {
     isIdentifierStartES5: isIdentifierStartES5,
     isIdentifierPartES5: isIdentifierPartES5,
     isIdentifierStartES6: isIdentifierStartES6,
-    isIdentifierPartES6: isIdentifierPartES6
+    isIdentifierPartES6: isIdentifierPartES6,
+
+    isIdentifierStart: isIdentifierStartES6,
+    isIdentifierPart: isIdentifierPartES6
 };
 
 export = code;

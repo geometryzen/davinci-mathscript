@@ -176,6 +176,13 @@ describe("MathScript", function() {
       var sum = MathScript.add(a,b);
       expect(sum).toBe("Hello, World!");
     });
+
+    describe("Syntax", function() {
+      it("ThisExpression", function() {
+        var code = MathScript.transform("(function() {2+3}.call(this));");
+        expect(code).toBe("(function () {\n    Ms.add(2, 3);\n}.call(this));");
+      });
+    });
 });
 
 });

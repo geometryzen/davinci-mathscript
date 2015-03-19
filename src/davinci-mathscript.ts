@@ -21,12 +21,19 @@ var funcNames = {
 
 function transform(code, options) {
   var tree = esprima.parse(code, options);
+//console.log(JSON.stringify(tree), null, '\t');
   visit(tree);
   return escodegen.generate(tree, null);
 }
 
 function visit(node) {
   switch(node.type) {
+    case 'BlockStatement': {
+      node.body.forEach(function(node, index) {
+        visit(node);
+      });
+    }
+    break;
     case 'Program': {
       node.body.forEach(function(node, index) {
         visit(node);
@@ -72,11 +79,21 @@ function visit(node) {
     }
     break;
     case 'CallExpression': {
+      visit(node.callee);
       node['arguments'].forEach(function(argument, index) { visit(argument); });
+    }
+    break;
+    case 'FunctionExpression': {
+      visit(node.body);
+    }
+    break;
+    case 'MemberExpression': {
+      visit(node.object);
     }
     break;
     case 'Literal':
     case 'Identifier':
+    case 'ThisExpression':
       break;
     default: {
       console.log(JSON.stringify(node));

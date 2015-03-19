@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.6</em>
+            <em>API Docs for: 0.0.7</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -94,11 +94,19 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
     };
     function transform(code, options) {
         var tree = esprima.parse(code, options);
+        //console.log(JSON.stringify(tree), null, &#x27;\t&#x27;);
         visit(tree);
         return escodegen.generate(tree, null);
     }
     function visit(node) {
         switch (node.type) {
+            case &#x27;BlockStatement&#x27;:
+                {
+                    node.body.forEach(function (node, index) {
+                        visit(node);
+                    });
+                }
+                break;
             case &#x27;Program&#x27;:
                 {
                     node.body.forEach(function (node, index) {
@@ -152,13 +160,25 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 break;
             case &#x27;CallExpression&#x27;:
                 {
+                    visit(node.callee);
                     node[&#x27;arguments&#x27;].forEach(function (argument, index) {
                         visit(argument);
                     });
                 }
                 break;
+            case &#x27;FunctionExpression&#x27;:
+                {
+                    visit(node.body);
+                }
+                break;
+            case &#x27;MemberExpression&#x27;:
+                {
+                    visit(node.object);
+                }
+                break;
             case &#x27;Literal&#x27;:
             case &#x27;Identifier&#x27;:
+            case &#x27;ThisExpression&#x27;:
                 break;
             default: {
                 console.log(JSON.stringify(node));

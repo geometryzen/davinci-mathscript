@@ -1,4 +1,5 @@
 /*
+  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
   Copyright (C) 2013 Ariya Hidayat <ariya.hidayat@gmail.com>
   Copyright (C) 2013 Thaddee Tyl <thaddee.tyl@gmail.com>
   Copyright (C) 2013 Mathias Bynens <mathias@qiwi.be>

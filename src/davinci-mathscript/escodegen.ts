@@ -1,4 +1,5 @@
 /*
+  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
   Copyright (C) 2012-2014 Yusuke Suzuki <utatane.tea@gmail.com>
   Copyright (C) 2015 Ingvar Stepanyan <me@rreverser.com>
   Copyright (C) 2014 Ivan Nikulin <ifaaan@gmail.com>

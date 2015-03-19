@@ -88,7 +88,10 @@ function visit(node) {
 }
 function add(lhs, rhs) {
     var result;
-    if (lhs['__add__']) {
+    if (typeof lhs === 'number' && typeof rhs === 'number') {
+        return lhs + rhs;
+    }
+    else if (lhs['__add__']) {
         result = lhs.__add__(rhs);
         if (typeof result !== 'undefined') {
             return result;
@@ -118,7 +121,7 @@ function add(lhs, rhs) {
         }
     }
     else {
-        return lhs + rhs;
+        throw new Error("+ is not supported for the operands given.");
     }
 }
 var Ms = {

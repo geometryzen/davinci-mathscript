@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.4</em>
+            <em>API Docs for: 0.0.5</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -167,7 +167,10 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
     }
     function add(lhs, rhs) {
         var result;
-        if (lhs[&#x27;__add__&#x27;]) {
+        if (typeof lhs === &#x27;number&#x27; &amp;&amp; typeof rhs === &#x27;number&#x27;) {
+            return lhs + rhs;
+        }
+        else if (lhs[&#x27;__add__&#x27;]) {
             result = lhs.__add__(rhs);
             if (typeof result !== &#x27;undefined&#x27;) {
                 return result;
@@ -197,7 +200,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             }
         }
         else {
-            return lhs + rhs;
+            throw new Error(&quot;+ is not supported for the operands given.&quot;);
         }
     }
     var Ms = {

@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.0.4'
+        VERSION: '0.0.5'
     };
     return core;
 });
@@ -7303,7 +7303,10 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
     }
     function add(lhs, rhs) {
         var result;
-        if (lhs['__add__']) {
+        if (typeof lhs === 'number' && typeof rhs === 'number') {
+            return lhs + rhs;
+        }
+        else if (lhs['__add__']) {
             result = lhs.__add__(rhs);
             if (typeof result !== 'undefined') {
                 return result;
@@ -7333,7 +7336,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
             }
         }
         else {
-            return lhs + rhs;
+            throw new Error("+ is not supported for the operands given.");
         }
     }
     var Ms = {

@@ -164,6 +164,17 @@ describe("MathScript", function() {
         expect(e.message).toBe("+ is not supported for the operands given.");
       }
     });
+    it("add(Foo, Foo);", function() {
+      var a = new Foo();
+      var b = new Foo();
+      try {
+        var sum = MathScript.add(a,b);
+        expect(1).toBe(0);
+      }
+      catch(e) {
+        expect(e.message).toBe("+ is not supported for the operands given.");
+      }
+    });
 });
 
 });

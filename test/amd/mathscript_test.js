@@ -167,13 +167,14 @@ describe("MathScript", function() {
     it("add(Foo, Foo);", function() {
       var a = new Foo();
       var b = new Foo();
-      try {
-        var sum = MathScript.add(a,b);
-        expect(1).toBe(0);
-      }
-      catch(e) {
-        expect(e.message).toBe("+ is not supported for the operands given.");
-      }
+      var sum = MathScript.add(a,b);
+      expect(sum).toBe("[object Object][object Object]");
+    });
+    it("add(string,string);", function() {
+      var a = "Hello, ";
+      var b = "World!";
+      var sum = MathScript.add(a,b);
+      expect(sum).toBe("Hello, World!");
     });
 });
 

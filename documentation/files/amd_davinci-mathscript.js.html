@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.5</em>
+            <em>API Docs for: 0.0.6</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -200,7 +200,8 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             }
         }
         else {
-            throw new Error(&quot;+ is not supported for the operands given.&quot;);
+            // Fallback to JavaScript &#x27;+&#x27;&#x27; in order to support string concatenation, etc.
+            return lhs + rhs;
         }
     }
     var Ms = {

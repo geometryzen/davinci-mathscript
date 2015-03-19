@@ -119,7 +119,8 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
             }
         }
         else {
-            throw new Error("+ is not supported for the operands given.");
+            // Fallback to JavaScript '+'' in order to support string concatenation, etc.
+            return lhs + rhs;
         }
     }
     var Ms = {

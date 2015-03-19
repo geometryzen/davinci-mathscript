@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.0.5'
+        VERSION: '0.0.6'
     };
     return core;
 });
@@ -7336,7 +7336,8 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
             }
         }
         else {
-            throw new Error("+ is not supported for the operands given.");
+            // Fallback to JavaScript '+'' in order to support string concatenation, etc.
+            return lhs + rhs;
         }
     }
     var Ms = {

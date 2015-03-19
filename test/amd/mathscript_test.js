@@ -82,6 +82,10 @@ describe("MathScript", function() {
       var code = MathScript.transform("console.log(2+3)");
       expect(code).toBe("console.log(Ms.add(2, 3));");
     });
+    it("VariableDeclaration", function() {
+      var code = MathScript.transform("var x = eight.vectorE3(1, 0, 0); var y = eight.vectorE3(0, 2, 0); console.log(x+y);");
+      expect(code).toBe("var x = eight.vectorE3(1, 0, 0);\nvar y = eight.vectorE3(0, 2, 0);\nconsole.log(Ms.add(x, y));");
+    });
     it("add(number,number);", function() {
       var sum = MathScript.add(2,3);
       expect(sum).toBe(5);

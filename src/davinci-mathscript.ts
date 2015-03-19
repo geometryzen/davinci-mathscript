@@ -33,6 +33,14 @@ function visit(node) {
       });
     }
     break;
+    case 'VariableDeclaration': {
+      node.declarations.forEach(function(declaration, index) { visit(declaration); });
+    }
+    break;
+    case 'VariableDeclarator': {
+      visit(node.init);
+    }
+    break;
     case 'BinaryExpression':
     case 'LogicalExpression':
     {

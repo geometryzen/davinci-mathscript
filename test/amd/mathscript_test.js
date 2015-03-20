@@ -182,6 +182,10 @@ describe("MathScript", function() {
         var code = MathScript.transform("(function() {2+3}.call(this));");
         expect(code).toBe("(function () {\n    Ms.add(2, 3);\n}.call(this));");
       });
+      it("ThisExpression", function() {
+        var code = MathScript.transform("(function() {var x;x=new Foo();z=x+y;}.call(this));");
+        expect(code).toBe("(function () {\n    var x;\n    x = new Foo();\n    z = Ms.add(x, y);\n}.call(this));");
+      });
     });
 });
 

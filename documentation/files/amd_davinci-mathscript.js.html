@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.7</em>
+            <em>API Docs for: 0.0.8</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -123,7 +123,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 break;
             case &#x27;VariableDeclarator&#x27;:
                 {
-                    visit(node.init);
+                    if (node.init) {
+                        visit(node.init);
+                    }
                 }
                 break;
             case &#x27;BinaryExpression&#x27;:
@@ -158,6 +160,25 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     visit(node.expression);
                 }
                 break;
+            case &#x27;AssignmentExpression&#x27;:
+                {
+                    if (node.operator &amp;&amp; funcNames[node.operator]) {
+                        var rightOld = node.right;
+                        node.right = {
+                            &#x27;type&#x27;: &#x27;BinaryExpression&#x27;,
+                            &#x27;operator&#x27;: node.operator.replace(/=/, &#x27;&#x27;).trim(),
+                            &#x27;left&#x27;: node.left,
+                            &#x27;right&#x27;: rightOld
+                        };
+                        node.operator = &#x27;=&#x27;;
+                        visit(node.left);
+                        visit(node.right);
+                    }
+                    else {
+                        visit(node.right);
+                    }
+                }
+                break;
             case &#x27;CallExpression&#x27;:
                 {
                     visit(node.callee);
@@ -174,6 +195,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             case &#x27;MemberExpression&#x27;:
                 {
                     visit(node.object);
+                }
+                break;
+            case &#x27;NewExpression&#x27;:
+                {
+                    visit(node.callee);
+                    node[&#x27;arguments&#x27;].forEach(function (argument, index) {
+                        visit(argument);
+                    });
                 }
                 break;
             case &#x27;Literal&#x27;:

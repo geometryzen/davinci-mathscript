@@ -44,7 +44,9 @@ function visit(node) {
             break;
         case 'VariableDeclarator':
             {
-                visit(node.init);
+                if (node.init) {
+                    visit(node.init);
+                }
             }
             break;
         case 'BinaryExpression':
@@ -79,6 +81,25 @@ function visit(node) {
                 visit(node.expression);
             }
             break;
+        case 'AssignmentExpression':
+            {
+                if (node.operator && funcNames[node.operator]) {
+                    var rightOld = node.right;
+                    node.right = {
+                        'type': 'BinaryExpression',
+                        'operator': node.operator.replace(/=/, '').trim(),
+                        'left': node.left,
+                        'right': rightOld
+                    };
+                    node.operator = '=';
+                    visit(node.left);
+                    visit(node.right);
+                }
+                else {
+                    visit(node.right);
+                }
+            }
+            break;
         case 'CallExpression':
             {
                 visit(node.callee);
@@ -95,6 +116,14 @@ function visit(node) {
         case 'MemberExpression':
             {
                 visit(node.object);
+            }
+            break;
+        case 'NewExpression':
+            {
+                visit(node.callee);
+                node['arguments'].forEach(function (argument, index) {
+                    visit(argument);
+                });
             }
             break;
         case 'Literal':

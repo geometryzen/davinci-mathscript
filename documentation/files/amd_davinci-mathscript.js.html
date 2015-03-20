@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.10</em>
+            <em>API Docs for: 0.0.11</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -87,15 +87,30 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
      */
     // This should match the global namespace (in build.js).
     var MATHSCRIPT_NAMESPACE = &quot;Ms&quot;;
-    var funcNames = {
+    var binOp = {
         &#x27;+&#x27;: &#x27;add&#x27;,
+        &#x27;-&#x27;: &#x27;sub&#x27;,
         &#x27;*&#x27;: &#x27;mul&#x27;,
-        &#x27;&lt;&lt;&#x27;: &#x27;lco&#x27;
+        &#x27;/&#x27;: &#x27;div&#x27;,
+        &#x27;^&#x27;: &#x27;wedge&#x27;,
+        &#x27;&lt;&lt;&#x27;: &#x27;lshift&#x27;,
+        &#x27;&gt;&gt;&#x27;: &#x27;rshift&#x27;,
+        &#x27;===&#x27;: &#x27;eq&#x27;,
+        &#x27;!=&#x27;: &#x27;ne&#x27;,
+        &#x27;&lt;&#x27;: &#x27;lt&#x27;,
+        &#x27;&lt;=&#x27;: &#x27;le&#x27;,
+        &#x27;&gt;&#x27;: &#x27;gt&#x27;,
+        &#x27;&gt;=&#x27;: &#x27;ge&#x27;
     };
-    function transform(code, options) {
+    var unaryOp = { &#x27;+&#x27;: &#x27;pos&#x27;, &#x27;-&#x27;: &#x27;neg&#x27;, &#x27;!&#x27;: &#x27;bang&#x27;, &#x27;~&#x27;: &#x27;tilde&#x27; };
+    function parse(code, options) {
         var tree = esprima.parse(code, options);
         //console.log(JSON.stringify(tree), null, &#x27;\t&#x27;);
         visit(tree);
+        return tree;
+    }
+    function transpile(code, options) {
+        var tree = parse(code, options);
         return escodegen.generate(tree, null);
     }
     function visit(node) {
@@ -137,21 +152,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 }
                 break;
             case &#x27;BinaryExpression&#x27;:
-            case &#x27;LogicalExpression&#x27;:
                 {
-                    if (node.operator &amp;&amp; funcNames[node.operator]) {
+                    if (node.operator &amp;&amp; binOp[node.operator]) {
                         node.type = &#x27;CallExpression&#x27;;
                         node.callee = {
                             &#x27;type&#x27;: &#x27;MemberExpression&#x27;,
                             &#x27;computed&#x27;: false,
-                            &#x27;object&#x27;: {
-                                &#x27;type&#x27;: &#x27;Identifier&#x27;,
-                                &#x27;name&#x27;: MATHSCRIPT_NAMESPACE
-                            },
-                            &#x27;property&#x27;: {
-                                &#x27;type&#x27;: &#x27;Identifier&#x27;,
-                                &#x27;name&#x27;: funcNames[node.operator]
-                            }
+                            &#x27;object&#x27;: { &#x27;type&#x27;: &#x27;Identifier&#x27;, &#x27;name&#x27;: MATHSCRIPT_NAMESPACE },
+                            &#x27;property&#x27;: { &#x27;type&#x27;: &#x27;Identifier&#x27;, &#x27;name&#x27;: binOp[node.operator] }
                         };
                         visit(node.left);
                         visit(node.right);
@@ -170,7 +178,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 break;
             case &#x27;AssignmentExpression&#x27;:
                 {
-                    if (node.operator &amp;&amp; funcNames[node.operator]) {
+                    if (node.operator &amp;&amp; binOp[node.operator]) {
                         var rightOld = node.right;
                         node.right = {
                             &#x27;type&#x27;: &#x27;BinaryExpression&#x27;,
@@ -218,6 +226,30 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     visit(node.argument);
                 }
                 break;
+            case &#x27;UnaryExpression&#x27;:
+                {
+                    if (node.operator &amp;&amp; unaryOp[node.operator]) {
+                        node.type = &#x27;CallExpression&#x27;;
+                        node.callee = {
+                            &#x27;type&#x27;: &#x27;MemberExpression&#x27;,
+                            &#x27;computed&#x27;: false,
+                            &#x27;object&#x27;: {
+                                &#x27;type&#x27;: &#x27;Identifier&#x27;,
+                                &#x27;name&#x27;: MATHSCRIPT_NAMESPACE
+                            },
+                            &#x27;property&#x27;: {
+                                &#x27;type&#x27;: &#x27;Identifier&#x27;,
+                                &#x27;name&#x27;: unaryOp[node.operator]
+                            }
+                        };
+                        visit(node.argument);
+                        node[&#x27;arguments&#x27;] = [node.argument];
+                    }
+                    else {
+                        visit(node.argument);
+                    }
+                }
+                break;
             case &#x27;Literal&#x27;:
             case &#x27;Identifier&#x27;:
             case &#x27;ThisExpression&#x27;:
@@ -257,7 +289,8 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
     }
     var Ms = {
         &#x27;VERSION&#x27;: core.VERSION,
-        transform: transform,
+        parse: parse,
+        transpile: transpile,
         add: add
     };
     return Ms;

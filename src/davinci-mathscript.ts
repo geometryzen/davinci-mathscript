@@ -13,16 +13,34 @@ import esutils = require('davinci-mathscript/esutils');
 // This should match the global namespace (in build.js).
 var MATHSCRIPT_NAMESPACE = "Ms";
 
-var funcNames = {
-  '+':  'add',
-  '*':  'mul',
-  '<<': 'lco'
+var binOp =
+{
+  '+':'add',
+  '-':'sub',
+  '*':'mul',
+  '/':'div',
+  '^':'wedge',
+  '<<':'lshift',
+  '>>':'rshift',
+  '===':'eq',
+  '!=':'ne',
+  '<':'lt',
+  '<=':'le',
+  '>':'gt',
+  '>=':'ge'
 };
 
-function transform(code, options) {
+var unaryOp = {'+':'pos','-':'neg','!':'bang','~':'tilde'};
+
+function parse(code, options) {
   var tree = esprima.parse(code, options);
 //console.log(JSON.stringify(tree), null, '\t');
   visit(tree);
+  return tree;
+}
+
+function transpile(code, options) {
+  var tree = parse(code, options);
   return escodegen.generate(tree, null);
 }
 
@@ -56,26 +74,23 @@ function visit(node) {
     }
     break;
     case 'BinaryExpression':
-    case 'LogicalExpression':
     {
-      if (node.operator && funcNames[node.operator]) {
+      if (node.operator && binOp[node.operator])
+      {
           node.type = 'CallExpression';
           node.callee = {
               'type': 'MemberExpression',
               'computed': false,
-              'object': {
-                  'type': 'Identifier',
-                  'name': MATHSCRIPT_NAMESPACE
-              },
-              'property': {
-                  'type': 'Identifier',
-                  'name': funcNames[node.operator]
+              'object': {'type':'Identifier', 'name': MATHSCRIPT_NAMESPACE},
+              'property': {'type': 'Identifier', 'name': binOp[node.operator]
               }
           };
           visit(node.left);
           visit(node.right);
           node['arguments'] = [node.left, node.right];
-      } else {
+      }
+      else
+      {
           visit(node.left);
           visit(node.right);
       }
@@ -86,7 +101,7 @@ function visit(node) {
     }
     break;
     case 'AssignmentExpression': {
-      if (node.operator && funcNames[node.operator]) {
+      if (node.operator && binOp[node.operator]) {
           var rightOld = node.right;
           node.right = {
               'type': 'BinaryExpression',
@@ -124,27 +139,28 @@ function visit(node) {
       visit(node.argument);
     }
     break;
-    /*
     case 'UnaryExpression': {
-      if (node.operator && funcNames[node.operator]) {
-        node.type = 'CallExpression';
-        node.callee = {
-            'type': 'MemberExpression',
-            'computed': false,
-            'object': node.argument,
-            'property': {
-                'type': 'Identifier',
-                'name': (node.operator === '+' || node.operator === '-') ? funcNames['u' + node.operator] : funcNames[node.operator]
-            }
-        };
-        visit(node.argument, index, program);
-        node['arguments'] = [];
+      if (node.operator && unaryOp[node.operator]) {
+          node.type = 'CallExpression';
+          node.callee = {
+              'type': 'MemberExpression',
+              'computed': false,
+              'object': {
+                  'type': 'Identifier',
+                  'name': MATHSCRIPT_NAMESPACE
+              },
+              'property': {
+                  'type': 'Identifier',
+                  'name': unaryOp[node.operator]
+              }
+          };
+          visit(node.argument);
+          node['arguments'] = [node.argument];
       } else {
-        visit(node.argument, index, program);
-      }    
+          visit(node.argument);
+      }
     }
     break;
-    */
     case 'Literal':
     case 'Identifier':
     case 'ThisExpression':
@@ -186,7 +202,8 @@ function add(lhs, rhs) {
 
 var Ms = {
     'VERSION': core.VERSION,
-    transform: transform,
+    parse: parse,
+    transpile: transpile,
     add: add
 };
 export = Ms;

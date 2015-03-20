@@ -26,6 +26,14 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                     });
                 }
                 break;
+            case 'FunctionDeclaration':
+                {
+                    node.params.forEach(function (param, index) {
+                        visit(param);
+                    });
+                    visit(node.body);
+                }
+                break;
             case 'Program':
                 {
                     node.body.forEach(function (node, index) {
@@ -122,6 +130,11 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                     node['arguments'].forEach(function (argument, index) {
                         visit(argument);
                     });
+                }
+                break;
+            case 'ReturnStatement':
+                {
+                    visit(node.argument);
                 }
                 break;
             case 'Literal':

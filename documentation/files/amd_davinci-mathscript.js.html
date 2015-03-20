@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.9</em>
+            <em>API Docs for: 0.0.10</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -105,6 +105,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     node.body.forEach(function (node, index) {
                         visit(node);
                     });
+                }
+                break;
+            case &#x27;FunctionDeclaration&#x27;:
+                {
+                    node.params.forEach(function (param, index) {
+                        visit(param);
+                    });
+                    visit(node.body);
                 }
                 break;
             case &#x27;Program&#x27;:
@@ -203,6 +211,11 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     node[&#x27;arguments&#x27;].forEach(function (argument, index) {
                         visit(argument);
                     });
+                }
+                break;
+            case &#x27;ReturnStatement&#x27;:
+                {
+                    visit(node.argument);
                 }
                 break;
             case &#x27;Literal&#x27;:

@@ -34,6 +34,11 @@ function visit(node) {
       });
     }
     break;
+    case 'FunctionDeclaration': {
+      node.params.forEach(function(param, index) { visit(param); });
+      visit(node.body);
+    }
+    break;
     case 'Program': {
       node.body.forEach(function(node, index) {
         visit(node);
@@ -115,6 +120,31 @@ function visit(node) {
       node['arguments'].forEach(function(argument, index) { visit(argument); });
     }
     break;
+    case 'ReturnStatement': {
+      visit(node.argument);
+    }
+    break;
+    /*
+    case 'UnaryExpression': {
+      if (node.operator && funcNames[node.operator]) {
+        node.type = 'CallExpression';
+        node.callee = {
+            'type': 'MemberExpression',
+            'computed': false,
+            'object': node.argument,
+            'property': {
+                'type': 'Identifier',
+                'name': (node.operator === '+' || node.operator === '-') ? funcNames['u' + node.operator] : funcNames[node.operator]
+            }
+        };
+        visit(node.argument, index, program);
+        node['arguments'] = [];
+      } else {
+        visit(node.argument, index, program);
+      }    
+    }
+    break;
+    */
     case 'Literal':
     case 'Identifier':
     case 'ThisExpression':

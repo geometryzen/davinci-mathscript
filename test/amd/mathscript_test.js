@@ -5,6 +5,10 @@ define([
 ) {
 describe("MathScript", function() {
 
+    function stripWS(s) {
+      return s.replace(/\t/g, ' ').replace(/\n/g, ' ').replace(/(\s[\s]+)/g, '');
+    }
+
     // Complex knows about Scalar, but Scalar does not know about Complex.
     function Scalar(s) {
       this.s = s;
@@ -84,7 +88,7 @@ describe("MathScript", function() {
     });
     it("VariableDeclaration", function() {
       var code = MathScript.transform("var x = eight.vectorE3(1, 0, 0); var y = eight.vectorE3(0, 2, 0); console.log(x+y);");
-      expect(code).toBe("var x = eight.vectorE3(1, 0, 0);\nvar y = eight.vectorE3(0, 2, 0);\nconsole.log(Ms.add(x, y));");
+      expect(stripWS(code)).toBe("var x = eight.vectorE3(1, 0, 0); var y = eight.vectorE3(0, 2, 0); console.log(Ms.add(x, y));");
     });
     it("add(number,number);", function() {
       var sum = MathScript.add(2,3);
@@ -168,13 +172,17 @@ describe("MathScript", function() {
     });
 
     describe("Syntax", function() {
-      it("ThisExpression", function() {
-        var code = MathScript.transform("(function() {2+3}.call(this));");
-        expect(code).toBe("(function () {\n    Ms.add(2, 3);\n}.call(this));");
+      it("FunctionDeclaration", function() {
+        var code = MathScript.transform("function f(x) {return x + 1;}");
+        expect(stripWS(code)).toBe("function f(x) {return Ms.add(x, 1); }");
       });
       it("ThisExpression", function() {
         var code = MathScript.transform("(function() {var x;x=new Foo();z=x+y;}.call(this));");
-        expect(code).toBe("(function () {\n    var x;\n    x = new Foo();\n    z = Ms.add(x, y);\n}.call(this));");
+        expect(stripWS(code)).toBe("(function () {var x;x = new Foo();z = Ms.add(x, y); }.call(this));");
+      });
+      it("ReturnStatement", function() {
+        var code = stripWS(MathScript.transform("function f(x) {return x + 1;}"));
+        expect(stripWS(code)).toBe("function f(x) {return Ms.add(x, 1); }");
       });
     });
 });

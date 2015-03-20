@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.0.9'
+        VERSION: '0.0.10'
     };
     return core;
 });
@@ -7243,6 +7243,14 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                     });
                 }
                 break;
+            case 'FunctionDeclaration':
+                {
+                    node.params.forEach(function (param, index) {
+                        visit(param);
+                    });
+                    visit(node.body);
+                }
+                break;
             case 'Program':
                 {
                     node.body.forEach(function (node, index) {
@@ -7339,6 +7347,11 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                     node['arguments'].forEach(function (argument, index) {
                         visit(argument);
                     });
+                }
+                break;
+            case 'ReturnStatement':
+                {
+                    visit(node.argument);
                 }
                 break;
             case 'Literal':

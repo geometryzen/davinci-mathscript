@@ -149,12 +149,6 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                     if (typeof result !== 'undefined') {
                         return result;
                     }
-                    else {
-                        throw new Error("+ is not supported for the operands given.");
-                    }
-                }
-                else {
-                    throw new Error("+ is not supported for the operands given.");
                 }
             }
         }
@@ -163,14 +157,9 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
             if (typeof result !== 'undefined') {
                 return result;
             }
-            else {
-                throw new Error("+ is not supported for the operands given.");
-            }
         }
-        else {
-            // Fallback to JavaScript '+'' in order to support string concatenation, etc.
-            return lhs + rhs;
-        }
+        // Fallback to JavaScript '+'' in order to support string concatenation, etc.
+        return lhs + rhs;
     }
     var Ms = {
         'VERSION': core.VERSION,

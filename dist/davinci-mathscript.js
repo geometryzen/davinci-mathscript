@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.0.8'
+        VERSION: '0.0.9'
     };
     return core;
 });
@@ -7366,12 +7366,6 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                     if (typeof result !== 'undefined') {
                         return result;
                     }
-                    else {
-                        throw new Error("+ is not supported for the operands given.");
-                    }
-                }
-                else {
-                    throw new Error("+ is not supported for the operands given.");
                 }
             }
         }
@@ -7380,14 +7374,9 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
             if (typeof result !== 'undefined') {
                 return result;
             }
-            else {
-                throw new Error("+ is not supported for the operands given.");
-            }
         }
-        else {
-            // Fallback to JavaScript '+'' in order to support string concatenation, etc.
-            return lhs + rhs;
-        }
+        // Fallback to JavaScript '+'' in order to support string concatenation, etc.
+        return lhs + rhs;
     }
     var Ms = {
         'VERSION': core.VERSION,

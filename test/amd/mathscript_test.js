@@ -144,25 +144,15 @@ describe("MathScript", function() {
       var a = new Complex(2,3);
       var b = new Foo();
       var c = a.__add__(b);
-      try {
-        var sum = MathScript.add(a,b);
-        expect(1).toBe(0);
-      }
-      catch(e) {
-        expect(e.message).toBe("+ is not supported for the operands given.");
-      }
+      var sum = MathScript.add(a,b);
+      expect(sum).toBe("(2, 3)[object Object]");
     });
     it("add(Foo, Complex);", function() {
       var a = new Foo();
       var b = new Complex(2,3);
       var c = b.__radd__(a);
-      try {
-        var sum = MathScript.add(a,b);
-        expect(1).toBe(0);
-      }
-      catch(e) {
-        expect(e.message).toBe("+ is not supported for the operands given.");
-      }
+      var sum = MathScript.add(a,b);
+      expect(sum).toBe("[object Object](2, 3)");
     });
     it("add(Foo, Foo);", function() {
       var a = new Foo();

@@ -44,10 +44,64 @@ describe("MathScript", function() {
 
     Complex.prototype.__radd__ = function(other) {
       if (typeof other === 'number') {
-        return new Complex(this.x+other, this.y);
+        return new Complex(other+this.x, this.y);
       }
       else if (other instanceof Scalar) {
-        return new Complex(this.x+other.s, this.y);
+        return new Complex(other.s+this.x, this.y);
+      }
+      else {
+        return;
+      }
+    }
+
+    Complex.prototype.__sub__ = function(other) {
+      if (other instanceof Complex) {
+        return new Complex(this.x-other.x, this.y-other.y);
+      }
+      else if (typeof other === 'number') {
+        return new Complex(this.x-other, this.y);
+      }
+      else if (other instanceof Scalar) {
+        return new Complex(this.x-other.s, this.y);
+      }
+      else {
+        return;
+      }
+    }
+
+    Complex.prototype.__rsub__ = function(other) {
+      if (typeof other === 'number') {
+        return new Complex(other-this.x, -this.y);
+      }
+      else if (other instanceof Scalar) {
+        return new Complex(other.s-this.x, -this.y);
+      }
+      else {
+        return;
+      }
+    }
+
+    Complex.prototype.__mul__ = function(other) {
+      if (other instanceof Complex) {
+        return new Complex(this.x*other.x-this.y*other.y, this.x*other.y+this.y*other.x);
+      }
+      else if (typeof other === 'number') {
+        return new Complex(this.x*other, this.y*other);
+      }
+      else if (other instanceof Scalar) {
+        return new Complex(this.x*other.s, this.y*other.s);
+      }
+      else {
+        return;
+      }
+    }
+
+    Complex.prototype.__rmul__ = function(other) {
+      if (typeof other === 'number') {
+        return new Complex(other*this.x, other*this.y);
+      }
+      else if (other instanceof Scalar) {
+        return new Complex(other.s*this.x, other.s*this.y);
       }
       else {
         return;
@@ -295,6 +349,169 @@ describe("MathScript", function() {
           var b = "World!";
           var sum = MathScript.add(a,b);
           expect(sum).toBe("Hello, World!");
+        });
+      });
+      describe("sub", function() {
+        it("sub(number,number);", function() {
+          var diff = MathScript.sub(2,3);
+          expect(diff).toBe(-1);
+        });
+        it("sub(Complex,Complex);", function() {
+          var a = new Complex(2,3);
+          var b = new Complex(5,7);
+          var c = a.__sub__(b);
+          var d = MathScript.sub(a,b);
+          expect(c.x).toBe(-3);
+          expect(c.y).toBe(-4);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("sub(Complex,number);", function() {
+          var a = new Complex(2,3);
+          var b = 5;
+          var c = a.__sub__(b);
+          var d = MathScript.sub(a,b);
+          expect(c.x).toBe(-3);
+          expect(c.y).toBe(3);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("sub(number, Complex);", function() {
+          var a = 5;
+          var b = new Complex(2,3);
+          var c = b.__rsub__(a);
+          var d = MathScript.sub(a,b);
+          expect(c.x).toBe(3);
+          expect(c.y).toBe(-3);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("sub(Complex,Scalar);", function() {
+          var a = new Complex(2,3);
+          var b = new Scalar(5);
+          var c = a.__sub__(b);
+          var d = MathScript.sub(a,b);
+          expect(c.x).toBe(-3);
+          expect(c.y).toBe(3);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("sub(Scalar,Complex);", function() {
+          var a = new Scalar(5);
+          var b = new Complex(2,3);
+          var c = b.__rsub__(a);
+          var d = MathScript.sub(a,b);
+          expect(c.x).toBe(3);
+          expect(c.y).toBe(-3);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("sub(Complex,Foo);", function() {
+          var a = new Complex(2,3);
+          var b = new Foo();
+          var c = a.__sub__(b);
+          var d = MathScript.sub(a,b);
+          expect(isNaN(d)).toBe(true);
+        });
+        it("sub(Foo, Complex);", function() {
+          var a = new Foo();
+          var b = new Complex(2,3);
+          var c = b.__rsub__(a);
+          var d = MathScript.sub(a,b);
+          expect(isNaN(d)).toBe(true);
+        });
+        it("sub(Foo, Foo);", function() {
+          var a = new Foo();
+          var b = new Foo();
+          var c = MathScript.sub(a,b);
+          expect(isNaN(c)).toBe(true);
+        });
+        it("sub(string,string);", function() {
+          var a = "Hello, ";
+          var b = "World!";
+          var d = MathScript.sub(a,b);
+          expect(isNaN(d)).toBe(true);
+        });
+      });
+      describe("mul", function() {
+        it("mul(number,number);", function() {
+          expect(MathScript.mul(2,3)).toBe(6);
+        });
+        it("mul(Complex,Complex);", function() {
+          var a = new Complex(2,3);
+          var b = new Complex(5,7);
+          var c = a.__mul__(b);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(-11);
+          expect(c.y).toBe(29);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(Complex,number);", function() {
+          var a = new Complex(2,3);
+          var b = 5;
+          var c = a.__mul__(b);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(10);
+          expect(c.y).toBe(15);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(number, Complex);", function() {
+          var a = 5;
+          var b = new Complex(2,3);
+          var c = b.__rmul__(a);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(10);
+          expect(c.y).toBe(15);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(Complex,Scalar);", function() {
+          var a = new Complex(2,3);
+          var b = new Scalar(5);
+          var c = a.__mul__(b);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(10);
+          expect(c.y).toBe(15);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(Scalar,Complex);", function() {
+          var a = new Scalar(5);
+          var b = new Complex(2,3);
+          var c = b.__rmul__(a);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(10);
+          expect(c.y).toBe(15);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(Complex,Foo);", function() {
+          var a = new Complex(2,3);
+          var b = new Foo();
+          var c = a.__mul__(b);
+          var d = MathScript.mul(a,b);
+          expect(isNaN(d)).toBe(true);
+        });
+        it("mul(Foo, Complex);", function() {
+          var a = new Foo();
+          var b = new Complex(2,3);
+          var c = b.__rmul__(a);
+          var d = MathScript.mul(a,b);
+          expect(isNaN(d)).toBe(true);
+        });
+        it("mul(Foo, Foo);", function() {
+          var a = new Foo();
+          var b = new Foo();
+          var c = MathScript.mul(a,b);
+          expect(isNaN(c)).toBe(true);
+        });
+        it("mul(string,string);", function() {
+          var a = "Hello, ";
+          var b = "World!";
+          var c = MathScript.mul(a,b);
+          expect(isNaN(c)).toBe(true);
         });
       });
     });

@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.11</em>
+            <em>API Docs for: 0.0.13</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -259,39 +259,52 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             }
         }
     }
-    function add(lhs, rhs) {
+    function binEval(lhs, rhs, lprop, rprop, fallback) {
         var result;
-        if (typeof lhs === &#x27;number&#x27; &amp;&amp; typeof rhs === &#x27;number&#x27;) {
-            return lhs + rhs;
-        }
-        else if (lhs[&#x27;__add__&#x27;]) {
-            result = lhs.__add__(rhs);
+        if (lhs[lprop]) {
+            result = lhs[lprop](rhs);
             if (typeof result !== &#x27;undefined&#x27;) {
                 return result;
             }
             else {
-                if (rhs[&#x27;__radd__&#x27;]) {
-                    result = rhs.__radd__(lhs);
+                if (rhs[rprop]) {
+                    result = rhs[rprop](lhs);
                     if (typeof result !== &#x27;undefined&#x27;) {
                         return result;
                     }
                 }
             }
         }
-        else if (rhs[&#x27;__radd__&#x27;]) {
-            result = rhs.__radd__(lhs);
+        else if (rhs[rprop]) {
+            result = rhs[rprop](lhs);
             if (typeof result !== &#x27;undefined&#x27;) {
                 return result;
             }
         }
-        // Fallback to JavaScript &#x27;+&#x27;&#x27; in order to support string concatenation, etc.
-        return lhs + rhs;
+        return fallback(lhs, rhs);
+    }
+    function add(p, q) {
+        return binEval(p, q, &#x27;__add__&#x27;, &#x27;__radd__&#x27;, function (a, b) {
+            return a + b;
+        });
+    }
+    function sub(p, q) {
+        return binEval(p, q, &#x27;__sub__&#x27;, &#x27;__rsub__&#x27;, function (a, b) {
+            return a - b;
+        });
+    }
+    function mul(p, q) {
+        return binEval(p, q, &#x27;__mul__&#x27;, &#x27;__rmul__&#x27;, function (a, b) {
+            return a * b;
+        });
     }
     var Ms = {
         &#x27;VERSION&#x27;: core.VERSION,
         parse: parse,
         transpile: transpile,
-        add: add
+        add: add,
+        sub: sub,
+        mul: mul
     };
     return Ms;
 });

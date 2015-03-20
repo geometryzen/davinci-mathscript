@@ -180,38 +180,51 @@ function visit(node) {
         }
     }
 }
-function add(lhs, rhs) {
+function binEval(lhs, rhs, lprop, rprop, fallback) {
     var result;
-    if (typeof lhs === 'number' && typeof rhs === 'number') {
-        return lhs + rhs;
-    }
-    else if (lhs['__add__']) {
-        result = lhs.__add__(rhs);
+    if (lhs[lprop]) {
+        result = lhs[lprop](rhs);
         if (typeof result !== 'undefined') {
             return result;
         }
         else {
-            if (rhs['__radd__']) {
-                result = rhs.__radd__(lhs);
+            if (rhs[rprop]) {
+                result = rhs[rprop](lhs);
                 if (typeof result !== 'undefined') {
                     return result;
                 }
             }
         }
     }
-    else if (rhs['__radd__']) {
-        result = rhs.__radd__(lhs);
+    else if (rhs[rprop]) {
+        result = rhs[rprop](lhs);
         if (typeof result !== 'undefined') {
             return result;
         }
     }
-    // Fallback to JavaScript '+'' in order to support string concatenation, etc.
-    return lhs + rhs;
+    return fallback(lhs, rhs);
+}
+function add(p, q) {
+    return binEval(p, q, '__add__', '__radd__', function (a, b) {
+        return a + b;
+    });
+}
+function sub(p, q) {
+    return binEval(p, q, '__sub__', '__rsub__', function (a, b) {
+        return a - b;
+    });
+}
+function mul(p, q) {
+    return binEval(p, q, '__mul__', '__rmul__', function (a, b) {
+        return a * b;
+    });
 }
 var Ms = {
     'VERSION': core.VERSION,
     parse: parse,
     transpile: transpile,
-    add: add
+    add: add,
+    sub: sub,
+    mul: mul
 };
 module.exports = Ms;

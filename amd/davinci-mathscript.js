@@ -222,6 +222,21 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
             return a / b;
         });
     }
+    function wedge(p, q) {
+        return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) {
+            return a ^ b;
+        });
+    }
+    function lshift(p, q) {
+        return binEval(p, q, '__lshift__', '__rlshift__', function (a, b) {
+            return a << b;
+        });
+    }
+    function rshift(p, q) {
+        return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) {
+            return a >> b;
+        });
+    }
     function neg(x) {
         if (x['__neg__']) {
             return x['__neg__']();
@@ -238,6 +253,9 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
         sub: sub,
         mul: mul,
         div: div,
+        wedge: wedge,
+        lshift: lshift,
+        rshift: rshift,
         neg: neg
     };
     return Ms;

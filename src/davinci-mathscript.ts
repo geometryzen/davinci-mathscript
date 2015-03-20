@@ -200,6 +200,9 @@ function add(p,q) {return binEval(p,q,'__add__','__radd__',function(a,b){return 
 function sub(p,q) {return binEval(p,q,'__sub__','__rsub__',function(a,b){return a-b});}
 function mul(p,q) {return binEval(p,q,'__mul__','__rmul__',function(a,b){return a*b});}
 function div(p,q) {return binEval(p,q,'__div__','__rdiv__',function(a,b){return a/b});}
+function wedge(p,q) {return binEval(p,q,'__wedge__','__rwedge__',function(a,b){return a^b});}
+function lshift(p,q) {return binEval(p,q,'__lshift__','__rlshift__',function(a,b){return a<<b});}
+function rshift(p,q) {return binEval(p,q,'__rshift__','__rrshift__',function(a,b){return a>>b});}
 
 function neg(x) {
   if (x['__neg__']) {
@@ -218,6 +221,9 @@ var Ms = {
     sub: sub,
     mul: mul,
     div: div,
+    wedge: wedge,
+    lshift: lshift,
+    rshift: rshift,
     neg: neg
 };
 export = Ms;

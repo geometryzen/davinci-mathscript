@@ -108,6 +108,10 @@ describe("MathScript", function() {
       }
     }
 
+    Complex.prototype.__neg__ = function() {
+      return new Complex(-this.x, -this.y);
+    }
+
     function Foo() {
 
     }
@@ -512,6 +516,100 @@ describe("MathScript", function() {
           var b = "World!";
           var c = MathScript.mul(a,b);
           expect(isNaN(c)).toBe(true);
+        });
+      });
+      describe("div", function() {
+        it("div(number,number);", function() {
+          expect(MathScript.div(6,2)).toBe(3);
+        });
+        it("mul(Complex,Complex);", function() {
+          var a = new Complex(2,3);
+          var b = new Complex(5,7);
+          var c = a.__mul__(b);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(-11);
+          expect(c.y).toBe(29);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(Complex,number);", function() {
+          var a = new Complex(2,3);
+          var b = 5;
+          var c = a.__mul__(b);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(10);
+          expect(c.y).toBe(15);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(number, Complex);", function() {
+          var a = 5;
+          var b = new Complex(2,3);
+          var c = b.__rmul__(a);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(10);
+          expect(c.y).toBe(15);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(Complex,Scalar);", function() {
+          var a = new Complex(2,3);
+          var b = new Scalar(5);
+          var c = a.__mul__(b);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(10);
+          expect(c.y).toBe(15);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(Scalar,Complex);", function() {
+          var a = new Scalar(5);
+          var b = new Complex(2,3);
+          var c = b.__rmul__(a);
+          var d = MathScript.mul(a,b);
+          expect(c.x).toBe(10);
+          expect(c.y).toBe(15);
+          expect(d.x).toBe(c.x);
+          expect(d.y).toBe(c.y);
+        });
+        it("mul(Complex,Foo);", function() {
+          var a = new Complex(2,3);
+          var b = new Foo();
+          var c = a.__mul__(b);
+          var d = MathScript.mul(a,b);
+          expect(isNaN(d)).toBe(true);
+        });
+        it("mul(Foo, Complex);", function() {
+          var a = new Foo();
+          var b = new Complex(2,3);
+          var c = b.__rmul__(a);
+          var d = MathScript.mul(a,b);
+          expect(isNaN(d)).toBe(true);
+        });
+        it("mul(Foo, Foo);", function() {
+          var a = new Foo();
+          var b = new Foo();
+          var c = MathScript.mul(a,b);
+          expect(isNaN(c)).toBe(true);
+        });
+        it("mul(string,string);", function() {
+          var a = "Hello, ";
+          var b = "World!";
+          var c = MathScript.mul(a,b);
+          expect(isNaN(c)).toBe(true);
+        });
+      });
+      describe("neg", function(){
+        it("neg(number);", function() {
+          expect(MathScript.neg(2)).toBe(-2);
+        });
+        it("neg(Complex);", function() {
+          var z = new Complex(2,3);
+          var q = z.__neg__();
+          expect(q.x).toBe(-2);
+          expect(q.y).toBe(-3);
+          expect(MathScript.neg(z).x).toBe(-2);
+          expect(MathScript.neg(z).y).toBe(-3);
         });
       });
     });

@@ -5,5 +5,7 @@ declare var Ms: {
     add: (p: any, q: any) => any;
     sub: (p: any, q: any) => any;
     mul: (p: any, q: any) => any;
+    div: (p: any, q: any) => any;
+    neg: (x: any) => any;
 };
 export = Ms;

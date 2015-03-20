@@ -217,13 +217,28 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
             return a * b;
         });
     }
+    function div(p, q) {
+        return binEval(p, q, '__div__', '__rdiv__', function (a, b) {
+            return a / b;
+        });
+    }
+    function neg(x) {
+        if (x['__neg__']) {
+            return x['__neg__']();
+        }
+        else {
+            return -x;
+        }
+    }
     var Ms = {
         'VERSION': core.VERSION,
         parse: parse,
         transpile: transpile,
         add: add,
         sub: sub,
-        mul: mul
+        mul: mul,
+        div: div,
+        neg: neg
     };
     return Ms;
 });

@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.13</em>
+            <em>API Docs for: 0.0.14</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -298,13 +298,28 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             return a * b;
         });
     }
+    function div(p, q) {
+        return binEval(p, q, &#x27;__div__&#x27;, &#x27;__rdiv__&#x27;, function (a, b) {
+            return a / b;
+        });
+    }
+    function neg(x) {
+        if (x[&#x27;__neg__&#x27;]) {
+            return x[&#x27;__neg__&#x27;]();
+        }
+        else {
+            return -x;
+        }
+    }
     var Ms = {
         &#x27;VERSION&#x27;: core.VERSION,
         parse: parse,
         transpile: transpile,
         add: add,
         sub: sub,
-        mul: mul
+        mul: mul,
+        div: div,
+        neg: neg
     };
     return Ms;
 });

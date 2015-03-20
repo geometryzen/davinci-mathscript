@@ -199,6 +199,16 @@ function binEval(lhs, rhs, lprop: string, rprop: string, fallback) {
 function add(p,q) {return binEval(p,q,'__add__','__radd__',function(a,b){return a+b});}
 function sub(p,q) {return binEval(p,q,'__sub__','__rsub__',function(a,b){return a-b});}
 function mul(p,q) {return binEval(p,q,'__mul__','__rmul__',function(a,b){return a*b});}
+function div(p,q) {return binEval(p,q,'__div__','__rdiv__',function(a,b){return a/b});}
+
+function neg(x) {
+  if (x['__neg__']) {
+    return x['__neg__']();
+  }
+  else {
+    return -x;
+  }
+}
 
 var Ms = {
     'VERSION': core.VERSION,
@@ -206,6 +216,8 @@ var Ms = {
     transpile: transpile,
     add: add,
     sub: sub,
-    mul: mul
+    mul: mul,
+    div: div,
+    neg: neg
 };
 export = Ms;

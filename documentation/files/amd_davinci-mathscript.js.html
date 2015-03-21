@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.5</em>
+            <em>API Docs for: 0.9.6</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -152,6 +152,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     }
                     break;
                 case &#x27;BinaryExpression&#x27;:
+                case &#x27;LogicalExpression&#x27;:
                     {
                         if (node.operator &amp;&amp; binOp[node.operator]) {
                             node.type = &#x27;CallExpression&#x27;;
@@ -384,6 +385,16 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             return a &gt;= b;
         });
     }
+    function exp(x) {
+        if (x[&#x27;__exp__&#x27;]) {
+            return x[&#x27;__exp__&#x27;]();
+        }
+        else {
+            var s = x;
+            var result = Math.exp(s);
+            return result;
+        }
+    }
     function neg(x) {
         if (x[&#x27;__neg__&#x27;]) {
             return x[&#x27;__neg__&#x27;]();
@@ -436,7 +447,8 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         neg: neg,
         pos: pos,
         bang: bang,
-        tilde: tilde
+        tilde: tilde,
+        exp: exp
     };
     return Ms;
 });

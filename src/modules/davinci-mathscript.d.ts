@@ -5,4 +5,5 @@
 //
 declare module Ms {
     var VERSION: string;
+    function exp: <T>(arg: T) => T;
 }

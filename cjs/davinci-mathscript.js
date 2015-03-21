@@ -73,6 +73,7 @@ function visit(node) {
                 }
                 break;
             case 'BinaryExpression':
+            case 'LogicalExpression':
                 {
                     if (node.operator && binOp[node.operator]) {
                         node.type = 'CallExpression';
@@ -305,6 +306,16 @@ function ge(p, q) {
         return a >= b;
     });
 }
+function exp(x) {
+    if (x['__exp__']) {
+        return x['__exp__']();
+    }
+    else {
+        var s = x;
+        var result = Math.exp(s);
+        return result;
+    }
+}
 function neg(x) {
     if (x['__neg__']) {
         return x['__neg__']();
@@ -357,6 +368,7 @@ var Ms = {
     neg: neg,
     pos: pos,
     bang: bang,
-    tilde: tilde
+    tilde: tilde,
+    exp: exp
 };
 module.exports = Ms;

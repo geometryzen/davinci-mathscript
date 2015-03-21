@@ -43,7 +43,7 @@ to compile the source using the TypeScript compiler (For this you need to have [
 Make your changes to the TypeScript files in the _src_ directory. Do not edit the files in the _dist_ directory, these files will be generated.
 
 ## Release History
-* v0.9.5: Initial release (pending)
+* v0.9.6: Initial release (pending)
 
 ## License
 Copyright (c) 2014-2015 David Holmes  

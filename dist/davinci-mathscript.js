@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.9.5'
+        VERSION: '0.9.6'
     };
     return core;
 });
@@ -7288,6 +7288,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                     }
                     break;
                 case 'BinaryExpression':
+                case 'LogicalExpression':
                     {
                         if (node.operator && binOp[node.operator]) {
                             node.type = 'CallExpression';
@@ -7520,6 +7521,16 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
             return a >= b;
         });
     }
+    function exp(x) {
+        if (x['__exp__']) {
+            return x['__exp__']();
+        }
+        else {
+            var s = x;
+            var result = Math.exp(s);
+            return result;
+        }
+    }
     function neg(x) {
         if (x['__neg__']) {
             return x['__neg__']();
@@ -7572,7 +7583,8 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         neg: neg,
         pos: pos,
         bang: bang,
-        tilde: tilde
+        tilde: tilde,
+        exp: exp
     };
     return Ms;
 });

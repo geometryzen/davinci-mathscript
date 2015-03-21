@@ -72,6 +72,7 @@ function visit(node) {
       }
       break;
       case 'BinaryExpression':
+      case 'LogicalExpression':
       {
         if (node.operator && binOp[node.operator])
         {
@@ -251,6 +252,20 @@ function le(p,q) {return binEval(p,q,'__le__','__rle__',function(a,b){return a<=
 function gt(p,q) {return binEval(p,q,'__gt__','__rgt__',function(a,b){return a>b});}
 function ge(p,q) {return binEval(p,q,'__ge__','__rge__',function(a,b){return a>=b});}
 
+function exp<T>(x: T): T
+{
+  if (x['__exp__'])
+  {
+    return x['__exp__']();
+  }
+  else
+  {
+    var s: any = x;
+    var result: any = Math.exp(s);
+    return result;
+  }
+}
+
 function neg(x) {
   if (x['__neg__']) {
     return x['__neg__']();
@@ -309,6 +324,8 @@ var Ms = {
     neg: neg,
     pos: pos,
     bang: bang,
-    tilde: tilde
+    tilde: tilde,
+
+    exp: exp
 };
 export = Ms;

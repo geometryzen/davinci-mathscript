@@ -19,5 +19,6 @@ declare var Ms: {
     pos: (x: any) => any;
     bang: (x: any) => any;
     tilde: (x: any) => any;
+    exp: <T>(x: T) => T;
 };
 export = Ms;

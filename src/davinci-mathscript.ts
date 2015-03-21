@@ -100,6 +100,12 @@ function visit(node) {
       visit(node.expression);
     }
     break;
+    case 'IfStatement': {
+      visit(node.test);
+      visit(node.consequent);
+      visit(node.alternate);
+    }
+    break;
     case 'AssignmentExpression': {
       if (node.operator && binOp[node.operator]) {
           var rightOld = node.right;

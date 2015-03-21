@@ -242,10 +242,16 @@ describe("MathScript", function() {
         });
       });
 
+      it("IfStatement", function() {
+        var code = MathScript.transpile("if (1+2)\n    2+3\nelse\n    3+4");
+        expect(stripWS(code)).toBe("if (Ms.add(1, 2))Ms.add(2, 3); elseMs.add(3, 4);");
+      });
+
       it("FunctionDeclaration", function() {
         var code = MathScript.transpile("function f(x) {return x + 1;}");
         expect(stripWS(code)).toBe("function f(x) {return Ms.add(x, 1); }");
       });
+
       it("ThisExpression", function() {
         var code = MathScript.transpile("(function() {var x;x=new Foo();z=x+y;}.call(this));");
         expect(stripWS(code)).toBe("(function () {var x;x = new Foo();z = Ms.add(x, y); }.call(this));");

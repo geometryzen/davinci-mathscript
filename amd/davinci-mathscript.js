@@ -95,6 +95,13 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                     visit(node.expression);
                 }
                 break;
+            case 'IfStatement':
+                {
+                    visit(node.test);
+                    visit(node.consequent);
+                    visit(node.alternate);
+                }
+                break;
             case 'AssignmentExpression':
                 {
                     if (node.operator && binOp[node.operator]) {

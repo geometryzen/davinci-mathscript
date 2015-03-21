@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.9.0'
+        VERSION: '0.9.1'
     };
     return core;
 });
@@ -7310,6 +7310,13 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
             case 'ExpressionStatement':
                 {
                     visit(node.expression);
+                }
+                break;
+            case 'IfStatement':
+                {
+                    visit(node.test);
+                    visit(node.consequent);
+                    visit(node.alternate);
                 }
                 break;
             case 'AssignmentExpression':

@@ -38,8 +38,8 @@ function visit(node) {
         switch (node.type) {
             case 'BlockStatement':
                 {
-                    node.body.forEach(function (node, index) {
-                        visit(node);
+                    node.body.forEach(function (part, index) {
+                        visit(part);
                     });
                 }
                 break;
@@ -115,18 +115,11 @@ function visit(node) {
             case 'AssignmentExpression':
                 {
                     if (node.operator && binOp[node.operator]) {
-                        var rightOld = node.right;
-                        node.right = {
-                            'type': 'BinaryExpression',
-                            'operator': node.operator.replace(/=/, '').trim(),
-                            'left': node.left,
-                            'right': rightOld
-                        };
-                        node.operator = '=';
                         visit(node.left);
                         visit(node.right);
                     }
                     else {
+                        visit(node.left);
                         visit(node.right);
                     }
                 }

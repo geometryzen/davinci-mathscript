@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.4</em>
+            <em>API Docs for: 0.9.5</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -117,8 +117,8 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             switch (node.type) {
                 case &#x27;BlockStatement&#x27;:
                     {
-                        node.body.forEach(function (node, index) {
-                            visit(node);
+                        node.body.forEach(function (part, index) {
+                            visit(part);
                         });
                     }
                     break;
@@ -194,18 +194,11 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 case &#x27;AssignmentExpression&#x27;:
                     {
                         if (node.operator &amp;&amp; binOp[node.operator]) {
-                            var rightOld = node.right;
-                            node.right = {
-                                &#x27;type&#x27;: &#x27;BinaryExpression&#x27;,
-                                &#x27;operator&#x27;: node.operator.replace(/=/, &#x27;&#x27;).trim(),
-                                &#x27;left&#x27;: node.left,
-                                &#x27;right&#x27;: rightOld
-                            };
-                            node.operator = &#x27;=&#x27;;
                             visit(node.left);
                             visit(node.right);
                         }
                         else {
+                            visit(node.left);
                             visit(node.right);
                         }
                     }

@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.2</em>
+            <em>API Docs for: 0.9.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -114,156 +114,161 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         return escodegen.generate(tree, null);
     }
     function visit(node) {
-        switch (node.type) {
-            case &#x27;BlockStatement&#x27;:
-                {
-                    node.body.forEach(function (node, index) {
-                        visit(node);
-                    });
-                }
-                break;
-            case &#x27;FunctionDeclaration&#x27;:
-                {
-                    node.params.forEach(function (param, index) {
-                        visit(param);
-                    });
-                    visit(node.body);
-                }
-                break;
-            case &#x27;Program&#x27;:
-                {
-                    node.body.forEach(function (node, index) {
-                        visit(node);
-                    });
-                }
-                break;
-            case &#x27;VariableDeclaration&#x27;:
-                {
-                    node.declarations.forEach(function (declaration, index) {
-                        visit(declaration);
-                    });
-                }
-                break;
-            case &#x27;VariableDeclarator&#x27;:
-                {
-                    if (node.init) {
-                        visit(node.init);
+        if (node &amp;&amp; node.type) {
+            switch (node.type) {
+                case &#x27;BlockStatement&#x27;:
+                    {
+                        node.body.forEach(function (node, index) {
+                            visit(node);
+                        });
                     }
-                }
-                break;
-            case &#x27;BinaryExpression&#x27;:
-                {
-                    if (node.operator &amp;&amp; binOp[node.operator]) {
-                        node.type = &#x27;CallExpression&#x27;;
-                        node.callee = {
-                            &#x27;type&#x27;: &#x27;MemberExpression&#x27;,
-                            &#x27;computed&#x27;: false,
-                            &#x27;object&#x27;: { &#x27;type&#x27;: &#x27;Identifier&#x27;, &#x27;name&#x27;: MATHSCRIPT_NAMESPACE },
-                            &#x27;property&#x27;: { &#x27;type&#x27;: &#x27;Identifier&#x27;, &#x27;name&#x27;: binOp[node.operator] }
-                        };
-                        visit(node.left);
-                        visit(node.right);
-                        node[&#x27;arguments&#x27;] = [node.left, node.right];
+                    break;
+                case &#x27;FunctionDeclaration&#x27;:
+                    {
+                        node.params.forEach(function (param, index) {
+                            visit(param);
+                        });
+                        visit(node.body);
                     }
-                    else {
-                        visit(node.left);
-                        visit(node.right);
+                    break;
+                case &#x27;Program&#x27;:
+                    {
+                        node.body.forEach(function (node, index) {
+                            visit(node);
+                        });
                     }
-                }
-                break;
-            case &#x27;ExpressionStatement&#x27;:
-                {
-                    visit(node.expression);
-                }
-                break;
-            case &#x27;IfStatement&#x27;:
-                {
-                    visit(node.test);
-                    visit(node.consequent);
-                    visit(node.alternate);
-                }
-                break;
-            case &#x27;AssignmentExpression&#x27;:
-                {
-                    if (node.operator &amp;&amp; binOp[node.operator]) {
-                        var rightOld = node.right;
-                        node.right = {
-                            &#x27;type&#x27;: &#x27;BinaryExpression&#x27;,
-                            &#x27;operator&#x27;: node.operator.replace(/=/, &#x27;&#x27;).trim(),
-                            &#x27;left&#x27;: node.left,
-                            &#x27;right&#x27;: rightOld
-                        };
-                        node.operator = &#x27;=&#x27;;
-                        visit(node.left);
-                        visit(node.right);
+                    break;
+                case &#x27;VariableDeclaration&#x27;:
+                    {
+                        node.declarations.forEach(function (declaration, index) {
+                            visit(declaration);
+                        });
                     }
-                    else {
-                        visit(node.right);
+                    break;
+                case &#x27;VariableDeclarator&#x27;:
+                    {
+                        if (node.init) {
+                            visit(node.init);
+                        }
                     }
-                }
-                break;
-            case &#x27;CallExpression&#x27;:
-                {
-                    visit(node.callee);
-                    node[&#x27;arguments&#x27;].forEach(function (argument, index) {
-                        visit(argument);
-                    });
-                }
-                break;
-            case &#x27;FunctionExpression&#x27;:
-                {
-                    visit(node.body);
-                }
-                break;
-            case &#x27;MemberExpression&#x27;:
-                {
-                    visit(node.object);
-                }
-                break;
-            case &#x27;NewExpression&#x27;:
-                {
-                    visit(node.callee);
-                    node[&#x27;arguments&#x27;].forEach(function (argument, index) {
-                        visit(argument);
-                    });
-                }
-                break;
-            case &#x27;ReturnStatement&#x27;:
-                {
-                    visit(node.argument);
-                }
-                break;
-            case &#x27;UnaryExpression&#x27;:
-                {
-                    if (node.operator &amp;&amp; unaryOp[node.operator]) {
-                        node.type = &#x27;CallExpression&#x27;;
-                        node.callee = {
-                            &#x27;type&#x27;: &#x27;MemberExpression&#x27;,
-                            &#x27;computed&#x27;: false,
-                            &#x27;object&#x27;: {
-                                &#x27;type&#x27;: &#x27;Identifier&#x27;,
-                                &#x27;name&#x27;: MATHSCRIPT_NAMESPACE
-                            },
-                            &#x27;property&#x27;: {
-                                &#x27;type&#x27;: &#x27;Identifier&#x27;,
-                                &#x27;name&#x27;: unaryOp[node.operator]
-                            }
-                        };
-                        visit(node.argument);
-                        node[&#x27;arguments&#x27;] = [node.argument];
+                    break;
+                case &#x27;BinaryExpression&#x27;:
+                    {
+                        if (node.operator &amp;&amp; binOp[node.operator]) {
+                            node.type = &#x27;CallExpression&#x27;;
+                            node.callee = {
+                                &#x27;type&#x27;: &#x27;MemberExpression&#x27;,
+                                &#x27;computed&#x27;: false,
+                                &#x27;object&#x27;: { &#x27;type&#x27;: &#x27;Identifier&#x27;, &#x27;name&#x27;: MATHSCRIPT_NAMESPACE },
+                                &#x27;property&#x27;: { &#x27;type&#x27;: &#x27;Identifier&#x27;, &#x27;name&#x27;: binOp[node.operator] }
+                            };
+                            visit(node.left);
+                            visit(node.right);
+                            node[&#x27;arguments&#x27;] = [node.left, node.right];
+                        }
+                        else {
+                            visit(node.left);
+                            visit(node.right);
+                        }
                     }
-                    else {
+                    break;
+                case &#x27;ExpressionStatement&#x27;:
+                    {
+                        visit(node.expression);
+                    }
+                    break;
+                case &#x27;IfStatement&#x27;:
+                    {
+                        visit(node.test);
+                        visit(node.consequent);
+                        visit(node.alternate);
+                    }
+                    break;
+                case &#x27;AssignmentExpression&#x27;:
+                    {
+                        if (node.operator &amp;&amp; binOp[node.operator]) {
+                            var rightOld = node.right;
+                            node.right = {
+                                &#x27;type&#x27;: &#x27;BinaryExpression&#x27;,
+                                &#x27;operator&#x27;: node.operator.replace(/=/, &#x27;&#x27;).trim(),
+                                &#x27;left&#x27;: node.left,
+                                &#x27;right&#x27;: rightOld
+                            };
+                            node.operator = &#x27;=&#x27;;
+                            visit(node.left);
+                            visit(node.right);
+                        }
+                        else {
+                            visit(node.right);
+                        }
+                    }
+                    break;
+                case &#x27;CallExpression&#x27;:
+                    {
+                        visit(node.callee);
+                        node[&#x27;arguments&#x27;].forEach(function (argument, index) {
+                            visit(argument);
+                        });
+                    }
+                    break;
+                case &#x27;FunctionExpression&#x27;:
+                    {
+                        visit(node.body);
+                    }
+                    break;
+                case &#x27;MemberExpression&#x27;:
+                    {
+                        visit(node.object);
+                    }
+                    break;
+                case &#x27;NewExpression&#x27;:
+                    {
+                        visit(node.callee);
+                        node[&#x27;arguments&#x27;].forEach(function (argument, index) {
+                            visit(argument);
+                        });
+                    }
+                    break;
+                case &#x27;ReturnStatement&#x27;:
+                    {
                         visit(node.argument);
                     }
+                    break;
+                case &#x27;UnaryExpression&#x27;:
+                    {
+                        if (node.operator &amp;&amp; unaryOp[node.operator]) {
+                            node.type = &#x27;CallExpression&#x27;;
+                            node.callee = {
+                                &#x27;type&#x27;: &#x27;MemberExpression&#x27;,
+                                &#x27;computed&#x27;: false,
+                                &#x27;object&#x27;: {
+                                    &#x27;type&#x27;: &#x27;Identifier&#x27;,
+                                    &#x27;name&#x27;: MATHSCRIPT_NAMESPACE
+                                },
+                                &#x27;property&#x27;: {
+                                    &#x27;type&#x27;: &#x27;Identifier&#x27;,
+                                    &#x27;name&#x27;: unaryOp[node.operator]
+                                }
+                            };
+                            visit(node.argument);
+                            node[&#x27;arguments&#x27;] = [node.argument];
+                        }
+                        else {
+                            visit(node.argument);
+                        }
+                    }
+                    break;
+                case &#x27;Literal&#x27;:
+                case &#x27;Identifier&#x27;:
+                case &#x27;ThisExpression&#x27;:
+                    break;
+                default: {
+                    console.log(JSON.stringify(node));
                 }
-                break;
-            case &#x27;Literal&#x27;:
-            case &#x27;Identifier&#x27;:
-            case &#x27;ThisExpression&#x27;:
-                break;
-            default: {
-                console.log(JSON.stringify(node));
             }
+        }
+        else {
+            return;
         }
     }
     function binEval(lhs, rhs, lprop, rprop, fallback) {

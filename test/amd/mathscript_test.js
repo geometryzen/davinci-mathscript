@@ -197,6 +197,17 @@ describe("MathScript", function() {
         });
       });
 
+      describe("ForStatement", function() {
+        it("Basic", function() {
+          var src = "for (var x=0; x<10;x++) {z=x+1}"
+          var program = MathScript.parse(src);
+          expect(program.type).toBe("Program");
+          expect(program.body[0].type).toBe("ForStatement");
+          var code = MathScript.transpile(src);
+          expect(stripWS(code)).toBe("for (var x = 0; x < 10; x++) {z = Ms.add(x, 1); }");
+        });
+      });
+
       describe("LogicalExpression", function() {
         it("eq", function() {
           var code = MathScript.transpile("a === b");
@@ -207,20 +218,20 @@ describe("MathScript", function() {
           expect(stripWS(code)).toBe("Ms.ne(a, b);");
         });
         it("lt", function() {
-          var code = MathScript.transpile("a < b");
-          expect(stripWS(code)).toBe("Ms.lt(a, b);");
+          var code = MathScript.transpile("a < b;");
+          expect(stripWS(code)).toBe("a < b;");
         });
         it("le", function() {
-          var code = MathScript.transpile("a <= b");
-          expect(stripWS(code)).toBe("Ms.le(a, b);");
+          var code = MathScript.transpile("a <= b;");
+          expect(stripWS(code)).toBe("a <= b;");
         });
         it("gt", function() {
-          var code = MathScript.transpile("a > b");
-          expect(stripWS(code)).toBe("Ms.gt(a, b);");
+          var code = MathScript.transpile("a > b;");
+          expect(stripWS(code)).toBe("a > b;");
         });
         it("ge", function() {
-          var code = MathScript.transpile("a >= b");
-          expect(stripWS(code)).toBe("Ms.ge(a, b);");
+          var code = MathScript.transpile("a >= b;");
+          expect(stripWS(code)).toBe("a >= b;");
         });
       });
 

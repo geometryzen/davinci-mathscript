@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.9.3'
+        VERSION: '0.9.4'
     };
     return core;
 });
@@ -7223,6 +7223,8 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
      */
     // This should match the global namespace (in build.js).
     var MATHSCRIPT_NAMESPACE = "Ms";
+    // We're not really interested in those operators do do with ordering because most
+    // interesting mathematical types don't have an ordering relation.
     var binOp = {
         '+': 'add',
         '-': 'sub',
@@ -7232,13 +7234,10 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         '<<': 'lshift',
         '>>': 'rshift',
         '===': 'eq',
-        '!==': 'ne',
-        '<': 'lt',
-        '<=': 'le',
-        '>': 'gt',
-        '>=': 'ge'
+        '!==': 'ne'
     };
-    var unaryOp = { '+': 'pos', '-': 'neg', '!': 'bang', '~': 'tilde' };
+    // The increment and decrement operators are problematic from a timing perspective.
+    var unaryOp = { '+': 'pos', '-': 'neg', '!': 'bang', '~': 'tilde' /*,'++':'increment','--':'decrement'*/ };
     function parse(code, options) {
         var tree = esprima.parse(code, options);
         //console.log(JSON.stringify(tree), null, '\t');
@@ -7313,6 +7312,14 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                         visit(node.expression);
                     }
                     break;
+                case 'ForStatement':
+                    {
+                        visit(node.init);
+                        visit(node.test);
+                        visit(node.update);
+                        visit(node.body);
+                    }
+                    break;
                 case 'IfStatement':
                     {
                         visit(node.test);
@@ -7371,6 +7378,30 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                     }
                     break;
                 case 'UnaryExpression':
+                    {
+                        if (node.operator && unaryOp[node.operator]) {
+                            node.type = 'CallExpression';
+                            node.callee = {
+                                'type': 'MemberExpression',
+                                'computed': false,
+                                'object': {
+                                    'type': 'Identifier',
+                                    'name': MATHSCRIPT_NAMESPACE
+                                },
+                                'property': {
+                                    'type': 'Identifier',
+                                    'name': unaryOp[node.operator]
+                                }
+                            };
+                            visit(node.argument);
+                            node['arguments'] = [node.argument];
+                        }
+                        else {
+                            visit(node.argument);
+                        }
+                    }
+                    break;
+                case 'UpdateExpression':
                     {
                         if (node.operator && unaryOp[node.operator]) {
                             node.type = 'CallExpression';

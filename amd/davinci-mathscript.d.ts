@@ -10,5 +10,6 @@ declare var Ms: {
     lshift: (p: any, q: any) => any;
     rshift: (p: any, q: any) => any;
     neg: (x: any) => any;
+    pos: (x: any) => any;
 };
 export = Ms;

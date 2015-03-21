@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.15</em>
+            <em>API Docs for: 0.9.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -326,6 +326,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             return -x;
         }
     }
+    function pos(x) {
+        if (x[&#x27;__pos__&#x27;]) {
+            return x[&#x27;__pos__&#x27;]();
+        }
+        else {
+            return +x;
+        }
+    }
     var Ms = {
         &#x27;VERSION&#x27;: core.VERSION,
         parse: parse,
@@ -337,7 +345,8 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         wedge: wedge,
         lshift: lshift,
         rshift: rshift,
-        neg: neg
+        neg: neg,
+        pos: pos
     };
     return Ms;
 });

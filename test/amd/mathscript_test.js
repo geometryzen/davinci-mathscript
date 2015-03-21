@@ -108,6 +108,10 @@ describe("MathScript", function() {
       }
     }
 
+    Complex.prototype.__pos__ = function() {
+      return this;
+    }
+
     Complex.prototype.__neg__ = function() {
       return new Complex(-this.x, -this.y);
     }
@@ -599,6 +603,7 @@ describe("MathScript", function() {
           expect(isNaN(c)).toBe(true);
         });
       });
+
       describe("neg", function(){
         it("neg(number);", function() {
           expect(MathScript.neg(2)).toBe(-2);
@@ -612,6 +617,21 @@ describe("MathScript", function() {
           expect(MathScript.neg(z).y).toBe(-3);
         });
       });
+
+      describe("pos", function(){
+        it("pos(number);", function() {
+          expect(MathScript.pos(2)).toBe(2);
+        });
+        it("pos(Complex);", function() {
+          var z = new Complex(2,3);
+          var q = z.__pos__();
+          expect(q.x).toBe(2);
+          expect(q.y).toBe(3);
+          expect(MathScript.pos(z).x).toBe(2);
+          expect(MathScript.pos(z).y).toBe(3);
+        });
+      });
+
     });
 });
 

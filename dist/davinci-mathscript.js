@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.9.1'
+        VERSION: '0.9.2'
     };
     return core;
 });
@@ -7232,7 +7232,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         '<<': 'lshift',
         '>>': 'rshift',
         '===': 'eq',
-        '!=': 'ne',
+        '!==': 'ne',
         '<': 'lt',
         '<=': 'le',
         '>': 'gt',
@@ -7461,6 +7461,36 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
             return a >> b;
         });
     }
+    function eq(p, q) {
+        return binEval(p, q, '__eq__', '__req__', function (a, b) {
+            return a === b;
+        });
+    }
+    function ne(p, q) {
+        return binEval(p, q, '__ne__', '__rne__', function (a, b) {
+            return a !== b;
+        });
+    }
+    function lt(p, q) {
+        return binEval(p, q, '__lt__', '__rlt__', function (a, b) {
+            return a < b;
+        });
+    }
+    function le(p, q) {
+        return binEval(p, q, '__le__', '__rle__', function (a, b) {
+            return a <= b;
+        });
+    }
+    function gt(p, q) {
+        return binEval(p, q, '__gt__', '__rgt__', function (a, b) {
+            return a > b;
+        });
+    }
+    function ge(p, q) {
+        return binEval(p, q, '__ge__', '__rge__', function (a, b) {
+            return a >= b;
+        });
+    }
     function neg(x) {
         if (x['__neg__']) {
             return x['__neg__']();
@@ -7477,6 +7507,22 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
             return +x;
         }
     }
+    function bang(x) {
+        if (x['__bang__']) {
+            return x['__bang__']();
+        }
+        else {
+            return !x;
+        }
+    }
+    function tilde(x) {
+        if (x['__tilde__']) {
+            return x['__tilde__']();
+        }
+        else {
+            return ~x;
+        }
+    }
     var Ms = {
         'VERSION': core.VERSION,
         parse: parse,
@@ -7488,8 +7534,16 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         wedge: wedge,
         lshift: lshift,
         rshift: rshift,
+        eq: eq,
+        ne: ne,
+        lt: lt,
+        le: le,
+        gt: gt,
+        ge: ge,
         neg: neg,
-        pos: pos
+        pos: pos,
+        bang: bang,
+        tilde: tilde
     };
     return Ms;
 });

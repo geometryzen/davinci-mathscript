@@ -203,7 +203,7 @@ describe("MathScript", function() {
           expect(stripWS(code)).toBe("Ms.eq(a, b);");
         });
         it("ne", function() {
-          var code = MathScript.transpile("a != b");
+          var code = MathScript.transpile("a !== b");
           expect(stripWS(code)).toBe("Ms.ne(a, b);");
         });
         it("lt", function() {

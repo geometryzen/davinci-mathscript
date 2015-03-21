@@ -23,7 +23,7 @@ var binOp =
   '<<':'lshift',
   '>>':'rshift',
   '===':'eq',
-  '!=':'ne',
+  '!==':'ne',
   '<':'lt',
   '<=':'le',
   '>':'gt',
@@ -209,6 +209,12 @@ function div(p,q) {return binEval(p,q,'__div__','__rdiv__',function(a,b){return 
 function wedge(p,q) {return binEval(p,q,'__wedge__','__rwedge__',function(a,b){return a^b});}
 function lshift(p,q) {return binEval(p,q,'__lshift__','__rlshift__',function(a,b){return a<<b});}
 function rshift(p,q) {return binEval(p,q,'__rshift__','__rrshift__',function(a,b){return a>>b});}
+function eq(p,q) {return binEval(p,q,'__eq__','__req__',function(a,b){return a===b});}
+function ne(p,q) {return binEval(p,q,'__ne__','__rne__',function(a,b){return a!==b});}
+function lt(p,q) {return binEval(p,q,'__lt__','__rlt__',function(a,b){return a<b});}
+function le(p,q) {return binEval(p,q,'__le__','__rle__',function(a,b){return a<=b});}
+function gt(p,q) {return binEval(p,q,'__gt__','__rgt__',function(a,b){return a>b});}
+function ge(p,q) {return binEval(p,q,'__ge__','__rge__',function(a,b){return a>=b});}
 
 function neg(x) {
   if (x['__neg__']) {
@@ -228,10 +234,28 @@ function pos(x) {
   }
 }
 
+function bang(x) {
+  if (x['__bang__']) {
+    return x['__bang__']();
+  }
+  else {
+    return !x;
+  }
+}
+
+function tilde(x) {
+  if (x['__tilde__']) {
+    return x['__tilde__']();
+  }
+  else {
+    return ~x;
+  }
+}
 var Ms = {
     'VERSION': core.VERSION,
     parse: parse,
     transpile: transpile,
+
     add: add,
     sub: sub,
     mul: mul,
@@ -239,7 +263,16 @@ var Ms = {
     wedge: wedge,
     lshift: lshift,
     rshift: rshift,
+    eq: eq,
+    ne: ne,
+    lt: lt,
+    le: le,
+    gt: gt,
+    ge: ge,
+
     neg: neg,
-    pos: pos
+    pos: pos,
+    bang: bang,
+    tilde: tilde
 };
 export = Ms;

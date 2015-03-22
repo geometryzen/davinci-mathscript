@@ -18,6 +18,7 @@ var binOp = {
     '^': 'wedge',
     '<<': 'lshift',
     '>>': 'rshift',
+    '%': 'mod',
     '===': 'eq',
     '!==': 'ne'
 };
@@ -276,6 +277,11 @@ function rshift(p, q) {
         return a >> b;
     });
 }
+function mod(p, q) {
+    return binEval(p, q, '__mod__', '__rmod__', function (a, b) {
+        return a % b;
+    });
+}
 function eq(p, q) {
     return binEval(p, q, '__eq__', '__req__', function (a, b) {
         return a === b;
@@ -284,26 +290,6 @@ function eq(p, q) {
 function ne(p, q) {
     return binEval(p, q, '__ne__', '__rne__', function (a, b) {
         return a !== b;
-    });
-}
-function lt(p, q) {
-    return binEval(p, q, '__lt__', '__rlt__', function (a, b) {
-        return a < b;
-    });
-}
-function le(p, q) {
-    return binEval(p, q, '__le__', '__rle__', function (a, b) {
-        return a <= b;
-    });
-}
-function gt(p, q) {
-    return binEval(p, q, '__gt__', '__rgt__', function (a, b) {
-        return a > b;
-    });
-}
-function ge(p, q) {
-    return binEval(p, q, '__ge__', '__rge__', function (a, b) {
-        return a >= b;
     });
 }
 function exp(x) {
@@ -359,12 +345,9 @@ var Ms = {
     wedge: wedge,
     lshift: lshift,
     rshift: rshift,
+    mod: mod,
     eq: eq,
     ne: ne,
-    lt: lt,
-    le: le,
-    gt: gt,
-    ge: ge,
     neg: neg,
     pos: pos,
     bang: bang,

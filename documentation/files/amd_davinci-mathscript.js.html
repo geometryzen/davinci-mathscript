@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.6</em>
+            <em>API Docs for: 0.9.7</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -97,6 +97,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         &#x27;^&#x27;: &#x27;wedge&#x27;,
         &#x27;&lt;&lt;&#x27;: &#x27;lshift&#x27;,
         &#x27;&gt;&gt;&#x27;: &#x27;rshift&#x27;,
+        &#x27;%&#x27;: &#x27;mod&#x27;,
         &#x27;===&#x27;: &#x27;eq&#x27;,
         &#x27;!==&#x27;: &#x27;ne&#x27;
     };
@@ -355,6 +356,11 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             return a &gt;&gt; b;
         });
     }
+    function mod(p, q) {
+        return binEval(p, q, &#x27;__mod__&#x27;, &#x27;__rmod__&#x27;, function (a, b) {
+            return a % b;
+        });
+    }
     function eq(p, q) {
         return binEval(p, q, &#x27;__eq__&#x27;, &#x27;__req__&#x27;, function (a, b) {
             return a === b;
@@ -363,26 +369,6 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
     function ne(p, q) {
         return binEval(p, q, &#x27;__ne__&#x27;, &#x27;__rne__&#x27;, function (a, b) {
             return a !== b;
-        });
-    }
-    function lt(p, q) {
-        return binEval(p, q, &#x27;__lt__&#x27;, &#x27;__rlt__&#x27;, function (a, b) {
-            return a &lt; b;
-        });
-    }
-    function le(p, q) {
-        return binEval(p, q, &#x27;__le__&#x27;, &#x27;__rle__&#x27;, function (a, b) {
-            return a &lt;= b;
-        });
-    }
-    function gt(p, q) {
-        return binEval(p, q, &#x27;__gt__&#x27;, &#x27;__rgt__&#x27;, function (a, b) {
-            return a &gt; b;
-        });
-    }
-    function ge(p, q) {
-        return binEval(p, q, &#x27;__ge__&#x27;, &#x27;__rge__&#x27;, function (a, b) {
-            return a &gt;= b;
         });
     }
     function exp(x) {
@@ -438,12 +424,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         wedge: wedge,
         lshift: lshift,
         rshift: rshift,
+        mod: mod,
         eq: eq,
         ne: ne,
-        lt: lt,
-        le: le,
-        gt: gt,
-        ge: ge,
         neg: neg,
         pos: pos,
         bang: bang,

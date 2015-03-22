@@ -2259,43 +2259,43 @@ function binaryPrecedence(token, allowIn) {
         case '|':
             prec = 3;
             break;
-        case '^':
-            prec = 4;
-            break;
         case '&':
-            prec = 5;
+            prec = 4;
             break;
         case '==':
         case '!=':
         case '===':
         case '!==':
-            prec = 6;
+            prec = 5;
             break;
         case '<':
         case '>':
         case '<=':
         case '>=':
         case 'instanceof':
-            prec = 7;
+            prec = 6;
             break;
         case 'in':
-            prec = allowIn ? 7 : 0;
+            prec = allowIn ? 6 : 0;
             break;
         case '>>>':
-            prec = 8;
+            prec = 7;
             break;
         case '+':
         case '-':
-            prec = 9;
+            prec = 8;
             break;
         case '*':
         case '/':
-        case '%':
-            prec = 11;
+            prec = 9;
             break;
+        case '^':
+            prec = 10;
+            break;
+        case '%':
         case '<<':
         case '>>':
-            prec = 12;
+            prec = 11;
             break;
         default:
             break;

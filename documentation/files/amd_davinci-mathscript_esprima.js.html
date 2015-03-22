@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.6</em>
+            <em>API Docs for: 0.9.7</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -2341,43 +2341,43 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             case &#x27;|&#x27;:
                 prec = 3;
                 break;
-            case &#x27;^&#x27;:
-                prec = 4;
-                break;
             case &#x27;&amp;&#x27;:
-                prec = 5;
+                prec = 4;
                 break;
             case &#x27;==&#x27;:
             case &#x27;!=&#x27;:
             case &#x27;===&#x27;:
             case &#x27;!==&#x27;:
-                prec = 6;
+                prec = 5;
                 break;
             case &#x27;&lt;&#x27;:
             case &#x27;&gt;&#x27;:
             case &#x27;&lt;=&#x27;:
             case &#x27;&gt;=&#x27;:
             case &#x27;instanceof&#x27;:
-                prec = 7;
+                prec = 6;
                 break;
             case &#x27;in&#x27;:
-                prec = allowIn ? 7 : 0;
+                prec = allowIn ? 6 : 0;
                 break;
             case &#x27;&gt;&gt;&gt;&#x27;:
-                prec = 8;
+                prec = 7;
                 break;
             case &#x27;+&#x27;:
             case &#x27;-&#x27;:
-                prec = 9;
+                prec = 8;
                 break;
             case &#x27;*&#x27;:
             case &#x27;/&#x27;:
-            case &#x27;%&#x27;:
-                prec = 11;
+                prec = 9;
                 break;
+            case &#x27;^&#x27;:
+                prec = 10;
+                break;
+            case &#x27;%&#x27;:
             case &#x27;&lt;&lt;&#x27;:
             case &#x27;&gt;&gt;&#x27;:
-                prec = 12;
+                prec = 11;
                 break;
             default:
                 break;

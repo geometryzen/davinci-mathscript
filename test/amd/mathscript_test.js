@@ -236,13 +236,49 @@ describe("MathScript", function() {
       });
 
       describe("Precedence", function() {
-        it("a << b * c", function() {
-          var code = MathScript.transpile("a << b * c");
-          expect(code).toBe("Ms.mul(Ms.lshift(a, b), c);");
+        it("a << b ^ c", function() {
+          var code = MathScript.transpile("a << b ^ c");
+          expect(code).toBe("Ms.wedge(Ms.lshift(a, b), c);");
         });
-        it("a * b << c", function() {
-          var code = MathScript.transpile("a * b << c");
-          expect(code).toBe("Ms.mul(a, Ms.lshift(b, c));");
+        it("a ^ b << c", function() {
+          var code = MathScript.transpile("a ^ b << c");
+          expect(code).toBe("Ms.wedge(a, Ms.lshift(b, c));");
+        });
+
+        it("a >> b ^ c", function() {
+          var code = MathScript.transpile("a >> b ^ c");
+          expect(code).toBe("Ms.wedge(Ms.rshift(a, b), c);");
+        });
+        it("a ^ b >> c", function() {
+          var code = MathScript.transpile("a ^ b >> c");
+          expect(code).toBe("Ms.wedge(a, Ms.rshift(b, c));");
+        });
+
+        it("a % b ^ c", function() {
+          var code = MathScript.transpile("a % b ^ c");
+          expect(code).toBe("Ms.wedge(Ms.mod(a, b), c);");
+        });
+        it("a ^ b % c", function() {
+          var code = MathScript.transpile("a ^ b % c");
+          expect(code).toBe("Ms.wedge(a, Ms.mod(b, c));");
+        });
+
+        it("a ^ b * c", function() {
+          var code = MathScript.transpile("a ^ b * c");
+          expect(code).toBe("Ms.mul(Ms.wedge(a, b), c);");
+        });
+        it("a * b ^ c", function() {
+          var code = MathScript.transpile("a * b ^ c");
+          expect(code).toBe("Ms.mul(a, Ms.wedge(b, c));");
+        });
+
+        it("a * b + c", function() {
+          var code = MathScript.transpile("a * b + c");
+          expect(code).toBe("Ms.add(Ms.mul(a, b), c);");
+        });
+        it("a + b * c", function() {
+          var code = MathScript.transpile("a + b * c");
+          expect(code).toBe("Ms.add(a, Ms.mul(b, c));");
         });
       });
 

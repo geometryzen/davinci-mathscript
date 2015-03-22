@@ -24,6 +24,7 @@ var binOp =
   '^':'wedge',
   '<<':'lshift',
   '>>':'rshift',
+  '%':'mod',
   '===':'eq',
   '!==':'ne'
 };
@@ -238,19 +239,17 @@ function binEval(lhs, rhs, lprop: string, rprop: string, fallback) {
   return fallback(lhs, rhs);
 }
 
-function add(p,q) {return binEval(p,q,'__add__','__radd__',function(a,b){return a+b});}
-function sub(p,q) {return binEval(p,q,'__sub__','__rsub__',function(a,b){return a-b});}
-function mul(p,q) {return binEval(p,q,'__mul__','__rmul__',function(a,b){return a*b});}
-function div(p,q) {return binEval(p,q,'__div__','__rdiv__',function(a,b){return a/b});}
-function wedge(p,q) {return binEval(p,q,'__wedge__','__rwedge__',function(a,b){return a^b});}
-function lshift(p,q) {return binEval(p,q,'__lshift__','__rlshift__',function(a,b){return a<<b});}
-function rshift(p,q) {return binEval(p,q,'__rshift__','__rrshift__',function(a,b){return a>>b});}
-function eq(p,q) {return binEval(p,q,'__eq__','__req__',function(a,b){return a===b});}
-function ne(p,q) {return binEval(p,q,'__ne__','__rne__',function(a,b){return a!==b});}
-function lt(p,q) {return binEval(p,q,'__lt__','__rlt__',function(a,b){return a<b});}
-function le(p,q) {return binEval(p,q,'__le__','__rle__',function(a,b){return a<=b});}
-function gt(p,q) {return binEval(p,q,'__gt__','__rgt__',function(a,b){return a>b});}
-function ge(p,q) {return binEval(p,q,'__ge__','__rge__',function(a,b){return a>=b});}
+function add(p,q) {return binEval(p,q,'__add__','__radd__',function(a,b){return a + b});}
+function sub(p,q) {return binEval(p,q,'__sub__','__rsub__',function(a,b){return a - b});}
+function mul(p,q) {return binEval(p,q,'__mul__','__rmul__',function(a,b){return a * b});}
+function div(p,q) {return binEval(p,q,'__div__','__rdiv__',function(a,b){return a / b});}
+function wedge(p,q) {return binEval(p,q,'__wedge__','__rwedge__',function(a,b){return a ^ b});}
+function lshift(p,q) {return binEval(p,q,'__lshift__','__rlshift__',function(a,b){return a << b});}
+function rshift(p,q) {return binEval(p,q,'__rshift__','__rrshift__',function(a,b){return a >> b});}
+function mod(p,q) {return binEval(p,q,'__mod__','__rmod__',function(a,b){return a % b});}
+
+function eq(p,q) {return binEval(p,q,'__eq__','__req__',function(a,b){return a === b});}
+function ne(p,q) {return binEval(p,q,'__ne__','__rne__',function(a,b){return a !== b});}
 
 function exp<T>(x: T): T
 {
@@ -313,13 +312,10 @@ var Ms = {
     wedge: wedge,
     lshift: lshift,
     rshift: rshift,
+    mod: mod,
 
     eq: eq,
     ne: ne,
-    lt: lt,
-    le: le,
-    gt: gt,
-    ge: ge,
 
     neg: neg,
     pos: pos,

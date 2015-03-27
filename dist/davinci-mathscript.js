@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.9.7'
+        VERSION: '0.9.8'
     };
     return core;
 });
@@ -7329,6 +7329,13 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                         visit(node.alternate);
                     }
                     break;
+                case 'ArrayExpression':
+                    {
+                        node['elements'].forEach(function (elem, index) {
+                            visit(elem);
+                        });
+                    }
+                    break;
                 case 'AssignmentExpression':
                     {
                         if (node.operator && binOp[node.operator]) {
@@ -7367,9 +7374,23 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                         });
                     }
                     break;
+                case 'ObjectExpression':
+                    {
+                        node['properties'].forEach(function (prop, index) {
+                            visit(prop);
+                        });
+                    }
+                    break;
                 case 'ReturnStatement':
                     {
                         visit(node.argument);
+                    }
+                    break;
+                case 'SequenceExpression':
+                    {
+                        node['expressions'].forEach(function (expr, index) {
+                            visit(expr);
+                        });
                     }
                     break;
                 case 'UnaryExpression':
@@ -7423,6 +7444,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                 case 'Literal':
                 case 'Identifier':
                 case 'ThisExpression':
+                case 'DebuggerStatement':
                     break;
                 default: {
                     console.log(JSON.stringify(node));

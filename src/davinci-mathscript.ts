@@ -113,6 +113,10 @@ function visit(node) {
         visit(node.alternate);
       }
       break;
+      case 'ArrayExpression': {
+        node['elements'].forEach(function(elem, index) { visit(elem); });
+      }
+      break;
       case 'AssignmentExpression':
       {
         if (node.operator && binOp[node.operator])
@@ -145,8 +149,16 @@ function visit(node) {
         node['arguments'].forEach(function(argument, index) { visit(argument); });
       }
       break;
+      case 'ObjectExpression': {
+        node['properties'].forEach(function(prop, index) { visit(prop); });
+      }
+      break;
       case 'ReturnStatement': {
         visit(node.argument);
+      }
+      break;
+      case 'SequenceExpression': {
+        node['expressions'].forEach(function(expr, index) { visit(expr); });
       }
       break;
       case 'UnaryExpression': {
@@ -203,6 +215,7 @@ function visit(node) {
       case 'Literal':
       case 'Identifier':
       case 'ThisExpression':
+      case 'DebuggerStatement':
         break;
       default: {
         console.log(JSON.stringify(node));

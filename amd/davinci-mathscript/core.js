@@ -23,7 +23,7 @@
 */
 define(["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.9.7'
+        VERSION: '0.9.8'
     };
     return core;
 });

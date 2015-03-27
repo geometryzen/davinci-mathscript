@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.7</em>
+            <em>API Docs for: 0.9.8</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -193,6 +193,13 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                         visit(node.alternate);
                     }
                     break;
+                case &#x27;ArrayExpression&#x27;:
+                    {
+                        node[&#x27;elements&#x27;].forEach(function (elem, index) {
+                            visit(elem);
+                        });
+                    }
+                    break;
                 case &#x27;AssignmentExpression&#x27;:
                     {
                         if (node.operator &amp;&amp; binOp[node.operator]) {
@@ -231,9 +238,23 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                         });
                     }
                     break;
+                case &#x27;ObjectExpression&#x27;:
+                    {
+                        node[&#x27;properties&#x27;].forEach(function (prop, index) {
+                            visit(prop);
+                        });
+                    }
+                    break;
                 case &#x27;ReturnStatement&#x27;:
                     {
                         visit(node.argument);
+                    }
+                    break;
+                case &#x27;SequenceExpression&#x27;:
+                    {
+                        node[&#x27;expressions&#x27;].forEach(function (expr, index) {
+                            visit(expr);
+                        });
                     }
                     break;
                 case &#x27;UnaryExpression&#x27;:
@@ -287,6 +308,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 case &#x27;Literal&#x27;:
                 case &#x27;Identifier&#x27;:
                 case &#x27;ThisExpression&#x27;:
+                case &#x27;DebuggerStatement&#x27;:
                     break;
                 default: {
                     console.log(JSON.stringify(node));

@@ -224,6 +224,11 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                         }
                     }
                     break;
+                case 'Property':
+                    {
+                        visit(node.key);
+                    }
+                    break;
                 case 'Literal':
                 case 'Identifier':
                 case 'ThisExpression':

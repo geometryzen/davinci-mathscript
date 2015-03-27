@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.8</em>
+            <em>API Docs for: 0.9.9</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -303,6 +303,11 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                         else {
                             visit(node.argument);
                         }
+                    }
+                    break;
+                case &#x27;Property&#x27;:
+                    {
+                        visit(node.key);
                     }
                     break;
                 case &#x27;Literal&#x27;:

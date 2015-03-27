@@ -212,6 +212,10 @@ function visit(node) {
         }
       }
       break;
+      case 'Property': {
+        visit(node.key);
+      }
+      break;
       case 'Literal':
       case 'Identifier':
       case 'ThisExpression':

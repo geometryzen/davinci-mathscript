@@ -116,6 +116,10 @@ describe("MathScript", function() {
       return new Complex(-this.x, -this.y);
     }
 
+    Complex.prototype.__tilde__ = function() {
+      return new Complex(this.x, -this.y);
+    }
+
     function Foo() {
 
     }
@@ -682,6 +686,20 @@ describe("MathScript", function() {
           expect(q.y).toBe(3);
           expect(MathScript.pos(z).x).toBe(2);
           expect(MathScript.pos(z).y).toBe(3);
+        });
+      });
+
+      describe("tilde", function(){
+        it("tilde(number);", function() {
+          expect(MathScript.pos(2)).toBe(2);
+        });
+        it("tilde(Complex);", function() {
+          var z = new Complex(2,3);
+          var q = z.__tilde__();
+          expect(q.x).toBe(2);
+          expect(q.y).toBe(-3);
+          expect(MathScript.tilde(z).x).toBe(2);
+          expect(MathScript.tilde(z).y).toBe(-3);
         });
       });
 

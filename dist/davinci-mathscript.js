@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.9.11'
+        VERSION: '0.9.12'
     };
     return core;
 });
@@ -7513,7 +7513,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         });
     }
     function bitwiseIOR(p, q) {
-        return binEval(p, q, '__or__', '__ror__', function (a, b) {
+        return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) {
             return a | b;
         });
     }

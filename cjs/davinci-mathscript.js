@@ -298,7 +298,7 @@ function mod(p, q) {
     });
 }
 function bitwiseIOR(p, q) {
-    return binEval(p, q, '__or__', '__ror__', function (a, b) {
+    return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) {
         return a | b;
     });
 }

@@ -265,7 +265,7 @@ function mul(p,q) {return binEval(p,q,'__mul__','__rmul__',function(a,b){return 
 function div(p,q) {return binEval(p,q,'__div__','__rdiv__',function(a,b){return a / b});}
 
 function mod(p,q) {return binEval(p,q,'__mod__','__rmod__',function(a,b){return a % b});}
-function bitwiseIOR(p,q) {return binEval(p,q,'__or__','__ror__',      function(a,b){return a | b});}
+function bitwiseIOR(p,q) {return binEval(p,q,'__vbar__', '__rvbar__', function(a,b){return a | b});}
 function bitwiseXOR(p,q) {return binEval(p,q,'__wedge__','__rwedge__',function(a,b){return a ^ b});}
 
 function lshift(p,q) {return binEval(p,q,'__lshift__','__rlshift__',function(a,b){return a << b});}

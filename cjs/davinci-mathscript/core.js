@@ -22,6 +22,6 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 var core = {
-    VERSION: '0.9.11'
+    VERSION: '0.9.12'
 };
 module.exports = core;

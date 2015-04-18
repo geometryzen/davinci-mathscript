@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.11</em>
+            <em>API Docs for: 0.9.12</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -377,7 +377,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         });
     }
     function bitwiseIOR(p, q) {
-        return binEval(p, q, &#x27;__or__&#x27;, &#x27;__ror__&#x27;, function (a, b) {
+        return binEval(p, q, &#x27;__vbar__&#x27;, &#x27;__rvbar__&#x27;, function (a, b) {
             return a | b;
         });
     }

@@ -13,20 +13,23 @@ import esutils = require('davinci-mathscript/esutils');
 // This should match the global namespace (in build.js).
 var MATHSCRIPT_NAMESPACE = "Ms";
 
-// We're not really interested in those operators do do with ordering because most
-// interesting mathematical types don't have an ordering relation.
+// We're not really interested in those operators to do with ordering because many
+// interesting mathematical structures don't have an ordering relation.
+// In the following table, the first string is the operator symbol and the second
+// string is the name of the function in the MATHSCRIPT_NAMESPACE.
 var binOp =
 {
-  '+':'add',
-  '-':'sub',
-  '*':'mul',
-  '/':'div',
-  '^':'wedge',
-  '<<':'lshift',
-  '>>':'rshift',
-  '%':'mod',
-  '===':'eq',
-  '!==':'ne'
+    '+'  :'add',
+    '-'  :'sub',
+    '*'  :'mul',
+    '/'  :'div',
+    '|'  :'vbar',
+    '^'  :'wedge',
+    '<<' :'lshift',
+    '>>' :'rshift',
+    '%'  :'mod',
+    '===':'eq',
+    '!==':'ne'
 };
 
 // The increment and decrement operators are problematic from a timing perspective.
@@ -260,26 +263,26 @@ function add(p,q) {return binEval(p,q,'__add__','__radd__',function(a,b){return 
 function sub(p,q) {return binEval(p,q,'__sub__','__rsub__',function(a,b){return a - b});}
 function mul(p,q) {return binEval(p,q,'__mul__','__rmul__',function(a,b){return a * b});}
 function div(p,q) {return binEval(p,q,'__div__','__rdiv__',function(a,b){return a / b});}
-function wedge(p,q) {return binEval(p,q,'__wedge__','__rwedge__',function(a,b){return a ^ b});}
+
+function mod(p,q) {return binEval(p,q,'__mod__','__rmod__',function(a,b){return a % b});}
+function bitwiseIOR(p,q) {return binEval(p,q,'__or__','__ror__',      function(a,b){return a | b});}
+function bitwiseXOR(p,q) {return binEval(p,q,'__wedge__','__rwedge__',function(a,b){return a ^ b});}
+
 function lshift(p,q) {return binEval(p,q,'__lshift__','__rlshift__',function(a,b){return a << b});}
 function rshift(p,q) {return binEval(p,q,'__rshift__','__rrshift__',function(a,b){return a >> b});}
-function mod(p,q) {return binEval(p,q,'__mod__','__rmod__',function(a,b){return a % b});}
 
 function eq(p,q) {return binEval(p,q,'__eq__','__req__',function(a,b){return a === b});}
 function ne(p,q) {return binEval(p,q,'__ne__','__rne__',function(a,b){return a !== b});}
 
-function exp<T>(x: T): T
-{
-  if (x['__exp__'])
-  {
-    return x['__exp__']();
-  }
-  else
-  {
-    var s: any = x;
-    var result: any = Math.exp(s);
-    return result;
-  }
+function exp<T>(x: T): T {
+    if (x['__exp__']) {
+        return x['__exp__']();
+    }
+    else {
+        var s: any = x;
+        var result: any = Math.exp(s);
+        return result;
+    }
 }
 
 function neg(x) {
@@ -322,23 +325,24 @@ var Ms = {
     parse: parse,
     transpile: transpile,
 
-    add: add,
-    sub: sub,
-    mul: mul,
-    div: div,
-    wedge: wedge,
+    add:    add,
+    sub:    sub,
+    mul:    mul,
+    div:    div,
+    vbar:   bitwiseIOR,
+    wedge:  bitwiseXOR,
     lshift: lshift,
     rshift: rshift,
-    mod: mod,
+    mod:    mod,
 
-    eq: eq,
-    ne: ne,
+    eq:     eq,
+    ne:     ne,
 
-    neg: neg,
-    pos: pos,
-    bang: bang,
-    tilde: tilde,
+    neg:    neg,
+    pos:    pos,
+    bang:   bang,
+    tilde:  tilde,
 
-    exp: exp
+    exp:    exp
 };
 export = Ms;

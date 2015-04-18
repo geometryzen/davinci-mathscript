@@ -6,6 +6,7 @@ declare var Ms: {
     sub: (p: any, q: any) => any;
     mul: (p: any, q: any) => any;
     div: (p: any, q: any) => any;
+    vbar: (p: any, q: any) => any;
     wedge: (p: any, q: any) => any;
     lshift: (p: any, q: any) => any;
     rshift: (p: any, q: any) => any;

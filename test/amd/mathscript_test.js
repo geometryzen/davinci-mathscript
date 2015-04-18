@@ -258,13 +258,13 @@ describe("MathScript", function() {
           expect(code).toBe("Ms.wedge(a, Ms.rshift(b, c));");
         });
 
-        it("a % b ^ c", function() {
-          var code = MathScript.transpile("a % b ^ c");
-          expect(code).toBe("Ms.wedge(Ms.mod(a, b), c);");
+        it("a | b ^ c", function() {
+          var code = MathScript.transpile("a | b ^ c");
+          expect(code).toBe("Ms.wedge(Ms.vbar(a, b), c);");
         });
-        it("a ^ b % c", function() {
-          var code = MathScript.transpile("a ^ b % c");
-          expect(code).toBe("Ms.wedge(a, Ms.mod(b, c));");
+        it("a ^ b | c", function() {
+          var code = MathScript.transpile("a ^ b | c");
+          expect(code).toBe("Ms.wedge(a, Ms.vbar(b, c));");
         });
 
         it("a ^ b * c", function() {

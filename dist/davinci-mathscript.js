@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.9.10'
+        VERSION: '0.9.11'
     };
     return core;
 });
@@ -2722,24 +2722,21 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
             case '&&':
                 prec = 2;
                 break;
-            case '|':
-                prec = 3;
-                break;
             case '&':
-                prec = 4;
+                prec = 3;
                 break;
             case '==':
             case '!=':
             case '===':
             case '!==':
-                prec = 5;
+                prec = 4;
                 break;
             case '<':
             case '>':
             case '<=':
             case '>=':
             case 'instanceof':
-                prec = 6;
+                prec = 5;
                 break;
             case 'in':
                 prec = allowIn ? 6 : 0;
@@ -2758,10 +2755,13 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
             case '^':
                 prec = 10;
                 break;
+            case '|':
+                prec = 11;
+                break;
             case '%':
             case '<<':
             case '>>':
-                prec = 11;
+                prec = 12;
                 break;
             default:
                 break;
@@ -7223,13 +7223,16 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
      */
     // This should match the global namespace (in build.js).
     var MATHSCRIPT_NAMESPACE = "Ms";
-    // We're not really interested in those operators do do with ordering because most
-    // interesting mathematical types don't have an ordering relation.
+    // We're not really interested in those operators to do with ordering because many
+    // interesting mathematical structures don't have an ordering relation.
+    // In the following table, the first string is the operator symbol and the second
+    // string is the name of the function in the MATHSCRIPT_NAMESPACE.
     var binOp = {
         '+': 'add',
         '-': 'sub',
         '*': 'mul',
         '/': 'div',
+        '|': 'vbar',
         '^': 'wedge',
         '<<': 'lshift',
         '>>': 'rshift',
@@ -7504,7 +7507,17 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
             return a / b;
         });
     }
-    function wedge(p, q) {
+    function mod(p, q) {
+        return binEval(p, q, '__mod__', '__rmod__', function (a, b) {
+            return a % b;
+        });
+    }
+    function bitwiseIOR(p, q) {
+        return binEval(p, q, '__or__', '__ror__', function (a, b) {
+            return a | b;
+        });
+    }
+    function bitwiseXOR(p, q) {
         return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) {
             return a ^ b;
         });
@@ -7517,11 +7530,6 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
     function rshift(p, q) {
         return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) {
             return a >> b;
-        });
-    }
-    function mod(p, q) {
-        return binEval(p, q, '__mod__', '__rmod__', function (a, b) {
-            return a % b;
         });
     }
     function eq(p, q) {
@@ -7584,7 +7592,8 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         sub: sub,
         mul: mul,
         div: div,
-        wedge: wedge,
+        vbar: bitwiseIOR,
+        wedge: bitwiseXOR,
         lshift: lshift,
         rshift: rshift,
         mod: mod,

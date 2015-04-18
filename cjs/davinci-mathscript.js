@@ -8,13 +8,16 @@ var escodegen = require('davinci-mathscript/escodegen');
  */
 // This should match the global namespace (in build.js).
 var MATHSCRIPT_NAMESPACE = "Ms";
-// We're not really interested in those operators do do with ordering because most
-// interesting mathematical types don't have an ordering relation.
+// We're not really interested in those operators to do with ordering because many
+// interesting mathematical structures don't have an ordering relation.
+// In the following table, the first string is the operator symbol and the second
+// string is the name of the function in the MATHSCRIPT_NAMESPACE.
 var binOp = {
     '+': 'add',
     '-': 'sub',
     '*': 'mul',
     '/': 'div',
+    '|': 'vbar',
     '^': 'wedge',
     '<<': 'lshift',
     '>>': 'rshift',
@@ -289,7 +292,17 @@ function div(p, q) {
         return a / b;
     });
 }
-function wedge(p, q) {
+function mod(p, q) {
+    return binEval(p, q, '__mod__', '__rmod__', function (a, b) {
+        return a % b;
+    });
+}
+function bitwiseIOR(p, q) {
+    return binEval(p, q, '__or__', '__ror__', function (a, b) {
+        return a | b;
+    });
+}
+function bitwiseXOR(p, q) {
     return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) {
         return a ^ b;
     });
@@ -302,11 +315,6 @@ function lshift(p, q) {
 function rshift(p, q) {
     return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) {
         return a >> b;
-    });
-}
-function mod(p, q) {
-    return binEval(p, q, '__mod__', '__rmod__', function (a, b) {
-        return a % b;
     });
 }
 function eq(p, q) {
@@ -369,7 +377,8 @@ var Ms = {
     sub: sub,
     mul: mul,
     div: div,
-    wedge: wedge,
+    vbar: bitwiseIOR,
+    wedge: bitwiseXOR,
     lshift: lshift,
     rshift: rshift,
     mod: mod,

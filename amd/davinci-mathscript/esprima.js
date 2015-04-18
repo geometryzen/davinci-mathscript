@@ -2257,24 +2257,21 @@ define(["require", "exports"], function (require, exports) {
             case '&&':
                 prec = 2;
                 break;
-            case '|':
-                prec = 3;
-                break;
             case '&':
-                prec = 4;
+                prec = 3;
                 break;
             case '==':
             case '!=':
             case '===':
             case '!==':
-                prec = 5;
+                prec = 4;
                 break;
             case '<':
             case '>':
             case '<=':
             case '>=':
             case 'instanceof':
-                prec = 6;
+                prec = 5;
                 break;
             case 'in':
                 prec = allowIn ? 6 : 0;
@@ -2293,10 +2290,13 @@ define(["require", "exports"], function (require, exports) {
             case '^':
                 prec = 10;
                 break;
+            case '|':
+                prec = 11;
+                break;
             case '%':
             case '<<':
             case '>>':
-                prec = 11;
+                prec = 12;
                 break;
             default:
                 break;

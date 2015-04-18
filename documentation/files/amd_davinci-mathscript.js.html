@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.10</em>
+            <em>API Docs for: 0.9.11</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -87,13 +87,16 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
      */
     // This should match the global namespace (in build.js).
     var MATHSCRIPT_NAMESPACE = &quot;Ms&quot;;
-    // We&#x27;re not really interested in those operators do do with ordering because most
-    // interesting mathematical types don&#x27;t have an ordering relation.
+    // We&#x27;re not really interested in those operators to do with ordering because many
+    // interesting mathematical structures don&#x27;t have an ordering relation.
+    // In the following table, the first string is the operator symbol and the second
+    // string is the name of the function in the MATHSCRIPT_NAMESPACE.
     var binOp = {
         &#x27;+&#x27;: &#x27;add&#x27;,
         &#x27;-&#x27;: &#x27;sub&#x27;,
         &#x27;*&#x27;: &#x27;mul&#x27;,
         &#x27;/&#x27;: &#x27;div&#x27;,
+        &#x27;|&#x27;: &#x27;vbar&#x27;,
         &#x27;^&#x27;: &#x27;wedge&#x27;,
         &#x27;&lt;&lt;&#x27;: &#x27;lshift&#x27;,
         &#x27;&gt;&gt;&#x27;: &#x27;rshift&#x27;,
@@ -368,7 +371,17 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
             return a / b;
         });
     }
-    function wedge(p, q) {
+    function mod(p, q) {
+        return binEval(p, q, &#x27;__mod__&#x27;, &#x27;__rmod__&#x27;, function (a, b) {
+            return a % b;
+        });
+    }
+    function bitwiseIOR(p, q) {
+        return binEval(p, q, &#x27;__or__&#x27;, &#x27;__ror__&#x27;, function (a, b) {
+            return a | b;
+        });
+    }
+    function bitwiseXOR(p, q) {
         return binEval(p, q, &#x27;__wedge__&#x27;, &#x27;__rwedge__&#x27;, function (a, b) {
             return a ^ b;
         });
@@ -381,11 +394,6 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
     function rshift(p, q) {
         return binEval(p, q, &#x27;__rshift__&#x27;, &#x27;__rrshift__&#x27;, function (a, b) {
             return a &gt;&gt; b;
-        });
-    }
-    function mod(p, q) {
-        return binEval(p, q, &#x27;__mod__&#x27;, &#x27;__rmod__&#x27;, function (a, b) {
-            return a % b;
         });
     }
     function eq(p, q) {
@@ -448,7 +456,8 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         sub: sub,
         mul: mul,
         div: div,
-        wedge: wedge,
+        vbar: bitwiseIOR,
+        wedge: bitwiseXOR,
         lshift: lshift,
         rshift: rshift,
         mod: mod,

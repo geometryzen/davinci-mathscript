@@ -139,6 +139,11 @@ function visit(node) {
         node['arguments'].forEach(function(argument, index) { visit(argument); });
       }
       break;
+      case 'CatchClause': {
+        visit(node.param);
+        visit(node.body);
+      }
+      break;
       case 'FunctionExpression': {
         visit(node.body);
       }
@@ -162,6 +167,13 @@ function visit(node) {
       break;
       case 'SequenceExpression': {
         node['expressions'].forEach(function(expr, index) { visit(expr); });
+      }
+      break;
+      case 'TryStatement': {
+        visit(node.block);
+        node['guardedHandlers'].forEach(function(guardedHandler, index) { visit(guardedHandler); });
+        node['handlers'].forEach(function(handler, index) { visit(handler); });
+        visit(node.finalizer);
       }
       break;
       case 'UnaryExpression': {

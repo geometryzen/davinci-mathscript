@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '0.9.12'
+        VERSION: '1.0.0'
     };
     return core;
 });
@@ -7359,6 +7359,12 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                         });
                     }
                     break;
+                case 'CatchClause':
+                    {
+                        visit(node.param);
+                        visit(node.body);
+                    }
+                    break;
                 case 'FunctionExpression':
                     {
                         visit(node.body);
@@ -7394,6 +7400,18 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                         node['expressions'].forEach(function (expr, index) {
                             visit(expr);
                         });
+                    }
+                    break;
+                case 'TryStatement':
+                    {
+                        visit(node.block);
+                        node['guardedHandlers'].forEach(function (guardedHandler, index) {
+                            visit(guardedHandler);
+                        });
+                        node['handlers'].forEach(function (handler, index) {
+                            visit(handler);
+                        });
+                        visit(node.finalizer);
                     }
                     break;
                 case 'UnaryExpression':

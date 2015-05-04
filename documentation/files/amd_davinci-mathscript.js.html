@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.9.12</em>
+            <em>API Docs for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -223,6 +223,12 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                         });
                     }
                     break;
+                case &#x27;CatchClause&#x27;:
+                    {
+                        visit(node.param);
+                        visit(node.body);
+                    }
+                    break;
                 case &#x27;FunctionExpression&#x27;:
                     {
                         visit(node.body);
@@ -258,6 +264,18 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                         node[&#x27;expressions&#x27;].forEach(function (expr, index) {
                             visit(expr);
                         });
+                    }
+                    break;
+                case &#x27;TryStatement&#x27;:
+                    {
+                        visit(node.block);
+                        node[&#x27;guardedHandlers&#x27;].forEach(function (guardedHandler, index) {
+                            visit(guardedHandler);
+                        });
+                        node[&#x27;handlers&#x27;].forEach(function (handler, index) {
+                            visit(handler);
+                        });
+                        visit(node.finalizer);
                     }
                     break;
                 case &#x27;UnaryExpression&#x27;:

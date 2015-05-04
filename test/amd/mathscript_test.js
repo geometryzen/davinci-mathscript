@@ -307,6 +307,18 @@ describe("MathScript", function() {
         var code = MathScript.transpile("(function() {var x;x=new Foo();z=x+y;}.call(this));");
         expect(stripWS(code)).toBe("(function () {var x;x = new Foo();z = Ms.add(x, y); }.call(this));");
       });
+      it("TryStatement (1)", function() {
+        var code = MathScript.transpile("try {var a=b+c;} catch (e) { }");
+        expect(stripWS(code)).toBe("try {var a = Ms.add(b, c); } catch (e) { }");
+      });
+      it("TryStatement (2)", function() {
+        var code = MathScript.transpile("try { } catch (e) {var x=y+z;}");
+        expect(stripWS(code)).toBe("try { } catch (e) {var x = Ms.add(y, z); }");
+      });
+      it("TryStatement (3)", function() {
+        var code = MathScript.transpile("try {} catch (e) { } finally {var a=b+c;}");
+        expect(stripWS(code)).toBe("try { } catch (e) { } finally {var a = Ms.add(b, c); }");
+      });
       it("ReturnStatement", function() {
         var code = stripWS(MathScript.transpile("function f(x) {return x + 1;}"));
         expect(stripWS(code)).toBe("function f(x) {return Ms.add(x, 1); }");

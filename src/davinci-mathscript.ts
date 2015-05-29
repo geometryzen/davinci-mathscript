@@ -75,6 +75,12 @@ function visit(node) {
         }
       }
       break;
+      case 'ConditionalExpression': {
+        visit(node.test);
+        visit(node.consequent);
+        visit(node.alternate);
+      }
+      break;
       case 'BinaryExpression':
       case 'LogicalExpression':
       {

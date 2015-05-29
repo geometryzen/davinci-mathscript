@@ -201,6 +201,13 @@ describe("MathScript", function() {
         });
       });
 
+      describe("ConditionalExpression", function() {
+        it("", function() {
+          var code = MathScript.transpile("hex.length === 1 ? '0' + hex : '' + hex;");
+          expect(stripWS(code)).toBe("Ms.eq(hex.length, 1) ? Ms.add('0', hex) : Ms.add('', hex);");
+        });
+      });
+
       describe("ForStatement", function() {
         it("Basic", function() {
           var src = "for (var x=0; x<10;x++) {z=x+1}"

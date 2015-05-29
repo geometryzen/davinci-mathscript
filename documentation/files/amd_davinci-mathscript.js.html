@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.0</em>
+            <em>API Docs for: 1.0.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -153,6 +153,13 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                         if (node.init) {
                             visit(node.init);
                         }
+                    }
+                    break;
+                case &#x27;ConditionalExpression&#x27;:
+                    {
+                        visit(node.test);
+                        visit(node.consequent);
+                        visit(node.alternate);
                     }
                     break;
                 case &#x27;BinaryExpression&#x27;:

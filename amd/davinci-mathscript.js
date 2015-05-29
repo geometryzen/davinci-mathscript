@@ -74,6 +74,13 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                         }
                     }
                     break;
+                case 'ConditionalExpression':
+                    {
+                        visit(node.test);
+                        visit(node.consequent);
+                        visit(node.alternate);
+                    }
+                    break;
                 case 'BinaryExpression':
                 case 'LogicalExpression':
                     {

@@ -252,15 +252,22 @@ function visit(node) {
   }
 }
 
+/**
+ * Determines whether a property name is callable on an object.
+ */
+function specialMethod(x, name: string) {
+  return typeof x === 'object' && typeof x[name] === 'function';
+}
+
 function binEval(lhs, rhs, lprop: string, rprop: string, fallback) {
   var result;
-  if (lhs[lprop]) {
+  if (specialMethod(lhs, lprop)) {
     result = lhs[lprop](rhs);
     if (typeof result !== 'undefined') {
       return result;
     }
     else {
-      if (rhs[rprop]) {
+      if (specialMethod(rhs, rprop)) {
         result = rhs[rprop](lhs);
         if (typeof result !== 'undefined') {
           return result;
@@ -268,7 +275,7 @@ function binEval(lhs, rhs, lprop: string, rprop: string, fallback) {
       }
     }
   }
-  else if (rhs[rprop]) {
+  else if (specialMethod(rhs, rprop)) {
     result = rhs[rprop](lhs);
     if (typeof result !== 'undefined') {
       return result;
@@ -293,18 +300,18 @@ function eq(p,q) {return binEval(p,q,'__eq__','__req__',function(a,b){return a =
 function ne(p,q) {return binEval(p,q,'__ne__','__rne__',function(a,b){return a !== b});}
 
 function exp<T>(x: T): T {
-    if (x['__exp__']) {
-        return x['__exp__']();
-    }
-    else {
-        var s: any = x;
-        var result: any = Math.exp(s);
-        return result;
-    }
+  if (specialMethod(x, '__exp__')) {
+    return x['__exp__']();
+  }
+  else {
+    var s: any = x;
+    var result: any = Math.exp(s);
+    return result;
+  }
 }
 
 function neg(x) {
-  if (x['__neg__']) {
+  if (specialMethod(x, '__neg__')) {
     return x['__neg__']();
   }
   else {
@@ -313,7 +320,7 @@ function neg(x) {
 }
 
 function pos(x) {
-  if (x['__pos__']) {
+  if (specialMethod(x, '__pos__')) {
     return x['__pos__']();
   }
   else {
@@ -322,7 +329,7 @@ function pos(x) {
 }
 
 function bang(x) {
-  if (x['__bang__']) {
+  if (specialMethod(x, '__bang__')) {
     return x['__bang__']();
   }
   else {
@@ -331,7 +338,7 @@ function bang(x) {
 }
 
 function tilde(x) {
-  if (x['__tilde__']) {
+  if (specialMethod(x, '__tilde__')) {
     return x['__tilde__']();
   }
   else {

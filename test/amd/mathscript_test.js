@@ -108,6 +108,21 @@ describe("MathScript", function() {
       }
     }
 
+    Complex.prototype.__eq__ = function(other) {
+      if (other instanceof Complex) {
+        return this.x === other.x && this.y === other.y;
+      }
+      else if (typeof other === 'number') {
+        return this.x === other && this.y === 0;
+      }
+      else if (other instanceof Scalar) {
+        return this.x === other.s && this.y === 0;
+      }
+      else {
+        return;
+      }
+    }
+
     Complex.prototype.__pos__ = function() {
       return this;
     }
@@ -355,8 +370,10 @@ describe("MathScript", function() {
     describe("Runtime", function() {
       describe("add", function() {
         it("add(number,number);", function() {
-          var sum = MathScript.add(2,3);
-          expect(sum).toBe(5);
+          var a = 2;
+          var b = 3;
+          var sum = MathScript.add(a, b);
+          expect(sum).toBe(a + b);
         });
         it("add(Complex,Complex);", function() {
           var a = new Complex(2,3);
@@ -680,9 +697,49 @@ describe("MathScript", function() {
         });
       });
 
+      describe("eq", function() {
+        it("eq(number,number);", function() {
+          var a = 2;
+          var b = 3;
+          var sum = MathScript.eq(a, b);
+          expect(sum).toBe(a === b);
+        });
+        it("eq(undefined,number);", function() {
+          var a = undefined;
+          var b = 3;
+          var sum = MathScript.eq(a, b);
+          expect(sum).toBe(a === b);
+        });
+        it("eq(number, undefined);", function() {
+          var a = 2;
+          var b = undefined;
+          var sum = MathScript.eq(a, b);
+          expect(sum).toBe(a === b);
+        });
+        it("eq(Complex,Complex);", function() {
+          var a = new Complex(2,3);
+          var b = new Complex(5,7);
+          var c = a.__eq__(b);
+          var same = MathScript.eq(a,b);
+          expect(c).toBe(false);
+          expect(same).toBe(false);
+        });
+        it("eq(Complex,undefined);", function() {
+          var a = new Complex(2,3);
+          var b = undefined;
+          var c = a.__eq__(b);
+          var same = MathScript.eq(a,b);
+          expect(c).toBe(undefined);
+          expect(same).toBe(false);
+        });
+      });
+
       describe("neg", function(){
         it("neg(number);", function() {
           expect(MathScript.neg(2)).toBe(-2);
+        });
+        it("neg(undefined);", function() {
+          expect(MathScript.neg(undefined)).toBeNaN();
         });
         it("neg(Complex);", function() {
           var z = new Complex(2,3);
@@ -697,6 +754,9 @@ describe("MathScript", function() {
       describe("pos", function(){
         it("pos(number);", function() {
           expect(MathScript.pos(2)).toBe(2);
+        });
+        it("pos(undefined);", function() {
+          expect(MathScript.pos(undefined)).toBeNaN();
         });
         it("pos(Complex);", function() {
           var z = new Complex(2,3);

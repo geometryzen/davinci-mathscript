@@ -271,15 +271,21 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
             return;
         }
     }
+    /**
+     * Determines whether a property name is callable on an object.
+     */
+    function specialMethod(x, name) {
+        return typeof x === 'object' && typeof x[name] === 'function';
+    }
     function binEval(lhs, rhs, lprop, rprop, fallback) {
         var result;
-        if (lhs[lprop]) {
+        if (specialMethod(lhs, lprop)) {
             result = lhs[lprop](rhs);
             if (typeof result !== 'undefined') {
                 return result;
             }
             else {
-                if (rhs[rprop]) {
+                if (specialMethod(rhs, rprop)) {
                     result = rhs[rprop](lhs);
                     if (typeof result !== 'undefined') {
                         return result;
@@ -287,7 +293,7 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                 }
             }
         }
-        else if (rhs[rprop]) {
+        else if (specialMethod(rhs, rprop)) {
             result = rhs[rprop](lhs);
             if (typeof result !== 'undefined') {
                 return result;
@@ -351,7 +357,7 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
         });
     }
     function exp(x) {
-        if (x['__exp__']) {
+        if (specialMethod(x, '__exp__')) {
             return x['__exp__']();
         }
         else {
@@ -361,7 +367,7 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
         }
     }
     function neg(x) {
-        if (x['__neg__']) {
+        if (specialMethod(x, '__neg__')) {
             return x['__neg__']();
         }
         else {
@@ -369,7 +375,7 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
         }
     }
     function pos(x) {
-        if (x['__pos__']) {
+        if (specialMethod(x, '__pos__')) {
             return x['__pos__']();
         }
         else {
@@ -377,7 +383,7 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
         }
     }
     function bang(x) {
-        if (x['__bang__']) {
+        if (specialMethod(x, '__bang__')) {
             return x['__bang__']();
         }
         else {
@@ -385,7 +391,7 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
         }
     }
     function tilde(x) {
-        if (x['__tilde__']) {
+        if (specialMethod(x, '__tilde__')) {
             return x['__tilde__']();
         }
         else {

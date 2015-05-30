@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '1.0.1'
+        VERSION: '1.0.2'
     };
     return core;
 });
@@ -7488,15 +7488,21 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
             return;
         }
     }
+    /**
+     * Determines whether a property name is callable on an object.
+     */
+    function specialMethod(x, name) {
+        return typeof x === 'object' && typeof x[name] === 'function';
+    }
     function binEval(lhs, rhs, lprop, rprop, fallback) {
         var result;
-        if (lhs[lprop]) {
+        if (specialMethod(lhs, lprop)) {
             result = lhs[lprop](rhs);
             if (typeof result !== 'undefined') {
                 return result;
             }
             else {
-                if (rhs[rprop]) {
+                if (specialMethod(rhs, rprop)) {
                     result = rhs[rprop](lhs);
                     if (typeof result !== 'undefined') {
                         return result;
@@ -7504,7 +7510,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                 }
             }
         }
-        else if (rhs[rprop]) {
+        else if (specialMethod(rhs, rprop)) {
             result = rhs[rprop](lhs);
             if (typeof result !== 'undefined') {
                 return result;
@@ -7568,7 +7574,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         });
     }
     function exp(x) {
-        if (x['__exp__']) {
+        if (specialMethod(x, '__exp__')) {
             return x['__exp__']();
         }
         else {
@@ -7578,7 +7584,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         }
     }
     function neg(x) {
-        if (x['__neg__']) {
+        if (specialMethod(x, '__neg__')) {
             return x['__neg__']();
         }
         else {
@@ -7586,7 +7592,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         }
     }
     function pos(x) {
-        if (x['__pos__']) {
+        if (specialMethod(x, '__pos__')) {
             return x['__pos__']();
         }
         else {
@@ -7594,7 +7600,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         }
     }
     function bang(x) {
-        if (x['__bang__']) {
+        if (specialMethod(x, '__bang__')) {
             return x['__bang__']();
         }
         else {
@@ -7602,7 +7608,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         }
     }
     function tilde(x) {
-        if (x['__tilde__']) {
+        if (specialMethod(x, '__tilde__')) {
             return x['__tilde__']();
         }
         else {

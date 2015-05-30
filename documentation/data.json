@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-mathscript",
         "description": "MathScript transcompiler to JavaScript.",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -65,6 +65,13 @@
             "description": "Quietly expect a comma when in tolerant mode, otherwise delegates\nto <code>expect(value)</code>",
             "since": "2.0",
             "class": ""
+        },
+        {
+            "file": "amd/davinci-mathscript.js",
+            "line": 274,
+            "description": "Determines whether a property name is callable on an object.",
+            "class": "",
+            "module": "mathscript"
         }
     ],
     "warnings": [
@@ -83,6 +90,10 @@
         {
             "message": "Missing item type\nQuietly expect a comma when in tolerant mode, otherwise delegates\nto <code>expect(value)</code>",
             "line": " amd/davinci-mathscript/esprima.js:1804"
+        },
+        {
+            "message": "Missing item type\nDetermines whether a property name is callable on an object.",
+            "line": " amd/davinci-mathscript.js:274"
         }
     ]
 }

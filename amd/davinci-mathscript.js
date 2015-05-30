@@ -282,7 +282,7 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
      * Determines whether a property name is callable on an object.
      */
     function specialMethod(x, name) {
-        return typeof x === 'object' && typeof x[name] === 'function';
+        return (x !== null) && (typeof x === 'object') && (typeof x[name] === 'function');
     }
     function binEval(lhs, rhs, lprop, rprop, fallback) {
         var result;

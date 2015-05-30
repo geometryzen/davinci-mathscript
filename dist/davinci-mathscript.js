@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '1.0.3'
+        VERSION: '1.0.4'
     };
     return core;
 });
@@ -7499,7 +7499,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
      * Determines whether a property name is callable on an object.
      */
     function specialMethod(x, name) {
-        return typeof x === 'object' && typeof x[name] === 'function';
+        return (x !== null) && (typeof x === 'object') && (typeof x[name] === 'function');
     }
     function binEval(lhs, rhs, lprop, rprop, fallback) {
         var result;

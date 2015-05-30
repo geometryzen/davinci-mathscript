@@ -123,6 +123,21 @@ describe("MathScript", function() {
       }
     }
 
+    Complex.prototype.__ne__ = function(other) {
+      if (other instanceof Complex) {
+        return this.x !== other.x || this.y !== other.y;
+      }
+      else if (typeof other === 'number') {
+        return this.x !== other || this.y !== 0;
+      }
+      else if (other instanceof Scalar) {
+        return this.x !== other.s || this.y !== 0;
+      }
+      else {
+        return;
+      }
+    }
+
     Complex.prototype.__pos__ = function() {
       return this;
     }
@@ -738,6 +753,55 @@ describe("MathScript", function() {
           var same = MathScript.eq(a,b);
           expect(c).toBe(undefined);
           expect(same).toBe(false);
+        });
+      });
+
+      describe("ne", function() {
+        it("ne(number,number);", function() {
+          var a = 2;
+          var b = 3;
+          var sum = MathScript.ne(a, b);
+          expect(sum).toBe(a !== b);
+        });
+        it("ne(undefined,number);", function() {
+          var a = undefined;
+          var b = 3;
+          var sum = MathScript.ne(a, b);
+          expect(sum).toBe(a !== b);
+        });
+        it("ne(number, undefined);", function() {
+          var a = 2;
+          var b = undefined;
+          var sum = MathScript.ne(a, b);
+          expect(sum).toBe(a !== b);
+        });
+        it("ne(null,number);", function() {
+          var a = null;
+          var b = 3;
+          var sum = MathScript.ne(a, b);
+          expect(sum).toBe(a !== b);
+        });
+        it("ne(number, null);", function() {
+          var a = 2;
+          var b = null;
+          var sum = MathScript.ne(a, b);
+          expect(sum).toBe(a !== b);
+        });
+        it("ne(Complex,Complex);", function() {
+          var a = new Complex(2,3);
+          var b = new Complex(5,7);
+          var c = a.__ne__(b);
+          var diff = MathScript.ne(a,b);
+          expect(c).toBe(true);
+          expect(diff).toBe(true);
+        });
+        it("ne(Complex,undefined);", function() {
+          var a = new Complex(2,3);
+          var b = undefined;
+          var c = a.__ne__(b);
+          var diff = MathScript.ne(a,b);
+          expect(c).toBe(undefined);
+          expect(diff).toBe(true);
         });
       });
 

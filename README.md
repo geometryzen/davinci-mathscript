@@ -47,6 +47,7 @@ Make your changes to the TypeScript files in the _src_ directory. Do not edit th
 * 1.0.1: ConditionalExpression
 * 1.0.2: Special Method undefined
 * 1.0.3: ForInStatement
+* 1.0.4: Special Method null
 
 ## License
 Copyright (c) 2014-2015 David Holmes  

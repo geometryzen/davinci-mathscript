@@ -115,6 +115,13 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                         visit(node.body);
                     }
                     break;
+                case 'ForInStatement':
+                    {
+                        visit(node.left);
+                        visit(node.right);
+                        visit(node.body);
+                    }
+                    break;
                 case 'IfStatement':
                     {
                         visit(node.test);

@@ -223,6 +223,13 @@ describe("MathScript", function() {
         });
       });
 
+      describe("ForInStatement", function() {
+        it("", function() {
+          var code = MathScript.transpile("for (var x in a + b) {x + y}");
+          expect(stripWS(code)).toBe("for (var x in Ms.add(a, b)) {Ms.add(x, y); }");
+        });
+      });
+
       describe("ForStatement", function() {
         it("Basic", function() {
           var src = "for (var x=0; x<10;x++) {z=x+1}"

@@ -116,6 +116,12 @@ function visit(node) {
         visit(node.body);
       }
       break;
+      case 'ForInStatement': {
+        visit(node.left);
+        visit(node.right);
+        visit(node.body);
+      }
+      break;
       case 'IfStatement': {
         visit(node.test);
         visit(node.consequent);

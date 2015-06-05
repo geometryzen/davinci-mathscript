@@ -351,6 +351,10 @@ describe("MathScript", function() {
         var code = MathScript.transpile("(function() {var x;x=new Foo();z=x+y;}.call(this));");
         expect(stripWS(code)).toBe("(function () {var x;x = new Foo();z = Ms.add(x, y); }.call(this));");
       });
+      it("ThrowStatement", function() {
+        var code = MathScript.transpile("throw new Error(a + b);");
+        expect(stripWS(code)).toBe("throw new Error(Ms.add(a, b));");
+      });
       it("TryStatement (1)", function() {
         var code = MathScript.transpile("try {var a=b+c;} catch (e) { }");
         expect(stripWS(code)).toBe("try {var a = Ms.add(b, c); } catch (e) { }");

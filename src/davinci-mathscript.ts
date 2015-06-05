@@ -181,6 +181,10 @@ function visit(node) {
         node['expressions'].forEach(function(expr, index) { visit(expr); });
       }
       break;
+      case 'ThrowStatement': {
+        visit(node.argument);
+      }
+      break;
       case 'TryStatement': {
         visit(node.block);
         node['guardedHandlers'].forEach(function(guardedHandler, index) { visit(guardedHandler); });

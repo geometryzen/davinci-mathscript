@@ -199,6 +199,11 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                         });
                     }
                     break;
+                case 'ThrowStatement':
+                    {
+                        visit(node.argument);
+                    }
+                    break;
                 case 'TryStatement':
                     {
                         visit(node.block);

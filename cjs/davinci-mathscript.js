@@ -201,6 +201,11 @@ function visit(node) {
                     });
                 }
                 break;
+            case 'ThrowStatement':
+                {
+                    visit(node.argument);
+                }
+                break;
             case 'TryStatement':
                 {
                     visit(node.block);

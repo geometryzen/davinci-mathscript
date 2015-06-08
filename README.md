@@ -49,6 +49,7 @@ Make your changes to the TypeScript files in the _src_ directory. Do not edit th
 * 1.0.3: ForInStatement
 * 1.0.4: Special Method null
 * 1.0.5: ThrowStatement
+* 1.0.6: Property
 
 ## License
 Copyright (c) 2014-2015 David Holmes  

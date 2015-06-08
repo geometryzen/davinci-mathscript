@@ -346,7 +346,10 @@ describe("MathScript", function() {
         var code = MathScript.transpile("function f(x) {return x + 1;}");
         expect(stripWS(code)).toBe("function f(x) {return Ms.add(x, 1); }");
       });
-
+      it("Property", function() {
+        var code = MathScript.transpile("var x = {expr: function(){var c = a + b}};");
+        expect(stripWS(code)).toBe("var x = {expr: function () {var c = Ms.add(a, b);} };");
+      });
       it("ThisExpression", function() {
         var code = MathScript.transpile("(function() {var x;x=new Foo();z=x+y;}.call(this));");
         expect(stripWS(code)).toBe("(function () {var x;x = new Foo();z = Ms.add(x, y); }.call(this));");

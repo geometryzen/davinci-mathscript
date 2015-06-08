@@ -269,6 +269,7 @@ function visit(node) {
             case 'Property':
                 {
                     visit(node.key);
+                    visit(node.value);
                 }
                 break;
             case 'Literal':
@@ -277,7 +278,7 @@ function visit(node) {
             case 'DebuggerStatement':
                 break;
             default: {
-                console.log(JSON.stringify(node));
+                console.log(JSON.stringify(node, null, 2));
             }
         }
     }

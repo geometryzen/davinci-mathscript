@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.5</em>
+            <em>API Docs for: 1.0.6</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -348,6 +348,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 case &#x27;Property&#x27;:
                     {
                         visit(node.key);
+                        visit(node.value);
                     }
                     break;
                 case &#x27;Literal&#x27;:
@@ -356,7 +357,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 case &#x27;DebuggerStatement&#x27;:
                     break;
                 default: {
-                    console.log(JSON.stringify(node));
+                    console.log(JSON.stringify(node, null, 2));
                 }
             }
         }

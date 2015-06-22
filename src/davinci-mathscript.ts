@@ -181,6 +181,16 @@ function visit(node) {
         node['expressions'].forEach(function(expr, index) { visit(expr); });
       }
       break;
+      case 'SwitchCase': {
+        visit(node.test);
+        node['consequent'].forEach(function(expr, index) { visit(expr); });
+      }
+      break;
+      case 'SwitchStatement': {
+        visit(node.discriminant);
+        node['cases'].forEach(function(kase, index) { visit(kase); });
+      }
+      break;
       case 'ThrowStatement': {
         visit(node.argument);
       }
@@ -248,6 +258,7 @@ function visit(node) {
         visit(node.value);
       }
       break;
+      case 'EmptyStatement':
       case 'Literal':
       case 'Identifier':
       case 'ThisExpression':

@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.6</em>
+            <em>API Docs for: 1.0.7</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -280,6 +280,22 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                         });
                     }
                     break;
+                case &#x27;SwitchCase&#x27;:
+                    {
+                        visit(node.test);
+                        node[&#x27;consequent&#x27;].forEach(function (expr, index) {
+                            visit(expr);
+                        });
+                    }
+                    break;
+                case &#x27;SwitchStatement&#x27;:
+                    {
+                        visit(node.discriminant);
+                        node[&#x27;cases&#x27;].forEach(function (kase, index) {
+                            visit(kase);
+                        });
+                    }
+                    break;
                 case &#x27;ThrowStatement&#x27;:
                     {
                         visit(node.argument);
@@ -351,6 +367,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                         visit(node.value);
                     }
                     break;
+                case &#x27;EmptyStatement&#x27;:
                 case &#x27;Literal&#x27;:
                 case &#x27;Identifier&#x27;:
                 case &#x27;ThisExpression&#x27;:

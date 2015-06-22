@@ -337,6 +337,11 @@ describe("MathScript", function() {
         });
       });
 
+      it("EmptyStatement ';;'", function() {
+        var code = MathScript.transpile("; ;");
+        expect(stripWS(code)).toBe("; ;");
+      });
+
       it("IfStatement", function() {
         var code = MathScript.transpile("if (1+2)\n    2+3\nelse\n    3+4");
         expect(stripWS(code)).toBe("if (Ms.add(1, 2))Ms.add(2, 3); elseMs.add(3, 4);");
@@ -353,6 +358,10 @@ describe("MathScript", function() {
       it("ThisExpression", function() {
         var code = MathScript.transpile("(function() {var x;x=new Foo();z=x+y;}.call(this));");
         expect(stripWS(code)).toBe("(function () {var x;x = new Foo();z = Ms.add(x, y); }.call(this));");
+      });
+      it("SwitchStatement", function() {
+        var code = MathScript.transpile("switch (a+b) {case p+q: {r+s} default: {x+y}}");
+        expect(stripWS(code)).toBe("switch (Ms.add(a, b)) { case Ms.add(p, q): {Ms.add(r, s);} default: {Ms.add(x, y);} }");
       });
       it("ThrowStatement", function() {
         var code = MathScript.transpile("throw new Error(a + b);");

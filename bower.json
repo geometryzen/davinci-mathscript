@@ -1,6 +1,6 @@
 {
   "name": "davinci-mathscript",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "MathScript transcompiler to JavaScript.",
   "author": {
     "name": "David Holmes",

@@ -286,6 +286,7 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                         visit(node.value);
                     }
                     break;
+                case 'BreakStatement':
                 case 'EmptyStatement':
                 case 'Literal':
                 case 'Identifier':

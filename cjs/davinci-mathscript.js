@@ -288,6 +288,7 @@ function visit(node) {
                     visit(node.value);
                 }
                 break;
+            case 'BreakStatement':
             case 'EmptyStatement':
             case 'Literal':
             case 'Identifier':

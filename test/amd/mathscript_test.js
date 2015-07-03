@@ -330,8 +330,16 @@ describe("MathScript", function() {
         });
       });
 
+      describe("BreakStatement", function() {
+        it("should be preserved", function() {
+          var sourceCode = "switch (x) { case 1: {}break; }";
+          var code = MathScript.transpile(sourceCode);
+          expect(stripWS(code)).toBe(sourceCode);
+        });
+      });
+
       describe("CallExpression", function() {
-        it("Arguments", function() {
+        it("should transpile its arguments", function() {
           var code = MathScript.transpile("f(2+3)");
           expect(code).toBe("f(Ms.add(2, 3));");
         });

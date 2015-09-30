@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-mathscript",
         "description": "MathScript transcompiler to JavaScript.",
-        "version": "1.0.9",
+        "version": "1.0.10",
         "url": "",
         "logo": "../assets/logo.png"
     },

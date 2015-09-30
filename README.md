@@ -43,16 +43,17 @@ to compile the source using the TypeScript compiler (For this you need to have [
 Make your changes to the TypeScript files in the _src_ directory. Do not edit the files in the _dist_ directory, these files will be generated.
 
 ## Release History
-* 1.0.0: Initial release.
-* 1.0.1: ConditionalExpression
-* 1.0.2: Special Method undefined
-* 1.0.3: ForInStatement
-* 1.0.4: Special Method null
-* 1.0.5: ThrowStatement
-* 1.0.6: Property
-* 1.0.7: SwitchStatement
-* 1.0.8: BreakStatement
-* 1.0.9: WhileStatement
+* 1.0.0:  Initial release.
+* 1.0.1:  ConditionalExpression
+* 1.0.2:  Special Method undefined
+* 1.0.3:  ForInStatement
+* 1.0.4:  Special Method null
+* 1.0.5:  ThrowStatement
+* 1.0.6:  Property
+* 1.0.7:  SwitchStatement
+* 1.0.8:  BreakStatement
+* 1.0.9:  WhileStatement
+* 1.0.10: Bower update
 
 ## License
 Copyright (c) 2014-2015 David Holmes  

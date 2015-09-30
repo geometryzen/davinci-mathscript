@@ -258,6 +258,11 @@ function visit(node) {
         visit(node.value);
       }
       break;
+      case 'WhileStatement': {
+        visit(node.test);
+        visit(node.body);
+      }
+      break;
       case 'BreakStatement':
       case 'EmptyStatement':
       case 'Literal':

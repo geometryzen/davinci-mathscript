@@ -286,6 +286,12 @@ define(["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esp
                         visit(node.value);
                     }
                     break;
+                case 'WhileStatement':
+                    {
+                        visit(node.test);
+                        visit(node.body);
+                    }
+                    break;
                 case 'BreakStatement':
                 case 'EmptyStatement':
                 case 'Literal':

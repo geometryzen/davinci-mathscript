@@ -411,6 +411,10 @@ describe("MathScript", function() {
         var code = MathScript.transpile("var x = eight.vectorE3(1, 0, 0); var y = eight.vectorE3(0, 2, 0); console.log(x+y);");
         expect(stripWS(code)).toBe("var x = eight.vectorE3(1, 0, 0); var y = eight.vectorE3(0, 2, 0); console.log(Ms.add(x, y));");
       });
+      it("WhileStatement", function() {
+        var code = MathScript.transpile("while (a + b) {z = x * y; }");
+        expect(stripWS(code)).toBe("while (Ms.add(a, b)) {z = Ms.mul(x, y); }");
+      });
     });
 
     describe("Runtime", function() {

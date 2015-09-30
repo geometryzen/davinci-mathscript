@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.8</em>
+            <em>API Docs for: 1.0.9</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -365,6 +365,12 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     {
                         visit(node.key);
                         visit(node.value);
+                    }
+                    break;
+                case &#x27;WhileStatement&#x27;:
+                    {
+                        visit(node.test);
+                        visit(node.body);
                     }
                     break;
                 case &#x27;BreakStatement&#x27;:

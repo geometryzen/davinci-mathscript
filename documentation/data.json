@@ -2,7 +2,7 @@
     "project": {
         "name": "davinci-mathscript",
         "description": "MathScript transcompiler to JavaScript.",
-        "version": "1.0.8",
+        "version": "1.0.9",
         "url": "",
         "logo": "../assets/logo.png"
     },
@@ -68,7 +68,7 @@
         },
         {
             "file": "amd/davinci-mathscript.js",
-            "line": 305,
+            "line": 311,
             "description": "Determines whether a property name is callable on an object.",
             "class": "",
             "module": "mathscript"
@@ -93,7 +93,7 @@
         },
         {
             "message": "Missing item type\nDetermines whether a property name is callable on an object.",
-            "line": " amd/davinci-mathscript.js:305"
+            "line": " amd/davinci-mathscript.js:311"
         }
     ]
 }

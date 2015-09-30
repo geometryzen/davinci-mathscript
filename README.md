@@ -52,6 +52,7 @@ Make your changes to the TypeScript files in the _src_ directory. Do not edit th
 * 1.0.6: Property
 * 1.0.7: SwitchStatement
 * 1.0.8: BreakStatement
+* 1.0.9: WhileStatement
 
 ## License
 Copyright (c) 2014-2015 David Holmes  

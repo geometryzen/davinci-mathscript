@@ -458,7 +458,7 @@ define("../vendor/almond/almond", function(){});
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
     var core = {
-        VERSION: '1.0.10'
+        VERSION: '1.0.11'
     };
     return core;
 });
@@ -7241,7 +7241,12 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         '!==': 'ne'
     };
     // The increment and decrement operators are problematic from a timing perspective.
-    var unaryOp = { '+': 'pos', '-': 'neg', '!': 'bang', '~': 'tilde' /*,'++':'increment','--':'decrement'*/ };
+    var unaryOp = {
+        '+': 'pos',
+        '-': 'neg',
+        '!': 'bang',
+        '~': 'tilde' /*,'++':'increment','--':'decrement'*/
+    };
     function parse(code, options) {
         var tree = esprima.parse(code, options);
         //console.log(JSON.stringify(tree), null, '\t');
@@ -7307,7 +7312,10 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                                 'type': 'MemberExpression',
                                 'computed': false,
                                 'object': { 'type': 'Identifier', 'name': MATHSCRIPT_NAMESPACE },
-                                'property': { 'type': 'Identifier', 'name': binOp[node.operator] }
+                                'property': {
+                                    'type': 'Identifier',
+                                    'name': binOp[node.operator]
+                                }
                             };
                             visit(node.left);
                             visit(node.right);
@@ -7553,6 +7561,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                 return result;
             }
         }
+        // The fallback is for native types.
         return fallback(lhs, rhs);
     }
     function add(p, q) {

@@ -379,7 +379,7 @@ function tilde(x) {
         return ~x;
     }
 }
-var Ms = {
+const Ms = {
     'VERSION': VERSION,
     parse: parse,
     transpile: transpile,

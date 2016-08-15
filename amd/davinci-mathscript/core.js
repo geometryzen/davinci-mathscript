@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
+  Copyright (C) 2015-2016 David Holmes <david.geo.holmes@gmail.com>
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
@@ -23,5 +23,5 @@
 */
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    exports.VERSION = '1.1.0';
+    exports.VERSION = '1.1.1';
 });

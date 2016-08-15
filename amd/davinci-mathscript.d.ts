@@ -1,4 +1,4 @@
-declare var Ms: {
+declare const Ms: {
     'VERSION': string;
     parse: (code: any, options: any) => any;
     transpile: (code: any, options: any) => any;

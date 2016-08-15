@@ -340,6 +340,10 @@ define([
                         var code = MathScript.transpile("a >= b;");
                         expect(stripWS(code)).toBe("Ms.ge(a, b);");
                     });
+                    it("const x = (p/q) < (a|b);", function() {
+                        var code = MathScript.transpile("const x = (p/q) < (a|b);");
+                        expect(stripWS(code)).toBe("const x = Ms.lt(Ms.div(p, q), Ms.vbar(a, b));");
+                    });
                 });
 
                 describe("Precedence", function() {

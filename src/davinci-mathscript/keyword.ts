@@ -22,21 +22,20 @@
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-import code = require('davinci-mathscript/code');
 
 function isStrictModeReservedWordES6(id) {
     switch (id) {
-    case 'implements':
-    case 'interface':
-    case 'package':
-    case 'private':
-    case 'protected':
-    case 'public':
-    case 'static':
-    case 'let':
-        return true;
-    default:
-        return false;
+        case 'implements':
+        case 'interface':
+        case 'package':
+        case 'private':
+        case 'protected':
+        case 'public':
+        case 'static':
+        case 'let':
+            return true;
+        default:
+            return false;
     }
 }
 
@@ -54,28 +53,28 @@ function isKeywordES6(id, strict) {
     }
 
     switch (id.length) {
-    case 2:
-        return (id === 'if') || (id === 'in') || (id === 'do');
-    case 3:
-        return (id === 'var') || (id === 'for') || (id === 'new') || (id === 'try');
-    case 4:
-        return (id === 'this') || (id === 'else') || (id === 'case') ||
-            (id === 'void') || (id === 'with') || (id === 'enum');
-    case 5:
-        return (id === 'while') || (id === 'break') || (id === 'catch') ||
-            (id === 'throw') || (id === 'const') || (id === 'yield') ||
-            (id === 'class') || (id === 'super');
-    case 6:
-        return (id === 'return') || (id === 'typeof') || (id === 'delete') ||
-            (id === 'switch') || (id === 'export') || (id === 'import');
-    case 7:
-        return (id === 'default') || (id === 'finally') || (id === 'extends');
-    case 8:
-        return (id === 'function') || (id === 'continue') || (id === 'debugger');
-    case 10:
-        return (id === 'instanceof');
-    default:
-        return false;
+        case 2:
+            return (id === 'if') || (id === 'in') || (id === 'do');
+        case 3:
+            return (id === 'var') || (id === 'for') || (id === 'new') || (id === 'try');
+        case 4:
+            return (id === 'this') || (id === 'else') || (id === 'case') ||
+                (id === 'void') || (id === 'with') || (id === 'enum');
+        case 5:
+            return (id === 'while') || (id === 'break') || (id === 'catch') ||
+                (id === 'throw') || (id === 'const') || (id === 'yield') ||
+                (id === 'class') || (id === 'super');
+        case 6:
+            return (id === 'return') || (id === 'typeof') || (id === 'delete') ||
+                (id === 'switch') || (id === 'export') || (id === 'import');
+        case 7:
+            return (id === 'default') || (id === 'finally') || (id === 'extends');
+        case 8:
+            return (id === 'function') || (id === 'continue') || (id === 'debugger');
+        case 10:
+            return (id === 'instanceof');
+        default:
+            return false;
     }
 }
 

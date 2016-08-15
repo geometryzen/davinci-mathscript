@@ -457,10 +457,8 @@ define("../vendor/almond/almond", function(){});
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 define('davinci-mathscript/core',["require", "exports"], function (require, exports) {
-    var core = {
-        VERSION: '1.0.11'
-    };
-    return core;
+    "use strict";
+    exports.VERSION = '1.1.0';
 });
 
 /*
@@ -497,6 +495,7 @@ define('davinci-mathscript/core',["require", "exports"], function (require, expo
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 define('davinci-mathscript/esprima',["require", "exports"], function (require, exports) {
+    "use strict";
     var Token, TokenName, FnExprTokens, Syntax, PlaceHolders, PropertyKind, Messages, Regex, source, strict, index, lineNumber, lineStart, length, lookahead, state, extra;
     Token = {
         BooleanLiteral: 1,
@@ -520,7 +519,15 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
     TokenName[Token.StringLiteral] = 'String';
     TokenName[Token.RegularExpression] = 'RegularExpression';
     // A function following one of those tokens is an expression.
-    FnExprTokens = ['(', '{', '[', 'in', 'typeof', 'instanceof', 'new', 'return', 'case', 'delete', 'throw', 'void', '=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '>>>=', '&=', '|=', '^=', ',', '+', '-', '*', '/', '%', '++', '--', '<<', '>>', '>>>', '&', '|', '^', '!', '~', '&&', '||', '?', ':', '===', '==', '>=', '<=', '<', '>', '!=', '!=='];
+    FnExprTokens = ['(', '{', '[', 'in', 'typeof', 'instanceof', 'new',
+        'return', 'case', 'delete', 'throw', 'void',
+        // assignment operators
+        '=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '>>>=',
+        '&=', '|=', '^=', ',',
+        // binary/unary operators
+        '+', '-', '*', '/', '%', '++', '--', '<<', '>>', '>>>', '&',
+        '|', '^', '!', '~', '&&', '||', '?', ':', '===', '==', '>=',
+        '<=', '<', '>', '!=', '!=='];
     Syntax = {
         AssignmentExpression: 'AssignmentExpression',
         ArrayExpression: 'ArrayExpression',
@@ -636,7 +643,8 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
     }
     // 7.2 White Space
     function isWhiteSpace(ch) {
-        return (ch === 0x20) || (ch === 0x09) || (ch === 0x0B) || (ch === 0x0C) || (ch === 0xA0) || (ch >= 0x1680 && [0x1680, 0x180E, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000, 0xFEFF].indexOf(ch) >= 0);
+        return (ch === 0x20) || (ch === 0x09) || (ch === 0x0B) || (ch === 0x0C) || (ch === 0xA0) ||
+            (ch >= 0x1680 && [0x1680, 0x180E, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000, 0xFEFF].indexOf(ch) >= 0);
     }
     // 7.3 Line Terminators
     function isLineTerminator(ch) {
@@ -644,10 +652,19 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
     }
     // 7.6 Identifier Names and Identifiers
     function isIdentifierStart(ch) {
-        return (ch === 0x24) || (ch === 0x5F) || (ch >= 0x41 && ch <= 0x5A) || (ch >= 0x61 && ch <= 0x7A) || (ch === 0x5C) || ((ch >= 0x80) && Regex.NonAsciiIdentifierStart.test(String.fromCharCode(ch)));
+        return (ch === 0x24) || (ch === 0x5F) ||
+            (ch >= 0x41 && ch <= 0x5A) ||
+            (ch >= 0x61 && ch <= 0x7A) ||
+            (ch === 0x5C) ||
+            ((ch >= 0x80) && Regex.NonAsciiIdentifierStart.test(String.fromCharCode(ch)));
     }
     function isIdentifierPart(ch) {
-        return (ch === 0x24) || (ch === 0x5F) || (ch >= 0x41 && ch <= 0x5A) || (ch >= 0x61 && ch <= 0x7A) || (ch >= 0x30 && ch <= 0x39) || (ch === 0x5C) || ((ch >= 0x80) && Regex.NonAsciiIdentifierPart.test(String.fromCharCode(ch)));
+        return (ch === 0x24) || (ch === 0x5F) ||
+            (ch >= 0x41 && ch <= 0x5A) ||
+            (ch >= 0x61 && ch <= 0x7A) ||
+            (ch >= 0x30 && ch <= 0x39) ||
+            (ch === 0x5C) ||
+            ((ch >= 0x80) && Regex.NonAsciiIdentifierPart.test(String.fromCharCode(ch)));
     }
     // 7.6.1.2 Future Reserved Words
     function isFutureReservedWord(id) {
@@ -687,17 +704,25 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
         if (strict && isStrictModeReservedWord(id)) {
             return true;
         }
+        // 'const' is specialized as Keyword in V8.
+        // 'yield' and 'let' are for compatibility with SpiderMonkey and ES.next.
+        // Some others are from future reserved words.
         switch (id.length) {
             case 2:
                 return (id === 'if') || (id === 'in') || (id === 'do');
             case 3:
-                return (id === 'var') || (id === 'for') || (id === 'new') || (id === 'try') || (id === 'let');
+                return (id === 'var') || (id === 'for') || (id === 'new') ||
+                    (id === 'try') || (id === 'let');
             case 4:
-                return (id === 'this') || (id === 'else') || (id === 'case') || (id === 'void') || (id === 'with') || (id === 'enum');
+                return (id === 'this') || (id === 'else') || (id === 'case') ||
+                    (id === 'void') || (id === 'with') || (id === 'enum');
             case 5:
-                return (id === 'while') || (id === 'break') || (id === 'catch') || (id === 'throw') || (id === 'const') || (id === 'yield') || (id === 'class') || (id === 'super');
+                return (id === 'while') || (id === 'break') || (id === 'catch') ||
+                    (id === 'throw') || (id === 'const') || (id === 'yield') ||
+                    (id === 'class') || (id === 'super');
             case 6:
-                return (id === 'return') || (id === 'typeof') || (id === 'delete') || (id === 'switch') || (id === 'export') || (id === 'import');
+                return (id === 'return') || (id === 'typeof') || (id === 'delete') ||
+                    (id === 'switch') || (id === 'export') || (id === 'import');
             case 7:
                 return (id === 'default') || (id === 'finally') || (id === 'extends');
             case 8:
@@ -1016,17 +1041,18 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
     function scanPunctuator() {
         var start = index, code = source.charCodeAt(index), code2, ch1 = source[index], ch2, ch3, ch4;
         switch (code) {
-            case 0x2E:
-            case 0x28:
-            case 0x29:
-            case 0x3B:
-            case 0x2C:
-            case 0x7B:
-            case 0x7D:
-            case 0x5B:
-            case 0x5D:
-            case 0x3A:
-            case 0x3F:
+            // Check for most common single-character punctuators.
+            case 0x2E: // . dot
+            case 0x28: // ( open bracket
+            case 0x29: // ) close bracket
+            case 0x3B: // ; semicolon
+            case 0x2C: // , comma
+            case 0x7B: // { open curly brace
+            case 0x7D: // } close curly brace
+            case 0x5B: // [
+            case 0x5D: // ]
+            case 0x3A: // :
+            case 0x3F: // ?
             case 0x7E:
                 ++index;
                 if (extra.tokenize) {
@@ -1050,15 +1076,15 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
                 // '=' (U+003D) marks an assignment or comparison operator.
                 if (code2 === 0x3D) {
                     switch (code) {
-                        case 0x2B:
-                        case 0x2D:
-                        case 0x2F:
-                        case 0x3C:
-                        case 0x3E:
-                        case 0x5E:
-                        case 0x7C:
-                        case 0x25:
-                        case 0x26:
+                        case 0x2B: // +
+                        case 0x2D: // -
+                        case 0x2F: // /
+                        case 0x3C: // <
+                        case 0x3E: // >
+                        case 0x5E: // ^
+                        case 0x7C: // |
+                        case 0x25: // %
+                        case 0x26: // &
                         case 0x2A:
                             index += 2;
                             return {
@@ -1069,7 +1095,7 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
                                 start: start,
                                 end: index
                             };
-                        case 0x21:
+                        case 0x21: // !
                         case 0x3D:
                             index += 2;
                             // !== and ===
@@ -1230,6 +1256,8 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
     }
     function isImplicitOctalLiteral() {
         var i, ch;
+        // Implicit octal, unless there is a non-octal digit.
+        // (Annex B.1.1 on Numeric Literals)
         for (i = index + 1; i < length; ++i) {
             ch = source[i];
             if (ch === '8' || ch === '9') {
@@ -1378,7 +1406,9 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
                                     code = code * 8 + '01234567'.indexOf(source[index++]);
                                     // 3 digits are only allowed when string starts
                                     // with 0, 1, 2, 3
-                                    if ('0123'.indexOf(ch) >= 0 && index < length && isOctalDigit(source[index])) {
+                                    if ('0123'.indexOf(ch) >= 0 &&
+                                        index < length &&
+                                        isOctalDigit(source[index])) {
                                         code = code * 8 + '01234567'.indexOf(source[index++]);
                                     }
                                 }
@@ -1431,19 +1461,25 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
             // negatives in unlikely scenarios. For example, `[\u{61}-b]` is a
             // perfectly valid pattern that is equivalent to `[a-b]`, but it
             // would be replaced by `[x-b]` which throws an error.
-            tmp = tmp.replace(/\\u\{([0-9a-fA-F]+)\}/g, function ($0, $1) {
+            tmp = tmp
+                .replace(/\\u\{([0-9a-fA-F]+)\}/g, function ($0, $1) {
                 if (parseInt($1, 16) <= 0x10FFFF) {
                     return 'x';
                 }
                 throwError(Messages.InvalidRegExp);
-            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, 'x');
+            })
+                .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, 'x');
         }
+        // First, detect invalid regular expressions.
         try {
             value = new RegExp(tmp);
         }
         catch (e) {
             throwError(Messages.InvalidRegExp);
         }
+        // Return a regular expression object for this pattern-flag pair, or
+        // `null` in case the current environment doesn't support the flags it
+        // uses.
         try {
             return new RegExp(pattern, flags);
         }
@@ -1611,7 +1647,10 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
         return regex;
     }
     function isIdentifierName(token) {
-        return token.type === Token.Identifier || token.type === Token.Keyword || token.type === Token.BooleanLiteral || token.type === Token.NullLiteral;
+        return token.type === Token.Identifier ||
+            token.type === Token.Keyword ||
+            token.type === Token.BooleanLiteral ||
+            token.type === Token.NullLiteral;
     }
     function advanceSlash() {
         var prevToken, checkToken;
@@ -1628,7 +1667,12 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
             }
             if (prevToken.value === ')') {
                 checkToken = extra.tokens[extra.openParenToken - 1];
-                if (checkToken && checkToken.type === 'Keyword' && (checkToken.value === 'if' || checkToken.value === 'while' || checkToken.value === 'for' || checkToken.value === 'with')) {
+                if (checkToken &&
+                    checkToken.type === 'Keyword' &&
+                    (checkToken.value === 'if' ||
+                        checkToken.value === 'while' ||
+                        checkToken.value === 'for' ||
+                        checkToken.value === 'with')) {
                     return collectRegex();
                 }
                 return scanPunctuator();
@@ -1636,14 +1680,16 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
             if (prevToken.value === '}') {
                 // Dividing a function by anything makes little sense,
                 // but we have to check for that.
-                if (extra.tokens[extra.openCurlyToken - 3] && extra.tokens[extra.openCurlyToken - 3].type === 'Keyword') {
+                if (extra.tokens[extra.openCurlyToken - 3] &&
+                    extra.tokens[extra.openCurlyToken - 3].type === 'Keyword') {
                     // Anonymous function.
                     checkToken = extra.tokens[extra.openCurlyToken - 4];
                     if (!checkToken) {
                         return scanPunctuator();
                     }
                 }
-                else if (extra.tokens[extra.openCurlyToken - 4] && extra.tokens[extra.openCurlyToken - 4].type === 'Keyword') {
+                else if (extra.tokens[extra.openCurlyToken - 4] &&
+                    extra.tokens[extra.openCurlyToken - 4].type === 'Keyword') {
                     // Named function.
                     checkToken = extra.tokens[extra.openCurlyToken - 5];
                     if (!checkToken) {
@@ -2233,7 +2279,12 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
     function unexpectedTokenError(token, message) {
         var msg = Messages.UnexpectedToken;
         if (token) {
-            msg = message ? message : (token.type === Token.EOF) ? Messages.UnexpectedEOS : (token.type === Token.Identifier) ? Messages.UnexpectedIdentifier : (token.type === Token.NumericLiteral) ? Messages.UnexpectedNumber : (token.type === Token.StringLiteral) ? Messages.UnexpectedString : Messages.UnexpectedToken;
+            msg = message ? message :
+                (token.type === Token.EOF) ? Messages.UnexpectedEOS :
+                    (token.type === Token.Identifier) ? Messages.UnexpectedIdentifier :
+                        (token.type === Token.NumericLiteral) ? Messages.UnexpectedNumber :
+                            (token.type === Token.StringLiteral) ? Messages.UnexpectedString :
+                                Messages.UnexpectedToken;
             if (token.type === Token.Keyword) {
                 if (isFutureReservedWord(token.value)) {
                     msg = Messages.UnexpectedReserved;
@@ -2244,7 +2295,9 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
             }
         }
         msg = msg.replace('%0', token ? token.value : 'ILLEGAL');
-        return (token && typeof token.lineNumber === 'number') ? createError(token.lineNumber, token.start, msg) : createError(lineNumber, index, msg);
+        return (token && typeof token.lineNumber === 'number') ?
+            createError(token.lineNumber, token.start, msg) :
+            createError(lineNumber, index, msg);
     }
     function throwUnexpectedToken(token, message) {
         throw unexpectedTokenError(token, message);
@@ -2314,7 +2367,18 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
             return false;
         }
         op = lookahead.value;
-        return op === '=' || op === '*=' || op === '/=' || op === '%=' || op === '+=' || op === '-=' || op === '<<=' || op === '>>=' || op === '>>>=' || op === '&=' || op === '^=' || op === '|=';
+        return op === '=' ||
+            op === '*=' ||
+            op === '/=' ||
+            op === '%=' ||
+            op === '+=' ||
+            op === '-=' ||
+            op === '<<=' ||
+            op === '>>=' ||
+            op === '>>>=' ||
+            op === '&=' ||
+            op === '^=' ||
+            op === '|=';
     }
     function consumeSemicolon() {
         var line, oldIndex = index, oldLineNumber = lineNumber, oldLineStart = lineStart, oldLookahead = lookahead;
@@ -2793,6 +2857,7 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
         right = parseUnaryExpression();
         stack = [left, token, right];
         while ((prec = binaryPrecedence(lookahead, state.allowIn)) > 0) {
+            // Reduce: make a binary expression from the three topmost entries.
             while ((stack.length > 2) && (prec <= stack[stack.length - 2].prec)) {
                 right = stack.pop();
                 operator = stack.pop().value;
@@ -2910,7 +2975,8 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
         token = lookahead;
         expr = parseConditionalExpression();
         if (expr === PlaceHolders.ArrowParameterPlaceHolder || match('=>')) {
-            if (state.parenthesisCount === oldParenthesisCount || state.parenthesisCount === (oldParenthesisCount + 1)) {
+            if (state.parenthesisCount === oldParenthesisCount ||
+                state.parenthesisCount === (oldParenthesisCount + 1)) {
                 if (expr.type === Syntax.Identifier) {
                     list = reinterpretAsCoverFormalsList([expr]);
                 }
@@ -3159,7 +3225,9 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
         state.inIteration = true;
         body = parseStatement();
         state.inIteration = oldInIteration;
-        return (typeof left === 'undefined') ? node.finishForStatement(init, test, update, body) : node.finishForInStatement(left, right, body);
+        return (typeof left === 'undefined') ?
+            node.finishForStatement(init, test, update, body) :
+            node.finishForInStatement(left, right, body);
     }
     // 12.7 The continue statement
     function parseContinueStatement(node) {
@@ -3449,6 +3517,7 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
             sourceElement = parseSourceElement();
             sourceElements.push(sourceElement);
             if (sourceElement.expression.type !== Syntax.Literal) {
+                // this is not directive
                 break;
             }
             directive = source.slice(token.start + 1, token.end - 1);
@@ -3671,6 +3740,7 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
             sourceElement = parseSourceElement();
             sourceElements.push(sourceElement);
             if (sourceElement.expression.type !== Syntax.Literal) {
+                // this is not directive
                 break;
             }
             directive = source.slice(token.start + 1, token.end - 1);
@@ -3780,6 +3850,8 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
                 catch (lexError) {
                     if (extra.errors) {
                         extra.errors.push(lexError);
+                        // We have to break on the first error
+                        // to avoid infinite loops.
                         break;
                     }
                     else {
@@ -3804,7 +3876,8 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
         }
         return tokens;
     }
-    function parse(code, options) {
+    exports.tokenize = tokenize;
+    function esprimaParse(code, options) {
         var program, toString;
         toString = String;
         if (typeof code !== 'string' && !(code instanceof String)) {
@@ -3871,9 +3944,10 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
         }
         return program;
     }
+    exports.esprimaParse = esprimaParse;
     // Deep copy.
     /* istanbul ignore next */
-    var esprimaSyntax = (function () {
+    exports.esprimaSyntax = (function () {
         var name, types = {};
         if (typeof Object.create === 'function') {
             types = Object.create(null);
@@ -3888,47 +3962,40 @@ define('davinci-mathscript/esprima',["require", "exports"], function (require, e
         }
         return types;
     }());
-    var esprima = {
-        tokenize: tokenize,
-        parse: parse,
-        Synatax: esprimaSyntax
-    };
-    return esprima;
 });
 
-/*
-  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
-  Copyright (C) 2012-2013 Yusuke Suzuki <utatane.tea@gmail.com>
-  Copyright (C) 2012 Ariya Hidayat <ariya.hidayat@gmail.com>
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-/*jslint vars:false, bitwise:true*/
-/*jshint indent:4*/
-/*global exports:true*/
-
 define('davinci-mathscript/estraverse',["require", "exports"], function (require, exports) {
-    var Syntax, isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE;
-    function ignoreJSHintError(what) {
-    }
+    /*
+      Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
+      Copyright (C) 2012-2013 Yusuke Suzuki <utatane.tea@gmail.com>
+      Copyright (C) 2012 Ariya Hidayat <ariya.hidayat@gmail.com>
+    
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions are met:
+    
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in the
+          documentation and/or other materials provided with the distribution.
+    
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+      ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+      DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+      (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+      ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+      THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    */
+    /*jslint vars:false, bitwise:true*/
+    /*jshint indent:4*/
+    /*global exports:true*/
+    'use strict';
+    var isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE;
+    function ignoreJSHintError(what) { }
     isArray = Array.isArray;
     if (!isArray) {
         isArray = function isArray(array) {
@@ -3998,8 +4065,7 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
     }
     ignoreJSHintError(lowerBound);
     objectCreate = Object.create || (function () {
-        function F() {
-        }
+        function F() { }
         return function (o) {
             F.prototype = o;
             return new F();
@@ -4020,7 +4086,7 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
         }
         return to;
     }
-    Syntax = {
+    exports.Syntax = {
         AssignmentExpression: 'AssignmentExpression',
         AssignmentPattern: 'AssignmentPattern',
         ArrayExpression: 'ArrayExpression',
@@ -4190,14 +4256,13 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
             return false;
         }
     };
-    function Element(node, path, wrap, ref) {
+    function ElementNode(node, path, wrap, ref) {
         this.node = node;
         this.path = path;
         this.wrap = wrap;
         this.ref = ref;
     }
-    function Controller() {
-    }
+    function Controller() { }
     // API:
     // return property path array from root to current node
     Controller.prototype.path = function path() {
@@ -4299,7 +4364,7 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
         return typeof node === 'object' && typeof node.type === 'string';
     }
     function isProperty(nodeType, key) {
-        return (nodeType === Syntax.ObjectExpression || nodeType === Syntax.ObjectPattern) && 'properties' === key;
+        return (nodeType === exports.Syntax.ObjectExpression || nodeType === exports.Syntax.ObjectPattern) && 'properties' === key;
     }
     Controller.prototype.traverse = function traverse(root, visitor) {
         var worklist, leavelist, element, node, nodeType, ret, key, current, current2, candidates, candidate, sentinel;
@@ -4309,8 +4374,8 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
         worklist = this.__worklist;
         leavelist = this.__leavelist;
         // initialize
-        worklist.push(new Element(root, null, null, null));
-        leavelist.push(new Element(null, null, null, null));
+        worklist.push(new ElementNode(root, null, null, null));
+        leavelist.push(new ElementNode(null, null, null, null));
         while (worklist.length) {
             element = worklist.pop();
             if (element === sentinel) {
@@ -4356,10 +4421,10 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
                                 continue;
                             }
                             if (isProperty(nodeType, candidates[current])) {
-                                element = new Element(candidate[current2], [key, current2], 'Property', null);
+                                element = new ElementNode(candidate[current2], [key, current2], 'Property', null);
                             }
                             else if (isNode(candidate[current2])) {
-                                element = new Element(candidate[current2], [key, current2], null, null);
+                                element = new ElementNode(candidate[current2], [key, current2], null, null);
                             }
                             else {
                                 continue;
@@ -4368,7 +4433,7 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
                         }
                     }
                     else if (isNode(candidate)) {
-                        worklist.push(new Element(candidate, key, null, null));
+                        worklist.push(new ElementNode(candidate, key, null, null));
                     }
                 }
             }
@@ -4404,7 +4469,7 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
         outer = {
             root: root
         };
-        element = new Element(root, null, null, new Reference(outer, 'root'));
+        element = new ElementNode(root, null, null, new Reference(outer, 'root'));
         worklist.push(element);
         leavelist.push(element);
         while (worklist.length) {
@@ -4475,10 +4540,10 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
                             continue;
                         }
                         if (isProperty(nodeType, candidates[current])) {
-                            element = new Element(candidate[current2], [key, current2], 'Property', new Reference(candidate, current2));
+                            element = new ElementNode(candidate[current2], [key, current2], 'Property', new Reference(candidate, current2));
                         }
                         else if (isNode(candidate[current2])) {
-                            element = new Element(candidate[current2], [key, current2], null, new Reference(candidate, current2));
+                            element = new ElementNode(candidate[current2], [key, current2], null, new Reference(candidate, current2));
                         }
                         else {
                             continue;
@@ -4487,7 +4552,7 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
                     }
                 }
                 else if (isNode(candidate)) {
-                    worklist.push(new Element(candidate, key, null, new Reference(node, key)));
+                    worklist.push(new ElementNode(candidate, key, null, new Reference(node, key)));
                 }
             }
         }
@@ -4598,156 +4663,6 @@ define('davinci-mathscript/estraverse',["require", "exports"], function (require
         });
         return tree;
     }
-    var estraverse = {
-        Syntax: Syntax,
-        traverse: traverse,
-        replace: replace,
-        attachComments: attachComments,
-        VisitorKeys: VisitorKeys,
-        VisitorOption: VisitorOption,
-        Controller: Controller
-    };
-    return estraverse;
-});
-
-/*
-  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
-  Copyright (C) 2013 Yusuke Suzuki <utatane.tea@gmail.com>
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
-define('davinci-mathscript/ast',["require", "exports"], function (require, exports) {
-    function isExpression(node) {
-        if (node == null) {
-            return false;
-        }
-        switch (node.type) {
-            case 'ArrayExpression':
-            case 'AssignmentExpression':
-            case 'BinaryExpression':
-            case 'CallExpression':
-            case 'ConditionalExpression':
-            case 'FunctionExpression':
-            case 'Identifier':
-            case 'Literal':
-            case 'LogicalExpression':
-            case 'MemberExpression':
-            case 'NewExpression':
-            case 'ObjectExpression':
-            case 'SequenceExpression':
-            case 'ThisExpression':
-            case 'UnaryExpression':
-            case 'UpdateExpression':
-                return true;
-        }
-        return false;
-    }
-    function isIterationStatement(node) {
-        if (node == null) {
-            return false;
-        }
-        switch (node.type) {
-            case 'DoWhileStatement':
-            case 'ForInStatement':
-            case 'ForStatement':
-            case 'WhileStatement':
-                return true;
-        }
-        return false;
-    }
-    function isStatement(node) {
-        if (node == null) {
-            return false;
-        }
-        switch (node.type) {
-            case 'BlockStatement':
-            case 'BreakStatement':
-            case 'ContinueStatement':
-            case 'DebuggerStatement':
-            case 'DoWhileStatement':
-            case 'EmptyStatement':
-            case 'ExpressionStatement':
-            case 'ForInStatement':
-            case 'ForStatement':
-            case 'IfStatement':
-            case 'LabeledStatement':
-            case 'ReturnStatement':
-            case 'SwitchStatement':
-            case 'ThrowStatement':
-            case 'TryStatement':
-            case 'VariableDeclaration':
-            case 'WhileStatement':
-            case 'WithStatement':
-                return true;
-        }
-        return false;
-    }
-    function isSourceElement(node) {
-        return isStatement(node) || node != null && node.type === 'FunctionDeclaration';
-    }
-    function trailingStatement(node) {
-        switch (node.type) {
-            case 'IfStatement':
-                if (node.alternate != null) {
-                    return node.alternate;
-                }
-                return node.consequent;
-            case 'LabeledStatement':
-            case 'ForStatement':
-            case 'ForInStatement':
-            case 'WhileStatement':
-            case 'WithStatement':
-                return node.body;
-        }
-        return null;
-    }
-    function isProblematicIfStatement(node) {
-        var current;
-        if (node.type !== 'IfStatement') {
-            return false;
-        }
-        if (node.alternate == null) {
-            return false;
-        }
-        current = node.consequent;
-        do {
-            if (current.type === 'IfStatement') {
-                if (current.alternate == null) {
-                    return true;
-                }
-            }
-            current = trailingStatement(current);
-        } while (current);
-        return false;
-    }
-    var ast = {
-        isExpression: isExpression,
-        isStatement: isStatement,
-        isIterationStatement: isIterationStatement,
-        isSourceElement: isSourceElement,
-        isProblematicIfStatement: isProblematicIfStatement,
-        trailingStatement: trailingStatement
-    };
-    return ast;
 });
 
 /*
@@ -4775,8 +4690,8 @@ define('davinci-mathscript/ast',["require", "exports"], function (require, expor
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 define('davinci-mathscript/code',["require", "exports"], function (require, exports) {
+    'use strict';
     var ES6Regex, ES5Regex, NON_ASCII_WHITESPACES, IDENTIFIER_START, IDENTIFIER_PART, ch;
     // See `tools/generate-identifier-regex.js`.
     ES5Regex = {
@@ -4794,39 +4709,33 @@ define('davinci-mathscript/code',["require", "exports"], function (require, expo
     function isDecimalDigit(ch) {
         return 0x30 <= ch && ch <= 0x39; // 0..9
     }
+    exports.isDecimalDigit = isDecimalDigit;
     function isHexDigit(ch) {
-        return 0x30 <= ch && ch <= 0x39 || 0x61 <= ch && ch <= 0x66 || 0x41 <= ch && ch <= 0x46; // A..F
+        return 0x30 <= ch && ch <= 0x39 ||
+            0x61 <= ch && ch <= 0x66 ||
+            0x41 <= ch && ch <= 0x46; // A..F
     }
     function isOctalDigit(ch) {
         return ch >= 0x30 && ch <= 0x37; // 0..7
     }
     // 7.2 White Space
     NON_ASCII_WHITESPACES = [
-        0x1680,
-        0x180E,
-        0x2000,
-        0x2001,
-        0x2002,
-        0x2003,
-        0x2004,
-        0x2005,
-        0x2006,
-        0x2007,
-        0x2008,
-        0x2009,
-        0x200A,
-        0x202F,
-        0x205F,
+        0x1680, 0x180E,
+        0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A,
+        0x202F, 0x205F,
         0x3000,
         0xFEFF
     ];
     function isWhiteSpace(ch) {
-        return ch === 0x20 || ch === 0x09 || ch === 0x0B || ch === 0x0C || ch === 0xA0 || ch >= 0x1680 && NON_ASCII_WHITESPACES.indexOf(ch) >= 0;
+        return ch === 0x20 || ch === 0x09 || ch === 0x0B || ch === 0x0C || ch === 0xA0 ||
+            ch >= 0x1680 && NON_ASCII_WHITESPACES.indexOf(ch) >= 0;
     }
+    exports.isWhiteSpace = isWhiteSpace;
     // 7.3 Line Terminators
     function isLineTerminator(ch) {
         return ch === 0x0A || ch === 0x0D || ch === 0x2028 || ch === 0x2029;
     }
+    exports.isLineTerminator = isLineTerminator;
     // 7.6 Identifier Names and Identifiers
     function fromCodePoint(cp) {
         if (cp <= 0xFFFF) {
@@ -4838,11 +4747,18 @@ define('davinci-mathscript/code',["require", "exports"], function (require, expo
     }
     IDENTIFIER_START = new Array(0x80);
     for (ch = 0; ch < 0x80; ++ch) {
-        IDENTIFIER_START[ch] = ch >= 0x61 && ch <= 0x7A || ch >= 0x41 && ch <= 0x5A || ch === 0x24 || ch === 0x5F; // $ (dollar) and _ (underscore)
+        IDENTIFIER_START[ch] =
+            ch >= 0x61 && ch <= 0x7A ||
+                ch >= 0x41 && ch <= 0x5A ||
+                ch === 0x24 || ch === 0x5F; // $ (dollar) and _ (underscore)
     }
     IDENTIFIER_PART = new Array(0x80);
     for (ch = 0; ch < 0x80; ++ch) {
-        IDENTIFIER_PART[ch] = ch >= 0x61 && ch <= 0x7A || ch >= 0x41 && ch <= 0x5A || ch >= 0x30 && ch <= 0x39 || ch === 0x24 || ch === 0x5F; // $ (dollar) and _ (underscore)
+        IDENTIFIER_PART[ch] =
+            ch >= 0x61 && ch <= 0x7A ||
+                ch >= 0x41 && ch <= 0x5A ||
+                ch >= 0x30 && ch <= 0x39 ||
+                ch === 0x24 || ch === 0x5F; // $ (dollar) and _ (underscore)
     }
     function isIdentifierStartES5(ch) {
         return ch < 0x80 ? IDENTIFIER_START[ch] : ES5Regex.NonAsciiIdentifierStart.test(fromCodePoint(ch));
@@ -4856,219 +4772,50 @@ define('davinci-mathscript/code',["require", "exports"], function (require, expo
     function isIdentifierPartES6(ch) {
         return ch < 0x80 ? IDENTIFIER_PART[ch] : ES6Regex.NonAsciiIdentifierPart.test(fromCodePoint(ch));
     }
-    var code = {
-        isDecimalDigit: isDecimalDigit,
-        isHexDigit: isHexDigit,
-        isOctalDigit: isOctalDigit,
-        isWhiteSpace: isWhiteSpace,
-        isLineTerminator: isLineTerminator,
-        isIdentifierStartES5: isIdentifierStartES5,
-        isIdentifierPartES5: isIdentifierPartES5,
-        isIdentifierStartES6: isIdentifierStartES6,
-        isIdentifierPartES6: isIdentifierPartES6,
-        isIdentifierStart: isIdentifierStartES6,
-        isIdentifierPart: isIdentifierPartES6
-    };
-    return code;
+    function isIdentifierPart(ch) {
+        return isIdentifierPartES6(ch);
+    }
+    exports.isIdentifierPart = isIdentifierPart;
 });
 
-define('davinci-mathscript/keyword',["require", "exports", 'davinci-mathscript/code'], function (require, exports, code) {
-    function isStrictModeReservedWordES6(id) {
-        switch (id) {
-            case 'implements':
-            case 'interface':
-            case 'package':
-            case 'private':
-            case 'protected':
-            case 'public':
-            case 'static':
-            case 'let':
-                return true;
-            default:
-                return false;
-        }
-    }
-    function isKeywordES5(id, strict) {
-        // yield should not be treated as keyword under non-strict mode.
-        if (!strict && id === 'yield') {
-            return false;
-        }
-        return isKeywordES6(id, strict);
-    }
-    function isKeywordES6(id, strict) {
-        if (strict && isStrictModeReservedWordES6(id)) {
-            return true;
-        }
-        switch (id.length) {
-            case 2:
-                return (id === 'if') || (id === 'in') || (id === 'do');
-            case 3:
-                return (id === 'var') || (id === 'for') || (id === 'new') || (id === 'try');
-            case 4:
-                return (id === 'this') || (id === 'else') || (id === 'case') || (id === 'void') || (id === 'with') || (id === 'enum');
-            case 5:
-                return (id === 'while') || (id === 'break') || (id === 'catch') || (id === 'throw') || (id === 'const') || (id === 'yield') || (id === 'class') || (id === 'super');
-            case 6:
-                return (id === 'return') || (id === 'typeof') || (id === 'delete') || (id === 'switch') || (id === 'export') || (id === 'import');
-            case 7:
-                return (id === 'default') || (id === 'finally') || (id === 'extends');
-            case 8:
-                return (id === 'function') || (id === 'continue') || (id === 'debugger');
-            case 10:
-                return (id === 'instanceof');
-            default:
-                return false;
-        }
-    }
-    function isReservedWordES5(id, strict) {
-        return id === 'null' || id === 'true' || id === 'false' || isKeywordES5(id, strict);
-    }
-    function isReservedWordES6(id, strict) {
-        return id === 'null' || id === 'true' || id === 'false' || isKeywordES6(id, strict);
-    }
-    function isRestrictedWord(id) {
-        return id === 'eval' || id === 'arguments';
-    }
-    function isIdentifierNameES5(id) {
-        var i, iz, ch;
-        if (id.length === 0) {
-            return false;
-        }
-        ch = id.charCodeAt(0);
-        if (!code.isIdentifierStartES5(ch)) {
-            return false;
-        }
-        for (i = 1, iz = id.length; i < iz; ++i) {
-            ch = id.charCodeAt(i);
-            if (!code.isIdentifierPartES5(ch)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    function decodeUtf16(lead, trail) {
-        return (lead - 0xD800) * 0x400 + (trail - 0xDC00) + 0x10000;
-    }
-    function isIdentifierNameES6(id) {
-        var i, iz, ch, lowCh, check;
-        if (id.length === 0) {
-            return false;
-        }
-        check = code.isIdentifierStartES6;
-        for (i = 0, iz = id.length; i < iz; ++i) {
-            ch = id.charCodeAt(i);
-            if (0xD800 <= ch && ch <= 0xDBFF) {
-                ++i;
-                if (i >= iz) {
-                    return false;
-                }
-                lowCh = id.charCodeAt(i);
-                if (!(0xDC00 <= lowCh && lowCh <= 0xDFFF)) {
-                    return false;
-                }
-                ch = decodeUtf16(ch, lowCh);
-            }
-            if (!check(ch)) {
-                return false;
-            }
-            check = code.isIdentifierPartES6;
-        }
-        return true;
-    }
-    function isIdentifierES5(id, strict) {
-        return isIdentifierNameES5(id) && !isReservedWordES5(id, strict);
-    }
-    function isIdentifierES6(id, strict) {
-        return isIdentifierNameES6(id) && !isReservedWordES6(id, strict);
-    }
-    var keyword = {
-        isKeywordES5: isKeywordES5,
-        isKeywordES6: isKeywordES6,
-        isReservedWordES5: isReservedWordES5,
-        isReservedWordES6: isReservedWordES6,
-        isRestrictedWord: isRestrictedWord,
-        isIdentifierNameES5: isIdentifierNameES5,
-        isIdentifierNameES6: isIdentifierNameES6,
-        isIdentifierES5: isIdentifierES5,
-        isIdentifierES6: isIdentifierES6
-    };
-    return keyword;
-});
-
-/*
-  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
-  Copyright (C) 2013 Yusuke Suzuki <utatane.tea@gmail.com>
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-define('davinci-mathscript/esutils',["require", "exports", 'davinci-mathscript/ast', 'davinci-mathscript/code', 'davinci-mathscript/keyword'], function (require, exports, ast, code, keyword) {
-    var esutils = {
-        ast: ast,
-        code: code,
-        keyword: keyword
-    };
-    return esutils;
-});
-
-/*
-  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
-  Copyright (C) 2012-2014 Yusuke Suzuki <utatane.tea@gmail.com>
-  Copyright (C) 2015 Ingvar Stepanyan <me@rreverser.com>
-  Copyright (C) 2014 Ivan Nikulin <ifaaan@gmail.com>
-  Copyright (C) 2012-2013 Michael Ficarra <escodegen.copyright@michael.ficarra.me>
-  Copyright (C) 2012-2013 Mathias Bynens <mathias@qiwi.be>
-  Copyright (C) 2013 Irakli Gozalishvili <rfobic@gmail.com>
-  Copyright (C) 2012 Robert Gust-Bardon <donate@robert.gust-bardon.org>
-  Copyright (C) 2012 John Freeman <jfreeman08@gmail.com>
-  Copyright (C) 2011-2012 Ariya Hidayat <ariya.hidayat@gmail.com>
-  Copyright (C) 2012 Joost-Wim Boekesteijn <joost-wim@boekesteijn.nl>
-  Copyright (C) 2012 Kris Kowal <kris.kowal@cixar.com>
-  Copyright (C) 2012 Arpad Borsos <arpad.borsos@googlemail.com>
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-/*global exports:true, require:true, global:true*/
-
-define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscript/esutils'], function (require, exports, estraverse, esutils) {
-    var Syntax, Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
-    //esutils = require('esutils');
-    Syntax = estraverse.Syntax;
+define('davinci-mathscript/escodegen',["require", "exports", './estraverse', './code', './code', './code', './code'], function (require, exports, estraverse_1, code_1, code_2, code_3, code_4) {
+    "use strict";
+    /*
+      Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
+      Copyright (C) 2012-2014 Yusuke Suzuki <utatane.tea@gmail.com>
+      Copyright (C) 2015 Ingvar Stepanyan <me@rreverser.com>
+      Copyright (C) 2014 Ivan Nikulin <ifaaan@gmail.com>
+      Copyright (C) 2012-2013 Michael Ficarra <escodegen.copyright@michael.ficarra.me>
+      Copyright (C) 2012-2013 Mathias Bynens <mathias@qiwi.be>
+      Copyright (C) 2013 Irakli Gozalishvili <rfobic@gmail.com>
+      Copyright (C) 2012 Robert Gust-Bardon <donate@robert.gust-bardon.org>
+      Copyright (C) 2012 John Freeman <jfreeman08@gmail.com>
+      Copyright (C) 2011-2012 Ariya Hidayat <ariya.hidayat@gmail.com>
+      Copyright (C) 2012 Joost-Wim Boekesteijn <joost-wim@boekesteijn.nl>
+      Copyright (C) 2012 Kris Kowal <kris.kowal@cixar.com>
+      Copyright (C) 2012 Arpad Borsos <arpad.borsos@googlemail.com>
+    
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions are met:
+    
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in the
+          documentation and/or other materials provided with the distribution.
+    
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+      ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+      DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+      (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+      ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+      THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    */
+    var Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
     // Generation is done by generateExpression.
     function isExpression(node) {
         return CodeGenerator.Expression.hasOwnProperty(node.type);
@@ -5203,7 +4950,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
     }
     function endsWithLineTerminator(str) {
         var len = str.length;
-        return len && esutils.code.isLineTerminator(str.charCodeAt(len - 1));
+        return len && code_1.isLineTerminator(str.charCodeAt(len - 1));
     }
     function merge(target, override) {
         var key;
@@ -5253,7 +5000,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             return result;
         }
         point = result.indexOf('.');
-        if (!json && result.charCodeAt(0) === 0x30 && point === 1) {
+        if (!json && result.charCodeAt(0) === 0x30 /* 0 */ && point === 1) {
             point = 0;
             result = result.slice(1);
         }
@@ -5269,7 +5016,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             temp = +(temp.slice(0, point) + temp.slice(point + 1)) + '';
         }
         pos = 0;
-        while (temp.charCodeAt(temp.length + pos - 1) === 0x30) {
+        while (temp.charCodeAt(temp.length + pos - 1) === 0x30 /* 0 */) {
             --pos;
         }
         if (pos !== 0) {
@@ -5279,7 +5026,9 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         if (exponent !== 0) {
             temp += 'e' + exponent;
         }
-        if ((temp.length < result.length || (hexadecimal && value > 1e12 && Math.floor(value) === value && (temp = '0x' + value.toString(16)).length < result.length)) && +temp === value) {
+        if ((temp.length < result.length ||
+            (hexadecimal && value > 1e12 && Math.floor(value) === value && (temp = '0x' + value.toString(16)).length < result.length)) &&
+            +temp === value) {
             result = temp;
         }
         return result;
@@ -5341,23 +5090,23 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
     }
     function escapeAllowedCharacter(code, next) {
         var hex;
-        if (code === 0x08) {
+        if (code === 0x08 /* \b */) {
             return '\\b';
         }
-        if (code === 0x0C) {
+        if (code === 0x0C /* \f */) {
             return '\\f';
         }
-        if (code === 0x09) {
+        if (code === 0x09 /* \t */) {
             return '\\t';
         }
         hex = code.toString(16).toUpperCase();
         if (json || code > 0xFF) {
             return '\\u' + '0000'.slice(hex.length) + hex;
         }
-        else if (code === 0x0000 && !esutils.code.isDecimalDigit(next)) {
+        else if (code === 0x0000 && !code_2.isDecimalDigit(next)) {
             return '\\0';
         }
-        else if (code === 0x000B) {
+        else if (code === 0x000B /* \v */) {
             return '\\x0B';
         }
         else {
@@ -5365,13 +5114,13 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         }
     }
     function escapeDisallowedCharacter(code) {
-        if (code === 0x5C) {
+        if (code === 0x5C /* \ */) {
             return '\\\\';
         }
-        if (code === 0x0A) {
+        if (code === 0x0A /* \n */) {
             return '\\n';
         }
-        if (code === 0x0D) {
+        if (code === 0x0D /* \r */) {
             return '\\r';
         }
         if (code === 0x2028) {
@@ -5387,15 +5136,15 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         quote = quotes === 'double' ? '"' : '\'';
         for (i = 0, iz = str.length; i < iz; ++i) {
             code = str.charCodeAt(i);
-            if (code === 0x27) {
+            if (code === 0x27 /* ' */) {
                 quote = '"';
                 break;
             }
-            else if (code === 0x22) {
+            else if (code === 0x22 /* " */) {
                 quote = '\'';
                 break;
             }
-            else if (code === 0x5C) {
+            else if (code === 0x5C /* \ */) {
                 ++i;
             }
         }
@@ -5405,20 +5154,20 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         var result = '', i, len, code, singleQuotes = 0, doubleQuotes = 0, single, quote;
         for (i = 0, len = str.length; i < len; ++i) {
             code = str.charCodeAt(i);
-            if (code === 0x27) {
+            if (code === 0x27 /* ' */) {
                 ++singleQuotes;
             }
-            else if (code === 0x22) {
+            else if (code === 0x22 /* " */) {
                 ++doubleQuotes;
             }
-            else if (code === 0x2F && json) {
+            else if (code === 0x2F /* / */ && json) {
                 result += '\\';
             }
-            else if (esutils.code.isLineTerminator(code) || code === 0x5C) {
+            else if (code_1.isLineTerminator(code) || code === 0x5C /* \ */) {
                 result += escapeDisallowedCharacter(code);
                 continue;
             }
-            else if ((json && code < 0x20) || !(json || escapeless || (code >= 0x20 && code <= 0x7E))) {
+            else if ((json && code < 0x20 /* SP */) || !(json || escapeless || (code >= 0x20 /* SP */ && code <= 0x7E /* ~ */))) {
                 result += escapeAllowedCharacter(code, str.charCodeAt(i + 1));
                 continue;
             }
@@ -5433,7 +5182,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         result = quote;
         for (i = 0, len = str.length; i < len; ++i) {
             code = str.charCodeAt(i);
-            if ((code === 0x27 && single) || (code === 0x22 && !single)) {
+            if ((code === 0x27 /* ' */ && single) || (code === 0x22 /* " */ && !single)) {
                 result += '\\';
             }
             result += String.fromCharCode(code);
@@ -5495,10 +5244,13 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         }
         leftCharCode = leftSource.charCodeAt(leftSource.length - 1);
         rightCharCode = rightSource.charCodeAt(0);
-        if ((leftCharCode === 0x2B || leftCharCode === 0x2D) && leftCharCode === rightCharCode || esutils.code.isIdentifierPart(leftCharCode) && esutils.code.isIdentifierPart(rightCharCode) || leftCharCode === 0x2F && rightCharCode === 0x69) {
+        if ((leftCharCode === 0x2B /* + */ || leftCharCode === 0x2D /* - */) && leftCharCode === rightCharCode ||
+            code_3.isIdentifierPart(leftCharCode) && code_3.isIdentifierPart(rightCharCode) ||
+            leftCharCode === 0x2F /* / */ && rightCharCode === 0x69 /* i */) {
             return [left, noEmptySpace(), right];
         }
-        else if (esutils.code.isWhiteSpace(leftCharCode) || esutils.code.isLineTerminator(leftCharCode) || esutils.code.isWhiteSpace(rightCharCode) || esutils.code.isLineTerminator(rightCharCode)) {
+        else if (code_4.isWhiteSpace(leftCharCode) || code_1.isLineTerminator(leftCharCode) ||
+            code_4.isWhiteSpace(rightCharCode) || code_1.isLineTerminator(rightCharCode)) {
             return [left, right];
         }
         return [left, space, right];
@@ -5516,7 +5268,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
     function calculateSpaces(str) {
         var i;
         for (i = str.length - 1; i >= 0; --i) {
-            if (esutils.code.isLineTerminator(str.charCodeAt(i))) {
+            if (code_1.isLineTerminator(str.charCodeAt(i))) {
                 break;
             }
         }
@@ -5526,10 +5278,11 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         var array, i, len, line, j, spaces, previousBase, sn;
         array = value.split(/\r\n|[\r\n]/);
         spaces = Number.MAX_VALUE;
+        // first line doesn't have indentation
         for (i = 1, len = array.length; i < len; ++i) {
             line = array[i];
             j = 0;
-            while (j < line.length && esutils.code.isWhiteSpace(line.charCodeAt(j))) {
+            while (j < line.length && code_4.isWhiteSpace(line.charCodeAt(j))) {
                 ++j;
             }
             if (spaces > j) {
@@ -5622,7 +5375,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             else {
                 comment = stmt.leadingComments[0];
                 result = [];
-                if (safeConcatenation && stmt.type === Syntax.Program && stmt.body.length === 0) {
+                if (safeConcatenation && stmt.type === estraverse_1.Syntax.Program && stmt.body.length === 0) {
                     result.push('\n');
                 }
                 result.push(generateComment(comment));
@@ -5732,12 +5485,14 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         CodeGenerator.prototype.generateFunctionParams = function (node) {
             var i, iz, result, hasDefault;
             hasDefault = false;
-            if (node.type === Syntax.ArrowFunctionExpression && !node.rest && (!node.defaults || node.defaults.length === 0) && node.params.length === 1 && node.params[0].type === Syntax.Identifier) {
+            if (node.type === estraverse_1.Syntax.ArrowFunctionExpression &&
+                !node.rest && (!node.defaults || node.defaults.length === 0) &&
+                node.params.length === 1 && node.params[0].type === estraverse_1.Syntax.Identifier) {
                 // arg => { } case
                 result = [generateAsyncPrefix(node, true), generateIdentifier(node.params[0])];
             }
             else {
-                result = node.type === Syntax.ArrowFunctionExpression ? [generateAsyncPrefix(node, false)] : [];
+                result = node.type === estraverse_1.Syntax.ArrowFunctionExpression ? [generateAsyncPrefix(node, false)] : [];
                 result.push('(');
                 if (node.defaults) {
                     hasDefault = true;
@@ -5766,7 +5521,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             return result;
         };
         CodeGenerator.prototype.generatePattern = function (node, precedence, flags) {
-            if (node.type === Syntax.Identifier) {
+            if (node.type === estraverse_1.Syntax.Identifier) {
                 return generateIdentifier(node);
             }
             return this.generateExpression(node, precedence, flags);
@@ -5779,14 +5534,14 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                 result = addComments(stmt, result);
             }
             fragment = toSourceNodeWhenNeeded(result).toString();
-            if (stmt.type === Syntax.Program && !safeConcatenation && newline === '' && fragment.charAt(fragment.length - 1) === '\n') {
+            if (stmt.type === estraverse_1.Syntax.Program && !safeConcatenation && newline === '' && fragment.charAt(fragment.length - 1) === '\n') {
                 result = sourceMap ? toSourceNodeWhenNeeded(result).replaceRight(/\s+$/, '') : fragment.replace(/\s+$/, '');
             }
             return toSourceNodeWhenNeeded(result, stmt);
         };
         CodeGenerator.prototype.generateExpression = function (expr, precedence, flags) {
             var result, type;
-            type = expr.type || Syntax.Property;
+            type = expr.type || estraverse_1.Syntax.Property;
             if (extra.verbatim && expr.hasOwnProperty(extra.verbatim)) {
                 return generateVerbatim(expr, precedence);
             }
@@ -5799,10 +5554,10 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         CodeGenerator.prototype.maybeBlock = function (stmt, flags) {
             var result, noLeadingComment, that = this;
             noLeadingComment = !extra.comment || !stmt.leadingComments;
-            if (stmt.type === Syntax.BlockStatement && noLeadingComment) {
+            if (stmt.type === estraverse_1.Syntax.BlockStatement && noLeadingComment) {
                 return [space, this.generateStatement(stmt, flags)];
             }
-            if (stmt.type === Syntax.EmptyStatement && noLeadingComment) {
+            if (stmt.type === estraverse_1.Syntax.EmptyStatement && noLeadingComment) {
                 return ';';
             }
             withIndent(function () {
@@ -5815,7 +5570,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         };
         CodeGenerator.prototype.maybeBlockSuffix = function (stmt, result) {
             var ends = endsWithLineTerminator(toSourceNodeWhenNeeded(result).toString());
-            if (stmt.type === Syntax.BlockStatement && (!extra.comment || !stmt.leadingComments) && !ends) {
+            if (stmt.type === estraverse_1.Syntax.BlockStatement && (!extra.comment || !stmt.leadingComments) && !ends) {
                 return [result, space];
             }
             if (ends) {
@@ -5826,7 +5581,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         CodeGenerator.prototype.generateFunctionBody = function (node) {
             var result, expr;
             result = this.generateFunctionParams(node);
-            if (node.type === Syntax.ArrowFunctionExpression) {
+            if (node.type === estraverse_1.Syntax.ArrowFunctionExpression) {
                 result.push(space);
                 result.push('=>');
             }
@@ -5846,7 +5601,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         CodeGenerator.prototype.generateIterationForStatement = function (operator, stmt, flags) {
             var result = ['for' + space + '('], that = this;
             withIndent(function () {
-                if (stmt.left.type === Syntax.VariableDeclaration) {
+                if (stmt.left.type === estraverse_1.Syntax.VariableDeclaration) {
                     withIndent(function () {
                         result.push(stmt.left.kind + noEmptySpace());
                         result.push(that.generateStatement(stmt.left.declarations[0], S_FFFF));
@@ -5889,7 +5644,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             return ';';
         };
         return CodeGenerator;
-    })();
+    }());
     // Helpers.
     function generateIdentifier(node) {
         return toSourceNodeWhenNeeded(node.name, node);
@@ -6097,9 +5852,6 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                 if (stmt.specifiers.length === 0) {
                     result = join(result, '{' + space + '}');
                 }
-                else if (stmt.specifiers[0].type === Syntax.ExportBatchSpecifier) {
-                    result = join(result, this.generateExpression(stmt.specifiers[0], Precedence.Sequence, E_TTT));
-                }
                 else {
                     result = join(result, '{');
                     withIndent(function (indent) {
@@ -6121,6 +5873,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                 if (stmt.source) {
                     result = join(result, [
                         'from' + space,
+                        // ModuleSpecifier
                         this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                         this.semicolon(flags)
                     ]);
@@ -6139,7 +5892,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                     return false;
                 }
                 code = fragment.charCodeAt(5);
-                return code === 0x7B || esutils.code.isWhiteSpace(code) || esutils.code.isLineTerminator(code);
+                return code === 0x7B /* '{' */ || code_4.isWhiteSpace(code) || code_1.isLineTerminator(code);
             }
             function isFunctionPrefixed(fragment) {
                 var code;
@@ -6147,18 +5900,18 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                     return false;
                 }
                 code = fragment.charCodeAt(8);
-                return code === 0x28 || esutils.code.isWhiteSpace(code) || code === 0x2A || esutils.code.isLineTerminator(code);
+                return code === 0x28 /* '(' */ || code_4.isWhiteSpace(code) || code === 0x2A /* '*' */ || code_1.isLineTerminator(code);
             }
             function isAsyncPrefixed(fragment) {
                 var code, i, iz;
                 if (fragment.slice(0, 5) !== 'async') {
                     return false;
                 }
-                if (!esutils.code.isWhiteSpace(fragment.charCodeAt(5))) {
+                if (!code_4.isWhiteSpace(fragment.charCodeAt(5))) {
                     return false;
                 }
                 for (i = 6, iz = fragment.length; i < iz; ++i) {
-                    if (!esutils.code.isWhiteSpace(fragment.charCodeAt(i))) {
+                    if (!code_4.isWhiteSpace(fragment.charCodeAt(i))) {
                         break;
                     }
                 }
@@ -6169,13 +5922,17 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                     return false;
                 }
                 code = fragment.charCodeAt(i + 8);
-                return code === 0x28 || esutils.code.isWhiteSpace(code) || code === 0x2A || esutils.code.isLineTerminator(code);
+                return code === 0x28 /* '(' */ || code_4.isWhiteSpace(code) || code === 0x2A /* '*' */ || code_1.isLineTerminator(code);
             }
             result = [this.generateExpression(stmt.expression, Precedence.Sequence, E_TTT)];
             // 12.4 '{', 'function', 'class' is not allowed in this position.
             // wrap expression with parentheses
             fragment = toSourceNodeWhenNeeded(result).toString();
-            if (fragment.charCodeAt(0) === 0x7B || isClassPrefixed(fragment) || isFunctionPrefixed(fragment) || isAsyncPrefixed(fragment) || (directive && (flags & F_DIRECTIVE_CTX) && stmt.expression.type === Syntax.Literal && typeof stmt.expression.value === 'string')) {
+            if (fragment.charCodeAt(0) === 0x7B /* '{' */ ||
+                isClassPrefixed(fragment) ||
+                isFunctionPrefixed(fragment) ||
+                isAsyncPrefixed(fragment) ||
+                (directive && (flags & F_DIRECTIVE_CTX) && stmt.expression.type === estraverse_1.Syntax.Literal && typeof stmt.expression.value === 'string')) {
                 result = ['(', result, ')' + this.semicolon(flags)];
             }
             else {
@@ -6196,6 +5953,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                 return [
                     'import',
                     space,
+                    // ModuleSpecifier
                     this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                     this.semicolon(flags)
                 ];
@@ -6206,7 +5964,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             ];
             cursor = 0;
             // ImportedBinding
-            if (stmt.specifiers[cursor].type === Syntax.ImportDefaultSpecifier) {
+            if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportDefaultSpecifier) {
                 result = join(result, [
                     this.generateExpression(stmt.specifiers[cursor], Precedence.Sequence, E_TTT)
                 ]);
@@ -6216,7 +5974,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                 if (cursor !== 0) {
                     result.push(',');
                 }
-                if (stmt.specifiers[cursor].type === Syntax.ImportNamespaceSpecifier) {
+                if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportNamespaceSpecifier) {
                     // NameSpaceImport
                     result = join(result, [
                         space,
@@ -6257,6 +6015,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             }
             result = join(result, [
                 'from' + space,
+                // ModuleSpecifier
                 this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                 this.semicolon(flags)
             ]);
@@ -6321,6 +6080,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             result = ['try', this.maybeBlock(stmt.block, S_TFFF)];
             result = this.maybeBlockSuffix(stmt.block, result);
             if (stmt.handlers) {
+                // old interface
                 for (i = 0, iz = stmt.handlers.length; i < iz; ++i) {
                     result = join(result, this.generateStatement(stmt.handlers[i], S_TFFF));
                     if (stmt.finalizer || i + 1 !== iz) {
@@ -6398,7 +6158,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                 }
                 i = 0;
                 iz = stmt.consequent.length;
-                if (iz && stmt.consequent[0].type === Syntax.BlockStatement) {
+                if (iz && stmt.consequent[0].type === estraverse_1.Syntax.BlockStatement) {
                     fragment = that.maybeBlock(stmt.consequent[0], S_TFFF);
                     result.push(fragment);
                     i = 1;
@@ -6437,7 +6197,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             if (stmt.alternate) {
                 result.push(this.maybeBlock(stmt.consequent, S_TFFF));
                 result = this.maybeBlockSuffix(stmt.consequent, result);
-                if (stmt.alternate.type === Syntax.IfStatement) {
+                if (stmt.alternate.type === estraverse_1.Syntax.IfStatement) {
                     result = join(result, ['else ', this.generateStatement(stmt.alternate, bodyFlags)]);
                 }
                 else {
@@ -6454,7 +6214,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             withIndent(function () {
                 result = ['for' + space + '('];
                 if (stmt.init) {
-                    if (stmt.init.type === Syntax.VariableDeclaration) {
+                    if (stmt.init.type === estraverse_1.Syntax.VariableDeclaration) {
                         result.push(that.generateStatement(stmt.init, S_FFFF));
                     }
                     else {
@@ -6627,14 +6387,15 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             }
             fragment = this.generateExpression(expr.left, currentPrecedence, flags);
             leftSource = fragment.toString();
-            if (leftSource.charCodeAt(leftSource.length - 1) === 0x2F && esutils.code.isIdentifierPart(expr.operator.charCodeAt(0))) {
+            if (leftSource.charCodeAt(leftSource.length - 1) === 0x2F /* / */ && code_3.isIdentifierPart(expr.operator.charCodeAt(0))) {
                 result = [fragment, noEmptySpace(), expr.operator];
             }
             else {
                 result = join(fragment, expr.operator);
             }
             fragment = this.generateExpression(expr.right, currentPrecedence + 1, flags);
-            if (expr.operator === '/' && fragment.toString().charAt(0) === '/' || expr.operator.slice(-1) === '<' && fragment.toString().slice(0, 3) === '!--') {
+            if (expr.operator === '/' && fragment.toString().charAt(0) === '/' ||
+                expr.operator.slice(-1) === '<' && fragment.toString().slice(0, 3) === '!--') {
                 // If '/' concats with '/' or `<` concats with `!--`, it is interpreted as comment start
                 result.push(noEmptySpace());
                 result.push(fragment);
@@ -6693,7 +6454,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                 result.push(']');
             }
             else {
-                if (expr.object.type === Syntax.Literal && typeof expr.object.value === 'number') {
+                if (expr.object.type === estraverse_1.Syntax.Literal && typeof expr.object.value === 'number') {
                     fragment = toSourceNodeWhenNeeded(result).toString();
                     // When the following conditions are all true,
                     //   1. No floating point
@@ -6701,7 +6462,11 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                     //   3. The last character is a decimal digit
                     //   4. Not hexadecimal OR octal number literal
                     // we should add a floating point.
-                    if (fragment.indexOf('.') < 0 && !/[eExX]/.test(fragment) && esutils.code.isDecimalDigit(fragment.charCodeAt(fragment.length - 1)) && !(fragment.length >= 2 && fragment.charCodeAt(0) === 48)) {
+                    if (fragment.indexOf('.') < 0 &&
+                        !/[eExX]/.test(fragment) &&
+                        code_2.isDecimalDigit(fragment.charCodeAt(fragment.length - 1)) &&
+                        !(fragment.length >= 2 && fragment.charCodeAt(0) === 48) // '0'
+                    ) {
                         result.push('.');
                     }
                 }
@@ -6729,7 +6494,8 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                     leftSource = toSourceNodeWhenNeeded(result).toString();
                     leftCharCode = leftSource.charCodeAt(leftSource.length - 1);
                     rightCharCode = fragment.toString().charCodeAt(0);
-                    if (((leftCharCode === 0x2B || leftCharCode === 0x2D) && leftCharCode === rightCharCode) || (esutils.code.isIdentifierPart(leftCharCode) && esutils.code.isIdentifierPart(rightCharCode))) {
+                    if (((leftCharCode === 0x2B /* + */ || leftCharCode === 0x2D /* - */) && leftCharCode === rightCharCode) ||
+                        (code_3.isIdentifierPart(leftCharCode) && code_3.isIdentifierPart(rightCharCode))) {
                         result.push(noEmptySpace());
                         result.push(fragment);
                     }
@@ -6864,8 +6630,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         Property: function (expr, precedence, flags) {
             if (expr.kind === 'get' || expr.kind === 'set') {
                 return [
-                    expr.kind,
-                    noEmptySpace(),
+                    expr.kind, noEmptySpace(),
                     this.generatePropertyKey(expr.key, expr.computed),
                     this.generateFunctionBody(expr.value)
                 ];
@@ -6937,7 +6702,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             multiline = false;
             if (expr.properties.length === 1) {
                 property = expr.properties[0];
-                if (property.value.type !== Syntax.Identifier) {
+                if (property.value.type !== estraverse_1.Syntax.Identifier) {
                     multiline = true;
                 }
             }
@@ -6999,7 +6764,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             if (expr.hasOwnProperty('raw') && parse && extra.raw) {
                 try {
                     raw = parse(expr.raw).body[0].expression;
-                    if (raw.type === Syntax.Literal) {
+                    if (raw.type === estraverse_1.Syntax.Literal) {
                         if (raw.value === expr.value) {
                             return expr.raw;
                         }
@@ -7029,7 +6794,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
             // GeneratorExpression should be parenthesized with (...), ComprehensionExpression with [...]
             // Due to https://bugzilla.mozilla.org/show_bug.cgi?id=883468 position of expr.body can differ in Spidermonkey and ES6
             var result, i, iz, fragment, that = this;
-            result = (expr.type === Syntax.GeneratorExpression) ? ['('] : ['['];
+            result = (expr.type === estraverse_1.Syntax.GeneratorExpression) ? ['('] : ['['];
             if (extra.moz.comprehensionExpressionStartsWithAssignment) {
                 fragment = this.generateExpression(expr.body, Precedence.Assignment, E_TTT);
                 result.push(fragment);
@@ -7056,15 +6821,14 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
                 fragment = this.generateExpression(expr.body, Precedence.Assignment, E_TTT);
                 result = join(result, fragment);
             }
-            result.push((expr.type === Syntax.GeneratorExpression) ? ')' : ']');
+            result.push((expr.type === estraverse_1.Syntax.GeneratorExpression) ? ')' : ']');
             return result;
         },
         ComprehensionBlock: function (expr, precedence, flags) {
             var fragment;
-            if (expr.left.type === Syntax.VariableDeclaration) {
+            if (expr.left.type === estraverse_1.Syntax.VariableDeclaration) {
                 fragment = [
-                    expr.left.kind,
-                    noEmptySpace(),
+                    expr.left.kind, noEmptySpace(),
                     this.generateStatement(expr.left.declarations[0], S_FFFF)
                 ];
             }
@@ -7192,6 +6956,7 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         }
         return pair.map.toString();
     }
+    exports.generate = generate;
     FORMAT_MINIFY = {
         indent: {
             style: '',
@@ -7212,10 +6977,10 @@ define('davinci-mathscript/escodegen',["require", "exports", 'davinci-mathscript
         FORMAT_MINIFY: FORMAT_MINIFY,
         FORMAT_DEFAULT: FORMAT_DEFAULTS
     };
-    return escodegen;
 });
 
-define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'davinci-mathscript/esprima', 'davinci-mathscript/escodegen'], function (require, exports, core, esprima, escodegen) {
+define('davinci-mathscript',["require", "exports", './davinci-mathscript/core', './davinci-mathscript/esprima', './davinci-mathscript/escodegen'], function (require, exports, core_1, esprima_1, escodegen_1) {
+    "use strict";
     /**
      * Provides the MathScript module
      *
@@ -7238,7 +7003,11 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         '>>': 'rshift',
         '%': 'mod',
         '===': 'eq',
-        '!==': 'ne'
+        '!==': 'ne',
+        '>': 'gt',
+        '>=': 'ge',
+        '<': 'lt',
+        '<=': 'le'
     };
     // The increment and decrement operators are problematic from a timing perspective.
     var unaryOp = {
@@ -7248,30 +7017,26 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         '~': 'tilde' /*,'++':'increment','--':'decrement'*/
     };
     function parse(code, options) {
-        var tree = esprima.parse(code, options);
+        var tree = esprima_1.esprimaParse(code, options);
         //console.log(JSON.stringify(tree), null, '\t');
         visit(tree);
         return tree;
     }
     function transpile(code, options) {
         var tree = parse(code, options);
-        return escodegen.generate(tree, null);
+        return escodegen_1.generate(tree, null);
     }
     function visit(node) {
         if (node && node.type) {
             switch (node.type) {
                 case 'BlockStatement':
                     {
-                        node.body.forEach(function (part, index) {
-                            visit(part);
-                        });
+                        node.body.forEach(function (part, index) { visit(part); });
                     }
                     break;
                 case 'FunctionDeclaration':
                     {
-                        node.params.forEach(function (param, index) {
-                            visit(param);
-                        });
+                        node.params.forEach(function (param, index) { visit(param); });
                         visit(node.body);
                     }
                     break;
@@ -7284,9 +7049,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                     break;
                 case 'VariableDeclaration':
                     {
-                        node.declarations.forEach(function (declaration, index) {
-                            visit(declaration);
-                        });
+                        node.declarations.forEach(function (declaration, index) { visit(declaration); });
                     }
                     break;
                 case 'VariableDeclarator':
@@ -7313,8 +7076,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                                 'computed': false,
                                 'object': { 'type': 'Identifier', 'name': MATHSCRIPT_NAMESPACE },
                                 'property': {
-                                    'type': 'Identifier',
-                                    'name': binOp[node.operator]
+                                    'type': 'Identifier', 'name': binOp[node.operator]
                                 }
                             };
                             visit(node.left);
@@ -7356,9 +7118,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                     break;
                 case 'ArrayExpression':
                     {
-                        node['elements'].forEach(function (elem, index) {
-                            visit(elem);
-                        });
+                        node['elements'].forEach(function (elem, index) { visit(elem); });
                     }
                     break;
                 case 'AssignmentExpression':
@@ -7376,9 +7136,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                 case 'CallExpression':
                     {
                         visit(node.callee);
-                        node['arguments'].forEach(function (argument, index) {
-                            visit(argument);
-                        });
+                        node['arguments'].forEach(function (argument, index) { visit(argument); });
                     }
                     break;
                 case 'CatchClause':
@@ -7400,16 +7158,12 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                 case 'NewExpression':
                     {
                         visit(node.callee);
-                        node['arguments'].forEach(function (argument, index) {
-                            visit(argument);
-                        });
+                        node['arguments'].forEach(function (argument, index) { visit(argument); });
                     }
                     break;
                 case 'ObjectExpression':
                     {
-                        node['properties'].forEach(function (prop, index) {
-                            visit(prop);
-                        });
+                        node['properties'].forEach(function (prop, index) { visit(prop); });
                     }
                     break;
                 case 'ReturnStatement':
@@ -7419,25 +7173,19 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                     break;
                 case 'SequenceExpression':
                     {
-                        node['expressions'].forEach(function (expr, index) {
-                            visit(expr);
-                        });
+                        node['expressions'].forEach(function (expr, index) { visit(expr); });
                     }
                     break;
                 case 'SwitchCase':
                     {
                         visit(node.test);
-                        node['consequent'].forEach(function (expr, index) {
-                            visit(expr);
-                        });
+                        node['consequent'].forEach(function (expr, index) { visit(expr); });
                     }
                     break;
                 case 'SwitchStatement':
                     {
                         visit(node.discriminant);
-                        node['cases'].forEach(function (kase, index) {
-                            visit(kase);
-                        });
+                        node['cases'].forEach(function (kase, index) { visit(kase); });
                     }
                     break;
                 case 'ThrowStatement':
@@ -7448,12 +7196,8 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                 case 'TryStatement':
                     {
                         visit(node.block);
-                        node['guardedHandlers'].forEach(function (guardedHandler, index) {
-                            visit(guardedHandler);
-                        });
-                        node['handlers'].forEach(function (handler, index) {
-                            visit(handler);
-                        });
+                        node['guardedHandlers'].forEach(function (guardedHandler, index) { visit(guardedHandler); });
+                        node['handlers'].forEach(function (handler, index) { visit(handler); });
                         visit(node.finalizer);
                     }
                     break;
@@ -7485,18 +7229,19 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
                     {
                         if (node.operator && unaryOp[node.operator]) {
                             node.type = 'CallExpression';
-                            node.callee = {
-                                'type': 'MemberExpression',
-                                'computed': false,
-                                'object': {
-                                    'type': 'Identifier',
-                                    'name': MATHSCRIPT_NAMESPACE
-                                },
-                                'property': {
-                                    'type': 'Identifier',
-                                    'name': unaryOp[node.operator]
-                                }
-                            };
+                            node.callee =
+                                {
+                                    'type': 'MemberExpression',
+                                    'computed': false,
+                                    'object': {
+                                        'type': 'Identifier',
+                                        'name': MATHSCRIPT_NAMESPACE
+                                    },
+                                    'property': {
+                                        'type': 'Identifier',
+                                        'name': unaryOp[node.operator]
+                                    }
+                                };
                             visit(node.argument);
                             node['arguments'] = [node.argument];
                         }
@@ -7564,61 +7309,21 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         // The fallback is for native types.
         return fallback(lhs, rhs);
     }
-    function add(p, q) {
-        return binEval(p, q, '__add__', '__radd__', function (a, b) {
-            return a + b;
-        });
-    }
-    function sub(p, q) {
-        return binEval(p, q, '__sub__', '__rsub__', function (a, b) {
-            return a - b;
-        });
-    }
-    function mul(p, q) {
-        return binEval(p, q, '__mul__', '__rmul__', function (a, b) {
-            return a * b;
-        });
-    }
-    function div(p, q) {
-        return binEval(p, q, '__div__', '__rdiv__', function (a, b) {
-            return a / b;
-        });
-    }
-    function mod(p, q) {
-        return binEval(p, q, '__mod__', '__rmod__', function (a, b) {
-            return a % b;
-        });
-    }
-    function bitwiseIOR(p, q) {
-        return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) {
-            return a | b;
-        });
-    }
-    function bitwiseXOR(p, q) {
-        return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) {
-            return a ^ b;
-        });
-    }
-    function lshift(p, q) {
-        return binEval(p, q, '__lshift__', '__rlshift__', function (a, b) {
-            return a << b;
-        });
-    }
-    function rshift(p, q) {
-        return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) {
-            return a >> b;
-        });
-    }
-    function eq(p, q) {
-        return binEval(p, q, '__eq__', '__req__', function (a, b) {
-            return a === b;
-        });
-    }
-    function ne(p, q) {
-        return binEval(p, q, '__ne__', '__rne__', function (a, b) {
-            return a !== b;
-        });
-    }
+    function add(p, q) { return binEval(p, q, '__add__', '__radd__', function (a, b) { return a + b; }); }
+    function sub(p, q) { return binEval(p, q, '__sub__', '__rsub__', function (a, b) { return a - b; }); }
+    function mul(p, q) { return binEval(p, q, '__mul__', '__rmul__', function (a, b) { return a * b; }); }
+    function div(p, q) { return binEval(p, q, '__div__', '__rdiv__', function (a, b) { return a / b; }); }
+    function mod(p, q) { return binEval(p, q, '__mod__', '__rmod__', function (a, b) { return a % b; }); }
+    function bitwiseIOR(p, q) { return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) { return a | b; }); }
+    function bitwiseXOR(p, q) { return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) { return a ^ b; }); }
+    function lshift(p, q) { return binEval(p, q, '__lshift__', '__rlshift__', function (a, b) { return a << b; }); }
+    function rshift(p, q) { return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) { return a >> b; }); }
+    function eq(p, q) { return binEval(p, q, '__eq__', '__req__', function (a, b) { return a === b; }); }
+    function ne(p, q) { return binEval(p, q, '__ne__', '__rne__', function (a, b) { return a !== b; }); }
+    function ge(p, q) { return binEval(p, q, '__ge__', '__rge__', function (a, b) { return a >= b; }); }
+    function gt(p, q) { return binEval(p, q, '__gt__', '__rgt__', function (a, b) { return a > b; }); }
+    function le(p, q) { return binEval(p, q, '__le__', '__rle__', function (a, b) { return a <= b; }); }
+    function lt(p, q) { return binEval(p, q, '__lt__', '__rlt__', function (a, b) { return a < b; }); }
     function exp(x) {
         if (specialMethod(x, '__exp__')) {
             return x['__exp__']();
@@ -7662,7 +7367,7 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         }
     }
     var Ms = {
-        'VERSION': core.VERSION,
+        'VERSION': core_1.VERSION,
         parse: parse,
         transpile: transpile,
         add: add,
@@ -7676,6 +7381,10 @@ define('davinci-mathscript',["require", "exports", 'davinci-mathscript/core', 'd
         mod: mod,
         eq: eq,
         ne: ne,
+        ge: ge,
+        gt: gt,
+        le: le,
+        lt: lt,
         neg: neg,
         pos: pos,
         bang: bang,

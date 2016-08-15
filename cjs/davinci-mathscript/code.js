@@ -41,39 +41,33 @@ ES6Regex = {
 function isDecimalDigit(ch) {
     return 0x30 <= ch && ch <= 0x39; // 0..9
 }
+exports.isDecimalDigit = isDecimalDigit;
 function isHexDigit(ch) {
-    return 0x30 <= ch && ch <= 0x39 || 0x61 <= ch && ch <= 0x66 || 0x41 <= ch && ch <= 0x46; // A..F
+    return 0x30 <= ch && ch <= 0x39 ||
+        0x61 <= ch && ch <= 0x66 ||
+        0x41 <= ch && ch <= 0x46; // A..F
 }
 function isOctalDigit(ch) {
     return ch >= 0x30 && ch <= 0x37; // 0..7
 }
 // 7.2 White Space
 NON_ASCII_WHITESPACES = [
-    0x1680,
-    0x180E,
-    0x2000,
-    0x2001,
-    0x2002,
-    0x2003,
-    0x2004,
-    0x2005,
-    0x2006,
-    0x2007,
-    0x2008,
-    0x2009,
-    0x200A,
-    0x202F,
-    0x205F,
+    0x1680, 0x180E,
+    0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A,
+    0x202F, 0x205F,
     0x3000,
     0xFEFF
 ];
 function isWhiteSpace(ch) {
-    return ch === 0x20 || ch === 0x09 || ch === 0x0B || ch === 0x0C || ch === 0xA0 || ch >= 0x1680 && NON_ASCII_WHITESPACES.indexOf(ch) >= 0;
+    return ch === 0x20 || ch === 0x09 || ch === 0x0B || ch === 0x0C || ch === 0xA0 ||
+        ch >= 0x1680 && NON_ASCII_WHITESPACES.indexOf(ch) >= 0;
 }
+exports.isWhiteSpace = isWhiteSpace;
 // 7.3 Line Terminators
 function isLineTerminator(ch) {
     return ch === 0x0A || ch === 0x0D || ch === 0x2028 || ch === 0x2029;
 }
+exports.isLineTerminator = isLineTerminator;
 // 7.6 Identifier Names and Identifiers
 function fromCodePoint(cp) {
     if (cp <= 0xFFFF) {
@@ -85,11 +79,18 @@ function fromCodePoint(cp) {
 }
 IDENTIFIER_START = new Array(0x80);
 for (ch = 0; ch < 0x80; ++ch) {
-    IDENTIFIER_START[ch] = ch >= 0x61 && ch <= 0x7A || ch >= 0x41 && ch <= 0x5A || ch === 0x24 || ch === 0x5F; // $ (dollar) and _ (underscore)
+    IDENTIFIER_START[ch] =
+        ch >= 0x61 && ch <= 0x7A ||
+            ch >= 0x41 && ch <= 0x5A ||
+            ch === 0x24 || ch === 0x5F; // $ (dollar) and _ (underscore)
 }
 IDENTIFIER_PART = new Array(0x80);
 for (ch = 0; ch < 0x80; ++ch) {
-    IDENTIFIER_PART[ch] = ch >= 0x61 && ch <= 0x7A || ch >= 0x41 && ch <= 0x5A || ch >= 0x30 && ch <= 0x39 || ch === 0x24 || ch === 0x5F; // $ (dollar) and _ (underscore)
+    IDENTIFIER_PART[ch] =
+        ch >= 0x61 && ch <= 0x7A ||
+            ch >= 0x41 && ch <= 0x5A ||
+            ch >= 0x30 && ch <= 0x39 ||
+            ch === 0x24 || ch === 0x5F; // $ (dollar) and _ (underscore)
 }
 function isIdentifierStartES5(ch) {
     return ch < 0x80 ? IDENTIFIER_START[ch] : ES5Regex.NonAsciiIdentifierStart.test(fromCodePoint(ch));
@@ -103,17 +104,7 @@ function isIdentifierStartES6(ch) {
 function isIdentifierPartES6(ch) {
     return ch < 0x80 ? IDENTIFIER_PART[ch] : ES6Regex.NonAsciiIdentifierPart.test(fromCodePoint(ch));
 }
-var code = {
-    isDecimalDigit: isDecimalDigit,
-    isHexDigit: isHexDigit,
-    isOctalDigit: isOctalDigit,
-    isWhiteSpace: isWhiteSpace,
-    isLineTerminator: isLineTerminator,
-    isIdentifierStartES5: isIdentifierStartES5,
-    isIdentifierPartES5: isIdentifierPartES5,
-    isIdentifierStartES6: isIdentifierStartES6,
-    isIdentifierPartES6: isIdentifierPartES6,
-    isIdentifierStart: isIdentifierStartES6,
-    isIdentifierPart: isIdentifierPartES6
-};
-module.exports = code;
+function isIdentifierPart(ch) {
+    return isIdentifierPartES6(ch);
+}
+exports.isIdentifierPart = isIdentifierPart;

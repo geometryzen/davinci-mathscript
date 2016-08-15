@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.11</em>
+            <em>API Docs for: 1.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -113,6 +113,7 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
+    &quot;use strict&quot;;
     var Token, TokenName, FnExprTokens, Syntax, PlaceHolders, PropertyKind, Messages, Regex, source, strict, index, lineNumber, lineStart, length, lookahead, state, extra;
     Token = {
         BooleanLiteral: 1,
@@ -136,7 +137,15 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
     TokenName[Token.StringLiteral] = &#x27;String&#x27;;
     TokenName[Token.RegularExpression] = &#x27;RegularExpression&#x27;;
     // A function following one of those tokens is an expression.
-    FnExprTokens = [&#x27;(&#x27;, &#x27;{&#x27;, &#x27;[&#x27;, &#x27;in&#x27;, &#x27;typeof&#x27;, &#x27;instanceof&#x27;, &#x27;new&#x27;, &#x27;return&#x27;, &#x27;case&#x27;, &#x27;delete&#x27;, &#x27;throw&#x27;, &#x27;void&#x27;, &#x27;=&#x27;, &#x27;+=&#x27;, &#x27;-=&#x27;, &#x27;*=&#x27;, &#x27;/=&#x27;, &#x27;%=&#x27;, &#x27;&lt;&lt;=&#x27;, &#x27;&gt;&gt;=&#x27;, &#x27;&gt;&gt;&gt;=&#x27;, &#x27;&amp;=&#x27;, &#x27;|=&#x27;, &#x27;^=&#x27;, &#x27;,&#x27;, &#x27;+&#x27;, &#x27;-&#x27;, &#x27;*&#x27;, &#x27;/&#x27;, &#x27;%&#x27;, &#x27;++&#x27;, &#x27;--&#x27;, &#x27;&lt;&lt;&#x27;, &#x27;&gt;&gt;&#x27;, &#x27;&gt;&gt;&gt;&#x27;, &#x27;&amp;&#x27;, &#x27;|&#x27;, &#x27;^&#x27;, &#x27;!&#x27;, &#x27;~&#x27;, &#x27;&amp;&amp;&#x27;, &#x27;||&#x27;, &#x27;?&#x27;, &#x27;:&#x27;, &#x27;===&#x27;, &#x27;==&#x27;, &#x27;&gt;=&#x27;, &#x27;&lt;=&#x27;, &#x27;&lt;&#x27;, &#x27;&gt;&#x27;, &#x27;!=&#x27;, &#x27;!==&#x27;];
+    FnExprTokens = [&#x27;(&#x27;, &#x27;{&#x27;, &#x27;[&#x27;, &#x27;in&#x27;, &#x27;typeof&#x27;, &#x27;instanceof&#x27;, &#x27;new&#x27;,
+        &#x27;return&#x27;, &#x27;case&#x27;, &#x27;delete&#x27;, &#x27;throw&#x27;, &#x27;void&#x27;,
+        // assignment operators
+        &#x27;=&#x27;, &#x27;+=&#x27;, &#x27;-=&#x27;, &#x27;*=&#x27;, &#x27;/=&#x27;, &#x27;%=&#x27;, &#x27;&lt;&lt;=&#x27;, &#x27;&gt;&gt;=&#x27;, &#x27;&gt;&gt;&gt;=&#x27;,
+        &#x27;&amp;=&#x27;, &#x27;|=&#x27;, &#x27;^=&#x27;, &#x27;,&#x27;,
+        // binary/unary operators
+        &#x27;+&#x27;, &#x27;-&#x27;, &#x27;*&#x27;, &#x27;/&#x27;, &#x27;%&#x27;, &#x27;++&#x27;, &#x27;--&#x27;, &#x27;&lt;&lt;&#x27;, &#x27;&gt;&gt;&#x27;, &#x27;&gt;&gt;&gt;&#x27;, &#x27;&amp;&#x27;,
+        &#x27;|&#x27;, &#x27;^&#x27;, &#x27;!&#x27;, &#x27;~&#x27;, &#x27;&amp;&amp;&#x27;, &#x27;||&#x27;, &#x27;?&#x27;, &#x27;:&#x27;, &#x27;===&#x27;, &#x27;==&#x27;, &#x27;&gt;=&#x27;,
+        &#x27;&lt;=&#x27;, &#x27;&lt;&#x27;, &#x27;&gt;&#x27;, &#x27;!=&#x27;, &#x27;!==&#x27;];
     Syntax = {
         AssignmentExpression: &#x27;AssignmentExpression&#x27;,
         ArrayExpression: &#x27;ArrayExpression&#x27;,
@@ -252,7 +261,8 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
     }
     // 7.2 White Space
     function isWhiteSpace(ch) {
-        return (ch === 0x20) || (ch === 0x09) || (ch === 0x0B) || (ch === 0x0C) || (ch === 0xA0) || (ch &gt;= 0x1680 &amp;&amp; [0x1680, 0x180E, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000, 0xFEFF].indexOf(ch) &gt;= 0);
+        return (ch === 0x20) || (ch === 0x09) || (ch === 0x0B) || (ch === 0x0C) || (ch === 0xA0) ||
+            (ch &gt;= 0x1680 &amp;&amp; [0x1680, 0x180E, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000, 0xFEFF].indexOf(ch) &gt;= 0);
     }
     // 7.3 Line Terminators
     function isLineTerminator(ch) {
@@ -260,10 +270,19 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
     }
     // 7.6 Identifier Names and Identifiers
     function isIdentifierStart(ch) {
-        return (ch === 0x24) || (ch === 0x5F) || (ch &gt;= 0x41 &amp;&amp; ch &lt;= 0x5A) || (ch &gt;= 0x61 &amp;&amp; ch &lt;= 0x7A) || (ch === 0x5C) || ((ch &gt;= 0x80) &amp;&amp; Regex.NonAsciiIdentifierStart.test(String.fromCharCode(ch)));
+        return (ch === 0x24) || (ch === 0x5F) ||
+            (ch &gt;= 0x41 &amp;&amp; ch &lt;= 0x5A) ||
+            (ch &gt;= 0x61 &amp;&amp; ch &lt;= 0x7A) ||
+            (ch === 0x5C) ||
+            ((ch &gt;= 0x80) &amp;&amp; Regex.NonAsciiIdentifierStart.test(String.fromCharCode(ch)));
     }
     function isIdentifierPart(ch) {
-        return (ch === 0x24) || (ch === 0x5F) || (ch &gt;= 0x41 &amp;&amp; ch &lt;= 0x5A) || (ch &gt;= 0x61 &amp;&amp; ch &lt;= 0x7A) || (ch &gt;= 0x30 &amp;&amp; ch &lt;= 0x39) || (ch === 0x5C) || ((ch &gt;= 0x80) &amp;&amp; Regex.NonAsciiIdentifierPart.test(String.fromCharCode(ch)));
+        return (ch === 0x24) || (ch === 0x5F) ||
+            (ch &gt;= 0x41 &amp;&amp; ch &lt;= 0x5A) ||
+            (ch &gt;= 0x61 &amp;&amp; ch &lt;= 0x7A) ||
+            (ch &gt;= 0x30 &amp;&amp; ch &lt;= 0x39) ||
+            (ch === 0x5C) ||
+            ((ch &gt;= 0x80) &amp;&amp; Regex.NonAsciiIdentifierPart.test(String.fromCharCode(ch)));
     }
     // 7.6.1.2 Future Reserved Words
     function isFutureReservedWord(id) {
@@ -303,17 +322,25 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
         if (strict &amp;&amp; isStrictModeReservedWord(id)) {
             return true;
         }
+        // &#x27;const&#x27; is specialized as Keyword in V8.
+        // &#x27;yield&#x27; and &#x27;let&#x27; are for compatibility with SpiderMonkey and ES.next.
+        // Some others are from future reserved words.
         switch (id.length) {
             case 2:
                 return (id === &#x27;if&#x27;) || (id === &#x27;in&#x27;) || (id === &#x27;do&#x27;);
             case 3:
-                return (id === &#x27;var&#x27;) || (id === &#x27;for&#x27;) || (id === &#x27;new&#x27;) || (id === &#x27;try&#x27;) || (id === &#x27;let&#x27;);
+                return (id === &#x27;var&#x27;) || (id === &#x27;for&#x27;) || (id === &#x27;new&#x27;) ||
+                    (id === &#x27;try&#x27;) || (id === &#x27;let&#x27;);
             case 4:
-                return (id === &#x27;this&#x27;) || (id === &#x27;else&#x27;) || (id === &#x27;case&#x27;) || (id === &#x27;void&#x27;) || (id === &#x27;with&#x27;) || (id === &#x27;enum&#x27;);
+                return (id === &#x27;this&#x27;) || (id === &#x27;else&#x27;) || (id === &#x27;case&#x27;) ||
+                    (id === &#x27;void&#x27;) || (id === &#x27;with&#x27;) || (id === &#x27;enum&#x27;);
             case 5:
-                return (id === &#x27;while&#x27;) || (id === &#x27;break&#x27;) || (id === &#x27;catch&#x27;) || (id === &#x27;throw&#x27;) || (id === &#x27;const&#x27;) || (id === &#x27;yield&#x27;) || (id === &#x27;class&#x27;) || (id === &#x27;super&#x27;);
+                return (id === &#x27;while&#x27;) || (id === &#x27;break&#x27;) || (id === &#x27;catch&#x27;) ||
+                    (id === &#x27;throw&#x27;) || (id === &#x27;const&#x27;) || (id === &#x27;yield&#x27;) ||
+                    (id === &#x27;class&#x27;) || (id === &#x27;super&#x27;);
             case 6:
-                return (id === &#x27;return&#x27;) || (id === &#x27;typeof&#x27;) || (id === &#x27;delete&#x27;) || (id === &#x27;switch&#x27;) || (id === &#x27;export&#x27;) || (id === &#x27;import&#x27;);
+                return (id === &#x27;return&#x27;) || (id === &#x27;typeof&#x27;) || (id === &#x27;delete&#x27;) ||
+                    (id === &#x27;switch&#x27;) || (id === &#x27;export&#x27;) || (id === &#x27;import&#x27;);
             case 7:
                 return (id === &#x27;default&#x27;) || (id === &#x27;finally&#x27;) || (id === &#x27;extends&#x27;);
             case 8:
@@ -632,17 +659,18 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
     function scanPunctuator() {
         var start = index, code = source.charCodeAt(index), code2, ch1 = source[index], ch2, ch3, ch4;
         switch (code) {
-            case 0x2E:
-            case 0x28:
-            case 0x29:
-            case 0x3B:
-            case 0x2C:
-            case 0x7B:
-            case 0x7D:
-            case 0x5B:
-            case 0x5D:
-            case 0x3A:
-            case 0x3F:
+            // Check for most common single-character punctuators.
+            case 0x2E: // . dot
+            case 0x28: // ( open bracket
+            case 0x29: // ) close bracket
+            case 0x3B: // ; semicolon
+            case 0x2C: // , comma
+            case 0x7B: // { open curly brace
+            case 0x7D: // } close curly brace
+            case 0x5B: // [
+            case 0x5D: // ]
+            case 0x3A: // :
+            case 0x3F: // ?
             case 0x7E:
                 ++index;
                 if (extra.tokenize) {
@@ -666,15 +694,15 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
                 // &#x27;=&#x27; (U+003D) marks an assignment or comparison operator.
                 if (code2 === 0x3D) {
                     switch (code) {
-                        case 0x2B:
-                        case 0x2D:
-                        case 0x2F:
-                        case 0x3C:
-                        case 0x3E:
-                        case 0x5E:
-                        case 0x7C:
-                        case 0x25:
-                        case 0x26:
+                        case 0x2B: // +
+                        case 0x2D: // -
+                        case 0x2F: // /
+                        case 0x3C: // &lt;
+                        case 0x3E: // &gt;
+                        case 0x5E: // ^
+                        case 0x7C: // |
+                        case 0x25: // %
+                        case 0x26: // &amp;
                         case 0x2A:
                             index += 2;
                             return {
@@ -685,7 +713,7 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
                                 start: start,
                                 end: index
                             };
-                        case 0x21:
+                        case 0x21: // !
                         case 0x3D:
                             index += 2;
                             // !== and ===
@@ -846,6 +874,8 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
     }
     function isImplicitOctalLiteral() {
         var i, ch;
+        // Implicit octal, unless there is a non-octal digit.
+        // (Annex B.1.1 on Numeric Literals)
         for (i = index + 1; i &lt; length; ++i) {
             ch = source[i];
             if (ch === &#x27;8&#x27; || ch === &#x27;9&#x27;) {
@@ -994,7 +1024,9 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
                                     code = code * 8 + &#x27;01234567&#x27;.indexOf(source[index++]);
                                     // 3 digits are only allowed when string starts
                                     // with 0, 1, 2, 3
-                                    if (&#x27;0123&#x27;.indexOf(ch) &gt;= 0 &amp;&amp; index &lt; length &amp;&amp; isOctalDigit(source[index])) {
+                                    if (&#x27;0123&#x27;.indexOf(ch) &gt;= 0 &amp;&amp;
+                                        index &lt; length &amp;&amp;
+                                        isOctalDigit(source[index])) {
                                         code = code * 8 + &#x27;01234567&#x27;.indexOf(source[index++]);
                                     }
                                 }
@@ -1047,19 +1079,25 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             // negatives in unlikely scenarios. For example, &#x60;[\u{61}-b]&#x60; is a
             // perfectly valid pattern that is equivalent to &#x60;[a-b]&#x60;, but it
             // would be replaced by &#x60;[x-b]&#x60; which throws an error.
-            tmp = tmp.replace(/\\u\{([0-9a-fA-F]+)\}/g, function ($0, $1) {
+            tmp = tmp
+                .replace(/\\u\{([0-9a-fA-F]+)\}/g, function ($0, $1) {
                 if (parseInt($1, 16) &lt;= 0x10FFFF) {
                     return &#x27;x&#x27;;
                 }
                 throwError(Messages.InvalidRegExp);
-            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, &#x27;x&#x27;);
+            })
+                .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, &#x27;x&#x27;);
         }
+        // First, detect invalid regular expressions.
         try {
             value = new RegExp(tmp);
         }
         catch (e) {
             throwError(Messages.InvalidRegExp);
         }
+        // Return a regular expression object for this pattern-flag pair, or
+        // &#x60;null&#x60; in case the current environment doesn&#x27;t support the flags it
+        // uses.
         try {
             return new RegExp(pattern, flags);
         }
@@ -1227,7 +1265,10 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
         return regex;
     }
     function isIdentifierName(token) {
-        return token.type === Token.Identifier || token.type === Token.Keyword || token.type === Token.BooleanLiteral || token.type === Token.NullLiteral;
+        return token.type === Token.Identifier ||
+            token.type === Token.Keyword ||
+            token.type === Token.BooleanLiteral ||
+            token.type === Token.NullLiteral;
     }
     function advanceSlash() {
         var prevToken, checkToken;
@@ -1244,7 +1285,12 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             }
             if (prevToken.value === &#x27;)&#x27;) {
                 checkToken = extra.tokens[extra.openParenToken - 1];
-                if (checkToken &amp;&amp; checkToken.type === &#x27;Keyword&#x27; &amp;&amp; (checkToken.value === &#x27;if&#x27; || checkToken.value === &#x27;while&#x27; || checkToken.value === &#x27;for&#x27; || checkToken.value === &#x27;with&#x27;)) {
+                if (checkToken &amp;&amp;
+                    checkToken.type === &#x27;Keyword&#x27; &amp;&amp;
+                    (checkToken.value === &#x27;if&#x27; ||
+                        checkToken.value === &#x27;while&#x27; ||
+                        checkToken.value === &#x27;for&#x27; ||
+                        checkToken.value === &#x27;with&#x27;)) {
                     return collectRegex();
                 }
                 return scanPunctuator();
@@ -1252,14 +1298,16 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             if (prevToken.value === &#x27;}&#x27;) {
                 // Dividing a function by anything makes little sense,
                 // but we have to check for that.
-                if (extra.tokens[extra.openCurlyToken - 3] &amp;&amp; extra.tokens[extra.openCurlyToken - 3].type === &#x27;Keyword&#x27;) {
+                if (extra.tokens[extra.openCurlyToken - 3] &amp;&amp;
+                    extra.tokens[extra.openCurlyToken - 3].type === &#x27;Keyword&#x27;) {
                     // Anonymous function.
                     checkToken = extra.tokens[extra.openCurlyToken - 4];
                     if (!checkToken) {
                         return scanPunctuator();
                     }
                 }
-                else if (extra.tokens[extra.openCurlyToken - 4] &amp;&amp; extra.tokens[extra.openCurlyToken - 4].type === &#x27;Keyword&#x27;) {
+                else if (extra.tokens[extra.openCurlyToken - 4] &amp;&amp;
+                    extra.tokens[extra.openCurlyToken - 4].type === &#x27;Keyword&#x27;) {
                     // Named function.
                     checkToken = extra.tokens[extra.openCurlyToken - 5];
                     if (!checkToken) {
@@ -1849,7 +1897,12 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
     function unexpectedTokenError(token, message) {
         var msg = Messages.UnexpectedToken;
         if (token) {
-            msg = message ? message : (token.type === Token.EOF) ? Messages.UnexpectedEOS : (token.type === Token.Identifier) ? Messages.UnexpectedIdentifier : (token.type === Token.NumericLiteral) ? Messages.UnexpectedNumber : (token.type === Token.StringLiteral) ? Messages.UnexpectedString : Messages.UnexpectedToken;
+            msg = message ? message :
+                (token.type === Token.EOF) ? Messages.UnexpectedEOS :
+                    (token.type === Token.Identifier) ? Messages.UnexpectedIdentifier :
+                        (token.type === Token.NumericLiteral) ? Messages.UnexpectedNumber :
+                            (token.type === Token.StringLiteral) ? Messages.UnexpectedString :
+                                Messages.UnexpectedToken;
             if (token.type === Token.Keyword) {
                 if (isFutureReservedWord(token.value)) {
                     msg = Messages.UnexpectedReserved;
@@ -1860,7 +1913,9 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             }
         }
         msg = msg.replace(&#x27;%0&#x27;, token ? token.value : &#x27;ILLEGAL&#x27;);
-        return (token &amp;&amp; typeof token.lineNumber === &#x27;number&#x27;) ? createError(token.lineNumber, token.start, msg) : createError(lineNumber, index, msg);
+        return (token &amp;&amp; typeof token.lineNumber === &#x27;number&#x27;) ?
+            createError(token.lineNumber, token.start, msg) :
+            createError(lineNumber, index, msg);
     }
     function throwUnexpectedToken(token, message) {
         throw unexpectedTokenError(token, message);
@@ -1930,7 +1985,18 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             return false;
         }
         op = lookahead.value;
-        return op === &#x27;=&#x27; || op === &#x27;*=&#x27; || op === &#x27;/=&#x27; || op === &#x27;%=&#x27; || op === &#x27;+=&#x27; || op === &#x27;-=&#x27; || op === &#x27;&lt;&lt;=&#x27; || op === &#x27;&gt;&gt;=&#x27; || op === &#x27;&gt;&gt;&gt;=&#x27; || op === &#x27;&amp;=&#x27; || op === &#x27;^=&#x27; || op === &#x27;|=&#x27;;
+        return op === &#x27;=&#x27; ||
+            op === &#x27;*=&#x27; ||
+            op === &#x27;/=&#x27; ||
+            op === &#x27;%=&#x27; ||
+            op === &#x27;+=&#x27; ||
+            op === &#x27;-=&#x27; ||
+            op === &#x27;&lt;&lt;=&#x27; ||
+            op === &#x27;&gt;&gt;=&#x27; ||
+            op === &#x27;&gt;&gt;&gt;=&#x27; ||
+            op === &#x27;&amp;=&#x27; ||
+            op === &#x27;^=&#x27; ||
+            op === &#x27;|=&#x27;;
     }
     function consumeSemicolon() {
         var line, oldIndex = index, oldLineNumber = lineNumber, oldLineStart = lineStart, oldLookahead = lookahead;
@@ -2409,6 +2475,7 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
         right = parseUnaryExpression();
         stack = [left, token, right];
         while ((prec = binaryPrecedence(lookahead, state.allowIn)) &gt; 0) {
+            // Reduce: make a binary expression from the three topmost entries.
             while ((stack.length &gt; 2) &amp;&amp; (prec &lt;= stack[stack.length - 2].prec)) {
                 right = stack.pop();
                 operator = stack.pop().value;
@@ -2526,7 +2593,8 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
         token = lookahead;
         expr = parseConditionalExpression();
         if (expr === PlaceHolders.ArrowParameterPlaceHolder || match(&#x27;=&gt;&#x27;)) {
-            if (state.parenthesisCount === oldParenthesisCount || state.parenthesisCount === (oldParenthesisCount + 1)) {
+            if (state.parenthesisCount === oldParenthesisCount ||
+                state.parenthesisCount === (oldParenthesisCount + 1)) {
                 if (expr.type === Syntax.Identifier) {
                     list = reinterpretAsCoverFormalsList([expr]);
                 }
@@ -2775,7 +2843,9 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
         state.inIteration = true;
         body = parseStatement();
         state.inIteration = oldInIteration;
-        return (typeof left === &#x27;undefined&#x27;) ? node.finishForStatement(init, test, update, body) : node.finishForInStatement(left, right, body);
+        return (typeof left === &#x27;undefined&#x27;) ?
+            node.finishForStatement(init, test, update, body) :
+            node.finishForInStatement(left, right, body);
     }
     // 12.7 The continue statement
     function parseContinueStatement(node) {
@@ -3065,6 +3135,7 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             sourceElement = parseSourceElement();
             sourceElements.push(sourceElement);
             if (sourceElement.expression.type !== Syntax.Literal) {
+                // this is not directive
                 break;
             }
             directive = source.slice(token.start + 1, token.end - 1);
@@ -3287,6 +3358,7 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
             sourceElement = parseSourceElement();
             sourceElements.push(sourceElement);
             if (sourceElement.expression.type !== Syntax.Literal) {
+                // this is not directive
                 break;
             }
             directive = source.slice(token.start + 1, token.end - 1);
@@ -3396,6 +3468,8 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
                 catch (lexError) {
                     if (extra.errors) {
                         extra.errors.push(lexError);
+                        // We have to break on the first error
+                        // to avoid infinite loops.
                         break;
                     }
                     else {
@@ -3420,7 +3494,8 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
         }
         return tokens;
     }
-    function parse(code, options) {
+    exports.tokenize = tokenize;
+    function esprimaParse(code, options) {
         var program, toString;
         toString = String;
         if (typeof code !== &#x27;string&#x27; &amp;&amp; !(code instanceof String)) {
@@ -3487,9 +3562,10 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
         }
         return program;
     }
+    exports.esprimaParse = esprimaParse;
     // Deep copy.
     /* istanbul ignore next */
-    var esprimaSyntax = (function () {
+    exports.esprimaSyntax = (function () {
         var name, types = {};
         if (typeof Object.create === &#x27;function&#x27;) {
             types = Object.create(null);
@@ -3504,12 +3580,6 @@ define([&quot;require&quot;, &quot;exports&quot;], function (require, exports) {
         }
         return types;
     }());
-    var esprima = {
-        tokenize: tokenize,
-        parse: parse,
-        Synatax: esprimaSyntax
-    };
-    return esprima;
 });
 
     </pre>

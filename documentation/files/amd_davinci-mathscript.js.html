@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.11</em>
+            <em>API Docs for: 1.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -79,7 +79,8 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&#x27;, &#x27;davinci-mathscript/esprima&#x27;, &#x27;davinci-mathscript/escodegen&#x27;], function (require, exports, core, esprima, escodegen) {
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;./davinci-mathscript/core&#x27;, &#x27;./davinci-mathscript/esprima&#x27;, &#x27;./davinci-mathscript/escodegen&#x27;], function (require, exports, core_1, esprima_1, escodegen_1) {
+    &quot;use strict&quot;;
     /**
      * Provides the MathScript module
      *
@@ -102,7 +103,11 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         &#x27;&gt;&gt;&#x27;: &#x27;rshift&#x27;,
         &#x27;%&#x27;: &#x27;mod&#x27;,
         &#x27;===&#x27;: &#x27;eq&#x27;,
-        &#x27;!==&#x27;: &#x27;ne&#x27;
+        &#x27;!==&#x27;: &#x27;ne&#x27;,
+        &#x27;&gt;&#x27;: &#x27;gt&#x27;,
+        &#x27;&gt;=&#x27;: &#x27;ge&#x27;,
+        &#x27;&lt;&#x27;: &#x27;lt&#x27;,
+        &#x27;&lt;=&#x27;: &#x27;le&#x27;
     };
     // The increment and decrement operators are problematic from a timing perspective.
     var unaryOp = {
@@ -112,30 +117,26 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         &#x27;~&#x27;: &#x27;tilde&#x27; /*,&#x27;++&#x27;:&#x27;increment&#x27;,&#x27;--&#x27;:&#x27;decrement&#x27;*/
     };
     function parse(code, options) {
-        var tree = esprima.parse(code, options);
+        var tree = esprima_1.esprimaParse(code, options);
         //console.log(JSON.stringify(tree), null, &#x27;\t&#x27;);
         visit(tree);
         return tree;
     }
     function transpile(code, options) {
         var tree = parse(code, options);
-        return escodegen.generate(tree, null);
+        return escodegen_1.generate(tree, null);
     }
     function visit(node) {
         if (node &amp;&amp; node.type) {
             switch (node.type) {
                 case &#x27;BlockStatement&#x27;:
                     {
-                        node.body.forEach(function (part, index) {
-                            visit(part);
-                        });
+                        node.body.forEach(function (part, index) { visit(part); });
                     }
                     break;
                 case &#x27;FunctionDeclaration&#x27;:
                     {
-                        node.params.forEach(function (param, index) {
-                            visit(param);
-                        });
+                        node.params.forEach(function (param, index) { visit(param); });
                         visit(node.body);
                     }
                     break;
@@ -148,9 +149,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     break;
                 case &#x27;VariableDeclaration&#x27;:
                     {
-                        node.declarations.forEach(function (declaration, index) {
-                            visit(declaration);
-                        });
+                        node.declarations.forEach(function (declaration, index) { visit(declaration); });
                     }
                     break;
                 case &#x27;VariableDeclarator&#x27;:
@@ -177,8 +176,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                                 &#x27;computed&#x27;: false,
                                 &#x27;object&#x27;: { &#x27;type&#x27;: &#x27;Identifier&#x27;, &#x27;name&#x27;: MATHSCRIPT_NAMESPACE },
                                 &#x27;property&#x27;: {
-                                    &#x27;type&#x27;: &#x27;Identifier&#x27;,
-                                    &#x27;name&#x27;: binOp[node.operator]
+                                    &#x27;type&#x27;: &#x27;Identifier&#x27;, &#x27;name&#x27;: binOp[node.operator]
                                 }
                             };
                             visit(node.left);
@@ -220,9 +218,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     break;
                 case &#x27;ArrayExpression&#x27;:
                     {
-                        node[&#x27;elements&#x27;].forEach(function (elem, index) {
-                            visit(elem);
-                        });
+                        node[&#x27;elements&#x27;].forEach(function (elem, index) { visit(elem); });
                     }
                     break;
                 case &#x27;AssignmentExpression&#x27;:
@@ -240,9 +236,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 case &#x27;CallExpression&#x27;:
                     {
                         visit(node.callee);
-                        node[&#x27;arguments&#x27;].forEach(function (argument, index) {
-                            visit(argument);
-                        });
+                        node[&#x27;arguments&#x27;].forEach(function (argument, index) { visit(argument); });
                     }
                     break;
                 case &#x27;CatchClause&#x27;:
@@ -264,16 +258,12 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 case &#x27;NewExpression&#x27;:
                     {
                         visit(node.callee);
-                        node[&#x27;arguments&#x27;].forEach(function (argument, index) {
-                            visit(argument);
-                        });
+                        node[&#x27;arguments&#x27;].forEach(function (argument, index) { visit(argument); });
                     }
                     break;
                 case &#x27;ObjectExpression&#x27;:
                     {
-                        node[&#x27;properties&#x27;].forEach(function (prop, index) {
-                            visit(prop);
-                        });
+                        node[&#x27;properties&#x27;].forEach(function (prop, index) { visit(prop); });
                     }
                     break;
                 case &#x27;ReturnStatement&#x27;:
@@ -283,25 +273,19 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     break;
                 case &#x27;SequenceExpression&#x27;:
                     {
-                        node[&#x27;expressions&#x27;].forEach(function (expr, index) {
-                            visit(expr);
-                        });
+                        node[&#x27;expressions&#x27;].forEach(function (expr, index) { visit(expr); });
                     }
                     break;
                 case &#x27;SwitchCase&#x27;:
                     {
                         visit(node.test);
-                        node[&#x27;consequent&#x27;].forEach(function (expr, index) {
-                            visit(expr);
-                        });
+                        node[&#x27;consequent&#x27;].forEach(function (expr, index) { visit(expr); });
                     }
                     break;
                 case &#x27;SwitchStatement&#x27;:
                     {
                         visit(node.discriminant);
-                        node[&#x27;cases&#x27;].forEach(function (kase, index) {
-                            visit(kase);
-                        });
+                        node[&#x27;cases&#x27;].forEach(function (kase, index) { visit(kase); });
                     }
                     break;
                 case &#x27;ThrowStatement&#x27;:
@@ -312,12 +296,8 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                 case &#x27;TryStatement&#x27;:
                     {
                         visit(node.block);
-                        node[&#x27;guardedHandlers&#x27;].forEach(function (guardedHandler, index) {
-                            visit(guardedHandler);
-                        });
-                        node[&#x27;handlers&#x27;].forEach(function (handler, index) {
-                            visit(handler);
-                        });
+                        node[&#x27;guardedHandlers&#x27;].forEach(function (guardedHandler, index) { visit(guardedHandler); });
+                        node[&#x27;handlers&#x27;].forEach(function (handler, index) { visit(handler); });
                         visit(node.finalizer);
                     }
                     break;
@@ -349,18 +329,19 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
                     {
                         if (node.operator &amp;&amp; unaryOp[node.operator]) {
                             node.type = &#x27;CallExpression&#x27;;
-                            node.callee = {
-                                &#x27;type&#x27;: &#x27;MemberExpression&#x27;,
-                                &#x27;computed&#x27;: false,
-                                &#x27;object&#x27;: {
-                                    &#x27;type&#x27;: &#x27;Identifier&#x27;,
-                                    &#x27;name&#x27;: MATHSCRIPT_NAMESPACE
-                                },
-                                &#x27;property&#x27;: {
-                                    &#x27;type&#x27;: &#x27;Identifier&#x27;,
-                                    &#x27;name&#x27;: unaryOp[node.operator]
-                                }
-                            };
+                            node.callee =
+                                {
+                                    &#x27;type&#x27;: &#x27;MemberExpression&#x27;,
+                                    &#x27;computed&#x27;: false,
+                                    &#x27;object&#x27;: {
+                                        &#x27;type&#x27;: &#x27;Identifier&#x27;,
+                                        &#x27;name&#x27;: MATHSCRIPT_NAMESPACE
+                                    },
+                                    &#x27;property&#x27;: {
+                                        &#x27;type&#x27;: &#x27;Identifier&#x27;,
+                                        &#x27;name&#x27;: unaryOp[node.operator]
+                                    }
+                                };
                             visit(node.argument);
                             node[&#x27;arguments&#x27;] = [node.argument];
                         }
@@ -428,61 +409,21 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         // The fallback is for native types.
         return fallback(lhs, rhs);
     }
-    function add(p, q) {
-        return binEval(p, q, &#x27;__add__&#x27;, &#x27;__radd__&#x27;, function (a, b) {
-            return a + b;
-        });
-    }
-    function sub(p, q) {
-        return binEval(p, q, &#x27;__sub__&#x27;, &#x27;__rsub__&#x27;, function (a, b) {
-            return a - b;
-        });
-    }
-    function mul(p, q) {
-        return binEval(p, q, &#x27;__mul__&#x27;, &#x27;__rmul__&#x27;, function (a, b) {
-            return a * b;
-        });
-    }
-    function div(p, q) {
-        return binEval(p, q, &#x27;__div__&#x27;, &#x27;__rdiv__&#x27;, function (a, b) {
-            return a / b;
-        });
-    }
-    function mod(p, q) {
-        return binEval(p, q, &#x27;__mod__&#x27;, &#x27;__rmod__&#x27;, function (a, b) {
-            return a % b;
-        });
-    }
-    function bitwiseIOR(p, q) {
-        return binEval(p, q, &#x27;__vbar__&#x27;, &#x27;__rvbar__&#x27;, function (a, b) {
-            return a | b;
-        });
-    }
-    function bitwiseXOR(p, q) {
-        return binEval(p, q, &#x27;__wedge__&#x27;, &#x27;__rwedge__&#x27;, function (a, b) {
-            return a ^ b;
-        });
-    }
-    function lshift(p, q) {
-        return binEval(p, q, &#x27;__lshift__&#x27;, &#x27;__rlshift__&#x27;, function (a, b) {
-            return a &lt;&lt; b;
-        });
-    }
-    function rshift(p, q) {
-        return binEval(p, q, &#x27;__rshift__&#x27;, &#x27;__rrshift__&#x27;, function (a, b) {
-            return a &gt;&gt; b;
-        });
-    }
-    function eq(p, q) {
-        return binEval(p, q, &#x27;__eq__&#x27;, &#x27;__req__&#x27;, function (a, b) {
-            return a === b;
-        });
-    }
-    function ne(p, q) {
-        return binEval(p, q, &#x27;__ne__&#x27;, &#x27;__rne__&#x27;, function (a, b) {
-            return a !== b;
-        });
-    }
+    function add(p, q) { return binEval(p, q, &#x27;__add__&#x27;, &#x27;__radd__&#x27;, function (a, b) { return a + b; }); }
+    function sub(p, q) { return binEval(p, q, &#x27;__sub__&#x27;, &#x27;__rsub__&#x27;, function (a, b) { return a - b; }); }
+    function mul(p, q) { return binEval(p, q, &#x27;__mul__&#x27;, &#x27;__rmul__&#x27;, function (a, b) { return a * b; }); }
+    function div(p, q) { return binEval(p, q, &#x27;__div__&#x27;, &#x27;__rdiv__&#x27;, function (a, b) { return a / b; }); }
+    function mod(p, q) { return binEval(p, q, &#x27;__mod__&#x27;, &#x27;__rmod__&#x27;, function (a, b) { return a % b; }); }
+    function bitwiseIOR(p, q) { return binEval(p, q, &#x27;__vbar__&#x27;, &#x27;__rvbar__&#x27;, function (a, b) { return a | b; }); }
+    function bitwiseXOR(p, q) { return binEval(p, q, &#x27;__wedge__&#x27;, &#x27;__rwedge__&#x27;, function (a, b) { return a ^ b; }); }
+    function lshift(p, q) { return binEval(p, q, &#x27;__lshift__&#x27;, &#x27;__rlshift__&#x27;, function (a, b) { return a &lt;&lt; b; }); }
+    function rshift(p, q) { return binEval(p, q, &#x27;__rshift__&#x27;, &#x27;__rrshift__&#x27;, function (a, b) { return a &gt;&gt; b; }); }
+    function eq(p, q) { return binEval(p, q, &#x27;__eq__&#x27;, &#x27;__req__&#x27;, function (a, b) { return a === b; }); }
+    function ne(p, q) { return binEval(p, q, &#x27;__ne__&#x27;, &#x27;__rne__&#x27;, function (a, b) { return a !== b; }); }
+    function ge(p, q) { return binEval(p, q, &#x27;__ge__&#x27;, &#x27;__rge__&#x27;, function (a, b) { return a &gt;= b; }); }
+    function gt(p, q) { return binEval(p, q, &#x27;__gt__&#x27;, &#x27;__rgt__&#x27;, function (a, b) { return a &gt; b; }); }
+    function le(p, q) { return binEval(p, q, &#x27;__le__&#x27;, &#x27;__rle__&#x27;, function (a, b) { return a &lt;= b; }); }
+    function lt(p, q) { return binEval(p, q, &#x27;__lt__&#x27;, &#x27;__rlt__&#x27;, function (a, b) { return a &lt; b; }); }
     function exp(x) {
         if (specialMethod(x, &#x27;__exp__&#x27;)) {
             return x[&#x27;__exp__&#x27;]();
@@ -526,7 +467,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         }
     }
     var Ms = {
-        &#x27;VERSION&#x27;: core.VERSION,
+        &#x27;VERSION&#x27;: core_1.VERSION,
         parse: parse,
         transpile: transpile,
         add: add,
@@ -540,6 +481,10 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/core&
         mod: mod,
         eq: eq,
         ne: ne,
+        ge: ge,
+        gt: gt,
+        le: le,
+        lt: lt,
         neg: neg,
         pos: pos,
         bang: bang,

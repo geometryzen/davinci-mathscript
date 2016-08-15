@@ -1,9 +1,6 @@
-import core = require('davinci-mathscript/core');
-import esprima = require('davinci-mathscript/esprima');
-import escodegen = require('davinci-mathscript/escodegen');
-import estraverse = require('davinci-mathscript/estraverse');
-import esutils = require('davinci-mathscript/esutils');
-
+import {VERSION} from './davinci-mathscript/core';
+import {esprimaParse} from './davinci-mathscript/esprima';
+import {generate} from './davinci-mathscript/escodegen';
 /**
  * Provides the MathScript module
  *
@@ -29,7 +26,11 @@ var binOp =
         '>>': 'rshift',
         '%': 'mod',
         '===': 'eq',
-        '!==': 'ne'
+        '!==': 'ne',
+        '>': 'gt',
+        '>=': 'ge',
+        '<': 'lt',
+        '<=': 'le'
     };
 
 // The increment and decrement operators are problematic from a timing perspective.
@@ -41,7 +42,7 @@ var unaryOp = {
 };
 
 function parse(code, options) {
-    var tree = esprima.parse(code, options);
+    var tree = esprimaParse(code, options);
     //console.log(JSON.stringify(tree), null, '\t');
     visit(tree);
     return tree;
@@ -49,7 +50,7 @@ function parse(code, options) {
 
 function transpile(code, options) {
     var tree = parse(code, options);
-    return escodegen.generate(tree, null);
+    return generate(tree, null);
 }
 
 function visit(node) {
@@ -327,6 +328,10 @@ function rshift(p, q) { return binEval(p, q, '__rshift__', '__rrshift__', functi
 
 function eq(p, q) { return binEval(p, q, '__eq__', '__req__', function(a, b) { return a === b }); }
 function ne(p, q) { return binEval(p, q, '__ne__', '__rne__', function(a, b) { return a !== b }); }
+function ge(p, q) { return binEval(p, q, '__ge__', '__rge__', function(a, b) { return a >= b }); }
+function gt(p, q) { return binEval(p, q, '__gt__', '__rgt__', function(a, b) { return a > b }); }
+function le(p, q) { return binEval(p, q, '__le__', '__rle__', function(a, b) { return a <= b }); }
+function lt(p, q) { return binEval(p, q, '__lt__', '__rlt__', function(a, b) { return a < b }); }
 
 function exp<T>(x: T): T {
     if (specialMethod(x, '__exp__')) {
@@ -375,7 +380,7 @@ function tilde(x) {
     }
 }
 var Ms = {
-    'VERSION': core.VERSION,
+    'VERSION': VERSION,
     parse: parse,
     transpile: transpile,
 
@@ -391,6 +396,10 @@ var Ms = {
 
     eq: eq,
     ne: ne,
+    ge: ge,
+    gt: gt,
+    le: le,
+    lt: lt,
 
     neg: neg,
     pos: pos,

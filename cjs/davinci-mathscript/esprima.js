@@ -31,6 +31,7 @@
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+"use strict";
 var Token, TokenName, FnExprTokens, Syntax, PlaceHolders, PropertyKind, Messages, Regex, source, strict, index, lineNumber, lineStart, length, lookahead, state, extra;
 Token = {
     BooleanLiteral: 1,
@@ -54,7 +55,15 @@ TokenName[Token.Punctuator] = 'Punctuator';
 TokenName[Token.StringLiteral] = 'String';
 TokenName[Token.RegularExpression] = 'RegularExpression';
 // A function following one of those tokens is an expression.
-FnExprTokens = ['(', '{', '[', 'in', 'typeof', 'instanceof', 'new', 'return', 'case', 'delete', 'throw', 'void', '=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '>>>=', '&=', '|=', '^=', ',', '+', '-', '*', '/', '%', '++', '--', '<<', '>>', '>>>', '&', '|', '^', '!', '~', '&&', '||', '?', ':', '===', '==', '>=', '<=', '<', '>', '!=', '!=='];
+FnExprTokens = ['(', '{', '[', 'in', 'typeof', 'instanceof', 'new',
+    'return', 'case', 'delete', 'throw', 'void',
+    // assignment operators
+    '=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '>>>=',
+    '&=', '|=', '^=', ',',
+    // binary/unary operators
+    '+', '-', '*', '/', '%', '++', '--', '<<', '>>', '>>>', '&',
+    '|', '^', '!', '~', '&&', '||', '?', ':', '===', '==', '>=',
+    '<=', '<', '>', '!=', '!=='];
 Syntax = {
     AssignmentExpression: 'AssignmentExpression',
     ArrayExpression: 'ArrayExpression',
@@ -170,7 +179,8 @@ function isOctalDigit(ch) {
 }
 // 7.2 White Space
 function isWhiteSpace(ch) {
-    return (ch === 0x20) || (ch === 0x09) || (ch === 0x0B) || (ch === 0x0C) || (ch === 0xA0) || (ch >= 0x1680 && [0x1680, 0x180E, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000, 0xFEFF].indexOf(ch) >= 0);
+    return (ch === 0x20) || (ch === 0x09) || (ch === 0x0B) || (ch === 0x0C) || (ch === 0xA0) ||
+        (ch >= 0x1680 && [0x1680, 0x180E, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000, 0xFEFF].indexOf(ch) >= 0);
 }
 // 7.3 Line Terminators
 function isLineTerminator(ch) {
@@ -178,10 +188,19 @@ function isLineTerminator(ch) {
 }
 // 7.6 Identifier Names and Identifiers
 function isIdentifierStart(ch) {
-    return (ch === 0x24) || (ch === 0x5F) || (ch >= 0x41 && ch <= 0x5A) || (ch >= 0x61 && ch <= 0x7A) || (ch === 0x5C) || ((ch >= 0x80) && Regex.NonAsciiIdentifierStart.test(String.fromCharCode(ch)));
+    return (ch === 0x24) || (ch === 0x5F) ||
+        (ch >= 0x41 && ch <= 0x5A) ||
+        (ch >= 0x61 && ch <= 0x7A) ||
+        (ch === 0x5C) ||
+        ((ch >= 0x80) && Regex.NonAsciiIdentifierStart.test(String.fromCharCode(ch)));
 }
 function isIdentifierPart(ch) {
-    return (ch === 0x24) || (ch === 0x5F) || (ch >= 0x41 && ch <= 0x5A) || (ch >= 0x61 && ch <= 0x7A) || (ch >= 0x30 && ch <= 0x39) || (ch === 0x5C) || ((ch >= 0x80) && Regex.NonAsciiIdentifierPart.test(String.fromCharCode(ch)));
+    return (ch === 0x24) || (ch === 0x5F) ||
+        (ch >= 0x41 && ch <= 0x5A) ||
+        (ch >= 0x61 && ch <= 0x7A) ||
+        (ch >= 0x30 && ch <= 0x39) ||
+        (ch === 0x5C) ||
+        ((ch >= 0x80) && Regex.NonAsciiIdentifierPart.test(String.fromCharCode(ch)));
 }
 // 7.6.1.2 Future Reserved Words
 function isFutureReservedWord(id) {
@@ -221,17 +240,25 @@ function isKeyword(id) {
     if (strict && isStrictModeReservedWord(id)) {
         return true;
     }
+    // 'const' is specialized as Keyword in V8.
+    // 'yield' and 'let' are for compatibility with SpiderMonkey and ES.next.
+    // Some others are from future reserved words.
     switch (id.length) {
         case 2:
             return (id === 'if') || (id === 'in') || (id === 'do');
         case 3:
-            return (id === 'var') || (id === 'for') || (id === 'new') || (id === 'try') || (id === 'let');
+            return (id === 'var') || (id === 'for') || (id === 'new') ||
+                (id === 'try') || (id === 'let');
         case 4:
-            return (id === 'this') || (id === 'else') || (id === 'case') || (id === 'void') || (id === 'with') || (id === 'enum');
+            return (id === 'this') || (id === 'else') || (id === 'case') ||
+                (id === 'void') || (id === 'with') || (id === 'enum');
         case 5:
-            return (id === 'while') || (id === 'break') || (id === 'catch') || (id === 'throw') || (id === 'const') || (id === 'yield') || (id === 'class') || (id === 'super');
+            return (id === 'while') || (id === 'break') || (id === 'catch') ||
+                (id === 'throw') || (id === 'const') || (id === 'yield') ||
+                (id === 'class') || (id === 'super');
         case 6:
-            return (id === 'return') || (id === 'typeof') || (id === 'delete') || (id === 'switch') || (id === 'export') || (id === 'import');
+            return (id === 'return') || (id === 'typeof') || (id === 'delete') ||
+                (id === 'switch') || (id === 'export') || (id === 'import');
         case 7:
             return (id === 'default') || (id === 'finally') || (id === 'extends');
         case 8:
@@ -550,17 +577,18 @@ function scanIdentifier() {
 function scanPunctuator() {
     var start = index, code = source.charCodeAt(index), code2, ch1 = source[index], ch2, ch3, ch4;
     switch (code) {
-        case 0x2E:
-        case 0x28:
-        case 0x29:
-        case 0x3B:
-        case 0x2C:
-        case 0x7B:
-        case 0x7D:
-        case 0x5B:
-        case 0x5D:
-        case 0x3A:
-        case 0x3F:
+        // Check for most common single-character punctuators.
+        case 0x2E: // . dot
+        case 0x28: // ( open bracket
+        case 0x29: // ) close bracket
+        case 0x3B: // ; semicolon
+        case 0x2C: // , comma
+        case 0x7B: // { open curly brace
+        case 0x7D: // } close curly brace
+        case 0x5B: // [
+        case 0x5D: // ]
+        case 0x3A: // :
+        case 0x3F: // ?
         case 0x7E:
             ++index;
             if (extra.tokenize) {
@@ -584,15 +612,15 @@ function scanPunctuator() {
             // '=' (U+003D) marks an assignment or comparison operator.
             if (code2 === 0x3D) {
                 switch (code) {
-                    case 0x2B:
-                    case 0x2D:
-                    case 0x2F:
-                    case 0x3C:
-                    case 0x3E:
-                    case 0x5E:
-                    case 0x7C:
-                    case 0x25:
-                    case 0x26:
+                    case 0x2B: // +
+                    case 0x2D: // -
+                    case 0x2F: // /
+                    case 0x3C: // <
+                    case 0x3E: // >
+                    case 0x5E: // ^
+                    case 0x7C: // |
+                    case 0x25: // %
+                    case 0x26: // &
                     case 0x2A:
                         index += 2;
                         return {
@@ -603,7 +631,7 @@ function scanPunctuator() {
                             start: start,
                             end: index
                         };
-                    case 0x21:
+                    case 0x21: // !
                     case 0x3D:
                         index += 2;
                         // !== and ===
@@ -764,6 +792,8 @@ function scanOctalLiteral(prefix, start) {
 }
 function isImplicitOctalLiteral() {
     var i, ch;
+    // Implicit octal, unless there is a non-octal digit.
+    // (Annex B.1.1 on Numeric Literals)
     for (i = index + 1; i < length; ++i) {
         ch = source[i];
         if (ch === '8' || ch === '9') {
@@ -912,7 +942,9 @@ function scanStringLiteral() {
                                 code = code * 8 + '01234567'.indexOf(source[index++]);
                                 // 3 digits are only allowed when string starts
                                 // with 0, 1, 2, 3
-                                if ('0123'.indexOf(ch) >= 0 && index < length && isOctalDigit(source[index])) {
+                                if ('0123'.indexOf(ch) >= 0 &&
+                                    index < length &&
+                                    isOctalDigit(source[index])) {
                                     code = code * 8 + '01234567'.indexOf(source[index++]);
                                 }
                             }
@@ -965,19 +997,25 @@ function testRegExp(pattern, flags) {
         // negatives in unlikely scenarios. For example, `[\u{61}-b]` is a
         // perfectly valid pattern that is equivalent to `[a-b]`, but it
         // would be replaced by `[x-b]` which throws an error.
-        tmp = tmp.replace(/\\u\{([0-9a-fA-F]+)\}/g, function ($0, $1) {
+        tmp = tmp
+            .replace(/\\u\{([0-9a-fA-F]+)\}/g, function ($0, $1) {
             if (parseInt($1, 16) <= 0x10FFFF) {
                 return 'x';
             }
             throwError(Messages.InvalidRegExp);
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, 'x');
+        })
+            .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, 'x');
     }
+    // First, detect invalid regular expressions.
     try {
         value = new RegExp(tmp);
     }
     catch (e) {
         throwError(Messages.InvalidRegExp);
     }
+    // Return a regular expression object for this pattern-flag pair, or
+    // `null` in case the current environment doesn't support the flags it
+    // uses.
     try {
         return new RegExp(pattern, flags);
     }
@@ -1145,7 +1183,10 @@ function collectRegex() {
     return regex;
 }
 function isIdentifierName(token) {
-    return token.type === Token.Identifier || token.type === Token.Keyword || token.type === Token.BooleanLiteral || token.type === Token.NullLiteral;
+    return token.type === Token.Identifier ||
+        token.type === Token.Keyword ||
+        token.type === Token.BooleanLiteral ||
+        token.type === Token.NullLiteral;
 }
 function advanceSlash() {
     var prevToken, checkToken;
@@ -1162,7 +1203,12 @@ function advanceSlash() {
         }
         if (prevToken.value === ')') {
             checkToken = extra.tokens[extra.openParenToken - 1];
-            if (checkToken && checkToken.type === 'Keyword' && (checkToken.value === 'if' || checkToken.value === 'while' || checkToken.value === 'for' || checkToken.value === 'with')) {
+            if (checkToken &&
+                checkToken.type === 'Keyword' &&
+                (checkToken.value === 'if' ||
+                    checkToken.value === 'while' ||
+                    checkToken.value === 'for' ||
+                    checkToken.value === 'with')) {
                 return collectRegex();
             }
             return scanPunctuator();
@@ -1170,14 +1216,16 @@ function advanceSlash() {
         if (prevToken.value === '}') {
             // Dividing a function by anything makes little sense,
             // but we have to check for that.
-            if (extra.tokens[extra.openCurlyToken - 3] && extra.tokens[extra.openCurlyToken - 3].type === 'Keyword') {
+            if (extra.tokens[extra.openCurlyToken - 3] &&
+                extra.tokens[extra.openCurlyToken - 3].type === 'Keyword') {
                 // Anonymous function.
                 checkToken = extra.tokens[extra.openCurlyToken - 4];
                 if (!checkToken) {
                     return scanPunctuator();
                 }
             }
-            else if (extra.tokens[extra.openCurlyToken - 4] && extra.tokens[extra.openCurlyToken - 4].type === 'Keyword') {
+            else if (extra.tokens[extra.openCurlyToken - 4] &&
+                extra.tokens[extra.openCurlyToken - 4].type === 'Keyword') {
                 // Named function.
                 checkToken = extra.tokens[extra.openCurlyToken - 5];
                 if (!checkToken) {
@@ -1767,7 +1815,12 @@ function tolerateError(messageFormat) {
 function unexpectedTokenError(token, message) {
     var msg = Messages.UnexpectedToken;
     if (token) {
-        msg = message ? message : (token.type === Token.EOF) ? Messages.UnexpectedEOS : (token.type === Token.Identifier) ? Messages.UnexpectedIdentifier : (token.type === Token.NumericLiteral) ? Messages.UnexpectedNumber : (token.type === Token.StringLiteral) ? Messages.UnexpectedString : Messages.UnexpectedToken;
+        msg = message ? message :
+            (token.type === Token.EOF) ? Messages.UnexpectedEOS :
+                (token.type === Token.Identifier) ? Messages.UnexpectedIdentifier :
+                    (token.type === Token.NumericLiteral) ? Messages.UnexpectedNumber :
+                        (token.type === Token.StringLiteral) ? Messages.UnexpectedString :
+                            Messages.UnexpectedToken;
         if (token.type === Token.Keyword) {
             if (isFutureReservedWord(token.value)) {
                 msg = Messages.UnexpectedReserved;
@@ -1778,7 +1831,9 @@ function unexpectedTokenError(token, message) {
         }
     }
     msg = msg.replace('%0', token ? token.value : 'ILLEGAL');
-    return (token && typeof token.lineNumber === 'number') ? createError(token.lineNumber, token.start, msg) : createError(lineNumber, index, msg);
+    return (token && typeof token.lineNumber === 'number') ?
+        createError(token.lineNumber, token.start, msg) :
+        createError(lineNumber, index, msg);
 }
 function throwUnexpectedToken(token, message) {
     throw unexpectedTokenError(token, message);
@@ -1848,7 +1903,18 @@ function matchAssign() {
         return false;
     }
     op = lookahead.value;
-    return op === '=' || op === '*=' || op === '/=' || op === '%=' || op === '+=' || op === '-=' || op === '<<=' || op === '>>=' || op === '>>>=' || op === '&=' || op === '^=' || op === '|=';
+    return op === '=' ||
+        op === '*=' ||
+        op === '/=' ||
+        op === '%=' ||
+        op === '+=' ||
+        op === '-=' ||
+        op === '<<=' ||
+        op === '>>=' ||
+        op === '>>>=' ||
+        op === '&=' ||
+        op === '^=' ||
+        op === '|=';
 }
 function consumeSemicolon() {
     var line, oldIndex = index, oldLineNumber = lineNumber, oldLineStart = lineStart, oldLookahead = lookahead;
@@ -2327,6 +2393,7 @@ function parseBinaryExpression() {
     right = parseUnaryExpression();
     stack = [left, token, right];
     while ((prec = binaryPrecedence(lookahead, state.allowIn)) > 0) {
+        // Reduce: make a binary expression from the three topmost entries.
         while ((stack.length > 2) && (prec <= stack[stack.length - 2].prec)) {
             right = stack.pop();
             operator = stack.pop().value;
@@ -2444,7 +2511,8 @@ function parseAssignmentExpression() {
     token = lookahead;
     expr = parseConditionalExpression();
     if (expr === PlaceHolders.ArrowParameterPlaceHolder || match('=>')) {
-        if (state.parenthesisCount === oldParenthesisCount || state.parenthesisCount === (oldParenthesisCount + 1)) {
+        if (state.parenthesisCount === oldParenthesisCount ||
+            state.parenthesisCount === (oldParenthesisCount + 1)) {
             if (expr.type === Syntax.Identifier) {
                 list = reinterpretAsCoverFormalsList([expr]);
             }
@@ -2693,7 +2761,9 @@ function parseForStatement(node) {
     state.inIteration = true;
     body = parseStatement();
     state.inIteration = oldInIteration;
-    return (typeof left === 'undefined') ? node.finishForStatement(init, test, update, body) : node.finishForInStatement(left, right, body);
+    return (typeof left === 'undefined') ?
+        node.finishForStatement(init, test, update, body) :
+        node.finishForInStatement(left, right, body);
 }
 // 12.7 The continue statement
 function parseContinueStatement(node) {
@@ -2983,6 +3053,7 @@ function parseFunctionSourceElements() {
         sourceElement = parseSourceElement();
         sourceElements.push(sourceElement);
         if (sourceElement.expression.type !== Syntax.Literal) {
+            // this is not directive
             break;
         }
         directive = source.slice(token.start + 1, token.end - 1);
@@ -3205,6 +3276,7 @@ function parseSourceElements() {
         sourceElement = parseSourceElement();
         sourceElements.push(sourceElement);
         if (sourceElement.expression.type !== Syntax.Literal) {
+            // this is not directive
             break;
         }
         directive = source.slice(token.start + 1, token.end - 1);
@@ -3314,6 +3386,8 @@ function tokenize(code, options) {
             catch (lexError) {
                 if (extra.errors) {
                     extra.errors.push(lexError);
+                    // We have to break on the first error
+                    // to avoid infinite loops.
                     break;
                 }
                 else {
@@ -3338,7 +3412,8 @@ function tokenize(code, options) {
     }
     return tokens;
 }
-function parse(code, options) {
+exports.tokenize = tokenize;
+function esprimaParse(code, options) {
     var program, toString;
     toString = String;
     if (typeof code !== 'string' && !(code instanceof String)) {
@@ -3405,9 +3480,10 @@ function parse(code, options) {
     }
     return program;
 }
+exports.esprimaParse = esprimaParse;
 // Deep copy.
 /* istanbul ignore next */
-var esprimaSyntax = (function () {
+exports.esprimaSyntax = (function () {
     var name, types = {};
     if (typeof Object.create === 'function') {
         types = Object.create(null);
@@ -3422,9 +3498,3 @@ var esprimaSyntax = (function () {
     }
     return types;
 }());
-var esprima = {
-    tokenize: tokenize,
-    parse: parse,
-    Synatax: esprimaSyntax
-};
-module.exports = esprima;

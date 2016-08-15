@@ -13,6 +13,10 @@ declare var Ms: {
     mod: (p: any, q: any) => any;
     eq: (p: any, q: any) => any;
     ne: (p: any, q: any) => any;
+    ge: (p: any, q: any) => any;
+    gt: (p: any, q: any) => any;
+    le: (p: any, q: any) => any;
+    lt: (p: any, q: any) => any;
     neg: (x: any) => any;
     pos: (x: any) => any;
     bang: (x: any) => any;

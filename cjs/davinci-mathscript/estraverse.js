@@ -27,9 +27,8 @@
 /*jshint indent:4*/
 /*global exports:true*/
 'use strict';
-var Syntax, isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE;
-function ignoreJSHintError(what) {
-}
+var isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE;
+function ignoreJSHintError(what) { }
 isArray = Array.isArray;
 if (!isArray) {
     isArray = function isArray(array) {
@@ -99,8 +98,7 @@ function lowerBound(array, func) {
 }
 ignoreJSHintError(lowerBound);
 objectCreate = Object.create || (function () {
-    function F() {
-    }
+    function F() { }
     return function (o) {
         F.prototype = o;
         return new F();
@@ -121,7 +119,7 @@ function extend(to, from) {
     }
     return to;
 }
-Syntax = {
+exports.Syntax = {
     AssignmentExpression: 'AssignmentExpression',
     AssignmentPattern: 'AssignmentPattern',
     ArrayExpression: 'ArrayExpression',
@@ -291,14 +289,13 @@ Reference.prototype.remove = function remove() {
         return false;
     }
 };
-function Element(node, path, wrap, ref) {
+function ElementNode(node, path, wrap, ref) {
     this.node = node;
     this.path = path;
     this.wrap = wrap;
     this.ref = ref;
 }
-function Controller() {
-}
+function Controller() { }
 // API:
 // return property path array from root to current node
 Controller.prototype.path = function path() {
@@ -400,7 +397,7 @@ function isNode(node) {
     return typeof node === 'object' && typeof node.type === 'string';
 }
 function isProperty(nodeType, key) {
-    return (nodeType === Syntax.ObjectExpression || nodeType === Syntax.ObjectPattern) && 'properties' === key;
+    return (nodeType === exports.Syntax.ObjectExpression || nodeType === exports.Syntax.ObjectPattern) && 'properties' === key;
 }
 Controller.prototype.traverse = function traverse(root, visitor) {
     var worklist, leavelist, element, node, nodeType, ret, key, current, current2, candidates, candidate, sentinel;
@@ -410,8 +407,8 @@ Controller.prototype.traverse = function traverse(root, visitor) {
     worklist = this.__worklist;
     leavelist = this.__leavelist;
     // initialize
-    worklist.push(new Element(root, null, null, null));
-    leavelist.push(new Element(null, null, null, null));
+    worklist.push(new ElementNode(root, null, null, null));
+    leavelist.push(new ElementNode(null, null, null, null));
     while (worklist.length) {
         element = worklist.pop();
         if (element === sentinel) {
@@ -457,10 +454,10 @@ Controller.prototype.traverse = function traverse(root, visitor) {
                             continue;
                         }
                         if (isProperty(nodeType, candidates[current])) {
-                            element = new Element(candidate[current2], [key, current2], 'Property', null);
+                            element = new ElementNode(candidate[current2], [key, current2], 'Property', null);
                         }
                         else if (isNode(candidate[current2])) {
-                            element = new Element(candidate[current2], [key, current2], null, null);
+                            element = new ElementNode(candidate[current2], [key, current2], null, null);
                         }
                         else {
                             continue;
@@ -469,7 +466,7 @@ Controller.prototype.traverse = function traverse(root, visitor) {
                     }
                 }
                 else if (isNode(candidate)) {
-                    worklist.push(new Element(candidate, key, null, null));
+                    worklist.push(new ElementNode(candidate, key, null, null));
                 }
             }
         }
@@ -505,7 +502,7 @@ Controller.prototype.replace = function replace(root, visitor) {
     outer = {
         root: root
     };
-    element = new Element(root, null, null, new Reference(outer, 'root'));
+    element = new ElementNode(root, null, null, new Reference(outer, 'root'));
     worklist.push(element);
     leavelist.push(element);
     while (worklist.length) {
@@ -576,10 +573,10 @@ Controller.prototype.replace = function replace(root, visitor) {
                         continue;
                     }
                     if (isProperty(nodeType, candidates[current])) {
-                        element = new Element(candidate[current2], [key, current2], 'Property', new Reference(candidate, current2));
+                        element = new ElementNode(candidate[current2], [key, current2], 'Property', new Reference(candidate, current2));
                     }
                     else if (isNode(candidate[current2])) {
-                        element = new Element(candidate[current2], [key, current2], null, new Reference(candidate, current2));
+                        element = new ElementNode(candidate[current2], [key, current2], null, new Reference(candidate, current2));
                     }
                     else {
                         continue;
@@ -588,7 +585,7 @@ Controller.prototype.replace = function replace(root, visitor) {
                 }
             }
             else if (isNode(candidate)) {
-                worklist.push(new Element(candidate, key, null, new Reference(node, key)));
+                worklist.push(new ElementNode(candidate, key, null, new Reference(node, key)));
             }
         }
     }
@@ -699,13 +696,3 @@ function attachComments(tree, providedComments, tokens) {
     });
     return tree;
 }
-var estraverse = {
-    Syntax: Syntax,
-    traverse: traverse,
-    replace: replace,
-    attachComments: attachComments,
-    VisitorKeys: VisitorKeys,
-    VisitorOption: VisitorOption,
-    Controller: Controller
-};
-module.exports = estraverse;

@@ -1,44 +1,41 @@
-/*
-  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
-  Copyright (C) 2012-2014 Yusuke Suzuki <utatane.tea@gmail.com>
-  Copyright (C) 2015 Ingvar Stepanyan <me@rreverser.com>
-  Copyright (C) 2014 Ivan Nikulin <ifaaan@gmail.com>
-  Copyright (C) 2012-2013 Michael Ficarra <escodegen.copyright@michael.ficarra.me>
-  Copyright (C) 2012-2013 Mathias Bynens <mathias@qiwi.be>
-  Copyright (C) 2013 Irakli Gozalishvili <rfobic@gmail.com>
-  Copyright (C) 2012 Robert Gust-Bardon <donate@robert.gust-bardon.org>
-  Copyright (C) 2012 John Freeman <jfreeman08@gmail.com>
-  Copyright (C) 2011-2012 Ariya Hidayat <ariya.hidayat@gmail.com>
-  Copyright (C) 2012 Joost-Wim Boekesteijn <joost-wim@boekesteijn.nl>
-  Copyright (C) 2012 Kris Kowal <kris.kowal@cixar.com>
-  Copyright (C) 2012 Arpad Borsos <arpad.borsos@googlemail.com>
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-/*global exports:true, require:true, global:true*/
-'use strict';
-define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscript/esutils'], function (require, exports, estraverse, esutils) {
-    var Syntax, Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
-    //esutils = require('esutils');
-    Syntax = estraverse.Syntax;
+define(["require", "exports", './estraverse', './code', './code', './code', './code'], function (require, exports, estraverse_1, code_1, code_2, code_3, code_4) {
+    "use strict";
+    /*
+      Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
+      Copyright (C) 2012-2014 Yusuke Suzuki <utatane.tea@gmail.com>
+      Copyright (C) 2015 Ingvar Stepanyan <me@rreverser.com>
+      Copyright (C) 2014 Ivan Nikulin <ifaaan@gmail.com>
+      Copyright (C) 2012-2013 Michael Ficarra <escodegen.copyright@michael.ficarra.me>
+      Copyright (C) 2012-2013 Mathias Bynens <mathias@qiwi.be>
+      Copyright (C) 2013 Irakli Gozalishvili <rfobic@gmail.com>
+      Copyright (C) 2012 Robert Gust-Bardon <donate@robert.gust-bardon.org>
+      Copyright (C) 2012 John Freeman <jfreeman08@gmail.com>
+      Copyright (C) 2011-2012 Ariya Hidayat <ariya.hidayat@gmail.com>
+      Copyright (C) 2012 Joost-Wim Boekesteijn <joost-wim@boekesteijn.nl>
+      Copyright (C) 2012 Kris Kowal <kris.kowal@cixar.com>
+      Copyright (C) 2012 Arpad Borsos <arpad.borsos@googlemail.com>
+    
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions are met:
+    
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in the
+          documentation and/or other materials provided with the distribution.
+    
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+      ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+      DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+      (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+      ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+      THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    */
+    var Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
     // Generation is done by generateExpression.
     function isExpression(node) {
         return CodeGenerator.Expression.hasOwnProperty(node.type);
@@ -173,7 +170,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
     }
     function endsWithLineTerminator(str) {
         var len = str.length;
-        return len && esutils.code.isLineTerminator(str.charCodeAt(len - 1));
+        return len && code_1.isLineTerminator(str.charCodeAt(len - 1));
     }
     function merge(target, override) {
         var key;
@@ -223,7 +220,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             return result;
         }
         point = result.indexOf('.');
-        if (!json && result.charCodeAt(0) === 0x30 && point === 1) {
+        if (!json && result.charCodeAt(0) === 0x30 /* 0 */ && point === 1) {
             point = 0;
             result = result.slice(1);
         }
@@ -239,7 +236,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             temp = +(temp.slice(0, point) + temp.slice(point + 1)) + '';
         }
         pos = 0;
-        while (temp.charCodeAt(temp.length + pos - 1) === 0x30) {
+        while (temp.charCodeAt(temp.length + pos - 1) === 0x30 /* 0 */) {
             --pos;
         }
         if (pos !== 0) {
@@ -249,7 +246,9 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         if (exponent !== 0) {
             temp += 'e' + exponent;
         }
-        if ((temp.length < result.length || (hexadecimal && value > 1e12 && Math.floor(value) === value && (temp = '0x' + value.toString(16)).length < result.length)) && +temp === value) {
+        if ((temp.length < result.length ||
+            (hexadecimal && value > 1e12 && Math.floor(value) === value && (temp = '0x' + value.toString(16)).length < result.length)) &&
+            +temp === value) {
             result = temp;
         }
         return result;
@@ -311,23 +310,23 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
     }
     function escapeAllowedCharacter(code, next) {
         var hex;
-        if (code === 0x08) {
+        if (code === 0x08 /* \b */) {
             return '\\b';
         }
-        if (code === 0x0C) {
+        if (code === 0x0C /* \f */) {
             return '\\f';
         }
-        if (code === 0x09) {
+        if (code === 0x09 /* \t */) {
             return '\\t';
         }
         hex = code.toString(16).toUpperCase();
         if (json || code > 0xFF) {
             return '\\u' + '0000'.slice(hex.length) + hex;
         }
-        else if (code === 0x0000 && !esutils.code.isDecimalDigit(next)) {
+        else if (code === 0x0000 && !code_2.isDecimalDigit(next)) {
             return '\\0';
         }
-        else if (code === 0x000B) {
+        else if (code === 0x000B /* \v */) {
             return '\\x0B';
         }
         else {
@@ -335,13 +334,13 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         }
     }
     function escapeDisallowedCharacter(code) {
-        if (code === 0x5C) {
+        if (code === 0x5C /* \ */) {
             return '\\\\';
         }
-        if (code === 0x0A) {
+        if (code === 0x0A /* \n */) {
             return '\\n';
         }
-        if (code === 0x0D) {
+        if (code === 0x0D /* \r */) {
             return '\\r';
         }
         if (code === 0x2028) {
@@ -357,15 +356,15 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         quote = quotes === 'double' ? '"' : '\'';
         for (i = 0, iz = str.length; i < iz; ++i) {
             code = str.charCodeAt(i);
-            if (code === 0x27) {
+            if (code === 0x27 /* ' */) {
                 quote = '"';
                 break;
             }
-            else if (code === 0x22) {
+            else if (code === 0x22 /* " */) {
                 quote = '\'';
                 break;
             }
-            else if (code === 0x5C) {
+            else if (code === 0x5C /* \ */) {
                 ++i;
             }
         }
@@ -375,20 +374,20 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         var result = '', i, len, code, singleQuotes = 0, doubleQuotes = 0, single, quote;
         for (i = 0, len = str.length; i < len; ++i) {
             code = str.charCodeAt(i);
-            if (code === 0x27) {
+            if (code === 0x27 /* ' */) {
                 ++singleQuotes;
             }
-            else if (code === 0x22) {
+            else if (code === 0x22 /* " */) {
                 ++doubleQuotes;
             }
-            else if (code === 0x2F && json) {
+            else if (code === 0x2F /* / */ && json) {
                 result += '\\';
             }
-            else if (esutils.code.isLineTerminator(code) || code === 0x5C) {
+            else if (code_1.isLineTerminator(code) || code === 0x5C /* \ */) {
                 result += escapeDisallowedCharacter(code);
                 continue;
             }
-            else if ((json && code < 0x20) || !(json || escapeless || (code >= 0x20 && code <= 0x7E))) {
+            else if ((json && code < 0x20 /* SP */) || !(json || escapeless || (code >= 0x20 /* SP */ && code <= 0x7E /* ~ */))) {
                 result += escapeAllowedCharacter(code, str.charCodeAt(i + 1));
                 continue;
             }
@@ -403,7 +402,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         result = quote;
         for (i = 0, len = str.length; i < len; ++i) {
             code = str.charCodeAt(i);
-            if ((code === 0x27 && single) || (code === 0x22 && !single)) {
+            if ((code === 0x27 /* ' */ && single) || (code === 0x22 /* " */ && !single)) {
                 result += '\\';
             }
             result += String.fromCharCode(code);
@@ -465,10 +464,13 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         }
         leftCharCode = leftSource.charCodeAt(leftSource.length - 1);
         rightCharCode = rightSource.charCodeAt(0);
-        if ((leftCharCode === 0x2B || leftCharCode === 0x2D) && leftCharCode === rightCharCode || esutils.code.isIdentifierPart(leftCharCode) && esutils.code.isIdentifierPart(rightCharCode) || leftCharCode === 0x2F && rightCharCode === 0x69) {
+        if ((leftCharCode === 0x2B /* + */ || leftCharCode === 0x2D /* - */) && leftCharCode === rightCharCode ||
+            code_3.isIdentifierPart(leftCharCode) && code_3.isIdentifierPart(rightCharCode) ||
+            leftCharCode === 0x2F /* / */ && rightCharCode === 0x69 /* i */) {
             return [left, noEmptySpace(), right];
         }
-        else if (esutils.code.isWhiteSpace(leftCharCode) || esutils.code.isLineTerminator(leftCharCode) || esutils.code.isWhiteSpace(rightCharCode) || esutils.code.isLineTerminator(rightCharCode)) {
+        else if (code_4.isWhiteSpace(leftCharCode) || code_1.isLineTerminator(leftCharCode) ||
+            code_4.isWhiteSpace(rightCharCode) || code_1.isLineTerminator(rightCharCode)) {
             return [left, right];
         }
         return [left, space, right];
@@ -486,7 +488,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
     function calculateSpaces(str) {
         var i;
         for (i = str.length - 1; i >= 0; --i) {
-            if (esutils.code.isLineTerminator(str.charCodeAt(i))) {
+            if (code_1.isLineTerminator(str.charCodeAt(i))) {
                 break;
             }
         }
@@ -496,10 +498,11 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         var array, i, len, line, j, spaces, previousBase, sn;
         array = value.split(/\r\n|[\r\n]/);
         spaces = Number.MAX_VALUE;
+        // first line doesn't have indentation
         for (i = 1, len = array.length; i < len; ++i) {
             line = array[i];
             j = 0;
-            while (j < line.length && esutils.code.isWhiteSpace(line.charCodeAt(j))) {
+            while (j < line.length && code_4.isWhiteSpace(line.charCodeAt(j))) {
                 ++j;
             }
             if (spaces > j) {
@@ -592,7 +595,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             else {
                 comment = stmt.leadingComments[0];
                 result = [];
-                if (safeConcatenation && stmt.type === Syntax.Program && stmt.body.length === 0) {
+                if (safeConcatenation && stmt.type === estraverse_1.Syntax.Program && stmt.body.length === 0) {
                     result.push('\n');
                 }
                 result.push(generateComment(comment));
@@ -702,12 +705,14 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         CodeGenerator.prototype.generateFunctionParams = function (node) {
             var i, iz, result, hasDefault;
             hasDefault = false;
-            if (node.type === Syntax.ArrowFunctionExpression && !node.rest && (!node.defaults || node.defaults.length === 0) && node.params.length === 1 && node.params[0].type === Syntax.Identifier) {
+            if (node.type === estraverse_1.Syntax.ArrowFunctionExpression &&
+                !node.rest && (!node.defaults || node.defaults.length === 0) &&
+                node.params.length === 1 && node.params[0].type === estraverse_1.Syntax.Identifier) {
                 // arg => { } case
                 result = [generateAsyncPrefix(node, true), generateIdentifier(node.params[0])];
             }
             else {
-                result = node.type === Syntax.ArrowFunctionExpression ? [generateAsyncPrefix(node, false)] : [];
+                result = node.type === estraverse_1.Syntax.ArrowFunctionExpression ? [generateAsyncPrefix(node, false)] : [];
                 result.push('(');
                 if (node.defaults) {
                     hasDefault = true;
@@ -736,7 +741,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             return result;
         };
         CodeGenerator.prototype.generatePattern = function (node, precedence, flags) {
-            if (node.type === Syntax.Identifier) {
+            if (node.type === estraverse_1.Syntax.Identifier) {
                 return generateIdentifier(node);
             }
             return this.generateExpression(node, precedence, flags);
@@ -749,14 +754,14 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                 result = addComments(stmt, result);
             }
             fragment = toSourceNodeWhenNeeded(result).toString();
-            if (stmt.type === Syntax.Program && !safeConcatenation && newline === '' && fragment.charAt(fragment.length - 1) === '\n') {
+            if (stmt.type === estraverse_1.Syntax.Program && !safeConcatenation && newline === '' && fragment.charAt(fragment.length - 1) === '\n') {
                 result = sourceMap ? toSourceNodeWhenNeeded(result).replaceRight(/\s+$/, '') : fragment.replace(/\s+$/, '');
             }
             return toSourceNodeWhenNeeded(result, stmt);
         };
         CodeGenerator.prototype.generateExpression = function (expr, precedence, flags) {
             var result, type;
-            type = expr.type || Syntax.Property;
+            type = expr.type || estraverse_1.Syntax.Property;
             if (extra.verbatim && expr.hasOwnProperty(extra.verbatim)) {
                 return generateVerbatim(expr, precedence);
             }
@@ -769,10 +774,10 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         CodeGenerator.prototype.maybeBlock = function (stmt, flags) {
             var result, noLeadingComment, that = this;
             noLeadingComment = !extra.comment || !stmt.leadingComments;
-            if (stmt.type === Syntax.BlockStatement && noLeadingComment) {
+            if (stmt.type === estraverse_1.Syntax.BlockStatement && noLeadingComment) {
                 return [space, this.generateStatement(stmt, flags)];
             }
-            if (stmt.type === Syntax.EmptyStatement && noLeadingComment) {
+            if (stmt.type === estraverse_1.Syntax.EmptyStatement && noLeadingComment) {
                 return ';';
             }
             withIndent(function () {
@@ -785,7 +790,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         };
         CodeGenerator.prototype.maybeBlockSuffix = function (stmt, result) {
             var ends = endsWithLineTerminator(toSourceNodeWhenNeeded(result).toString());
-            if (stmt.type === Syntax.BlockStatement && (!extra.comment || !stmt.leadingComments) && !ends) {
+            if (stmt.type === estraverse_1.Syntax.BlockStatement && (!extra.comment || !stmt.leadingComments) && !ends) {
                 return [result, space];
             }
             if (ends) {
@@ -796,7 +801,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         CodeGenerator.prototype.generateFunctionBody = function (node) {
             var result, expr;
             result = this.generateFunctionParams(node);
-            if (node.type === Syntax.ArrowFunctionExpression) {
+            if (node.type === estraverse_1.Syntax.ArrowFunctionExpression) {
                 result.push(space);
                 result.push('=>');
             }
@@ -816,7 +821,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         CodeGenerator.prototype.generateIterationForStatement = function (operator, stmt, flags) {
             var result = ['for' + space + '('], that = this;
             withIndent(function () {
-                if (stmt.left.type === Syntax.VariableDeclaration) {
+                if (stmt.left.type === estraverse_1.Syntax.VariableDeclaration) {
                     withIndent(function () {
                         result.push(stmt.left.kind + noEmptySpace());
                         result.push(that.generateStatement(stmt.left.declarations[0], S_FFFF));
@@ -859,7 +864,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             return ';';
         };
         return CodeGenerator;
-    })();
+    }());
     // Helpers.
     function generateIdentifier(node) {
         return toSourceNodeWhenNeeded(node.name, node);
@@ -1067,9 +1072,6 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                 if (stmt.specifiers.length === 0) {
                     result = join(result, '{' + space + '}');
                 }
-                else if (stmt.specifiers[0].type === Syntax.ExportBatchSpecifier) {
-                    result = join(result, this.generateExpression(stmt.specifiers[0], Precedence.Sequence, E_TTT));
-                }
                 else {
                     result = join(result, '{');
                     withIndent(function (indent) {
@@ -1091,6 +1093,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                 if (stmt.source) {
                     result = join(result, [
                         'from' + space,
+                        // ModuleSpecifier
                         this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                         this.semicolon(flags)
                     ]);
@@ -1109,7 +1112,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                     return false;
                 }
                 code = fragment.charCodeAt(5);
-                return code === 0x7B || esutils.code.isWhiteSpace(code) || esutils.code.isLineTerminator(code);
+                return code === 0x7B /* '{' */ || code_4.isWhiteSpace(code) || code_1.isLineTerminator(code);
             }
             function isFunctionPrefixed(fragment) {
                 var code;
@@ -1117,18 +1120,18 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                     return false;
                 }
                 code = fragment.charCodeAt(8);
-                return code === 0x28 || esutils.code.isWhiteSpace(code) || code === 0x2A || esutils.code.isLineTerminator(code);
+                return code === 0x28 /* '(' */ || code_4.isWhiteSpace(code) || code === 0x2A /* '*' */ || code_1.isLineTerminator(code);
             }
             function isAsyncPrefixed(fragment) {
                 var code, i, iz;
                 if (fragment.slice(0, 5) !== 'async') {
                     return false;
                 }
-                if (!esutils.code.isWhiteSpace(fragment.charCodeAt(5))) {
+                if (!code_4.isWhiteSpace(fragment.charCodeAt(5))) {
                     return false;
                 }
                 for (i = 6, iz = fragment.length; i < iz; ++i) {
-                    if (!esutils.code.isWhiteSpace(fragment.charCodeAt(i))) {
+                    if (!code_4.isWhiteSpace(fragment.charCodeAt(i))) {
                         break;
                     }
                 }
@@ -1139,13 +1142,17 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                     return false;
                 }
                 code = fragment.charCodeAt(i + 8);
-                return code === 0x28 || esutils.code.isWhiteSpace(code) || code === 0x2A || esutils.code.isLineTerminator(code);
+                return code === 0x28 /* '(' */ || code_4.isWhiteSpace(code) || code === 0x2A /* '*' */ || code_1.isLineTerminator(code);
             }
             result = [this.generateExpression(stmt.expression, Precedence.Sequence, E_TTT)];
             // 12.4 '{', 'function', 'class' is not allowed in this position.
             // wrap expression with parentheses
             fragment = toSourceNodeWhenNeeded(result).toString();
-            if (fragment.charCodeAt(0) === 0x7B || isClassPrefixed(fragment) || isFunctionPrefixed(fragment) || isAsyncPrefixed(fragment) || (directive && (flags & F_DIRECTIVE_CTX) && stmt.expression.type === Syntax.Literal && typeof stmt.expression.value === 'string')) {
+            if (fragment.charCodeAt(0) === 0x7B /* '{' */ ||
+                isClassPrefixed(fragment) ||
+                isFunctionPrefixed(fragment) ||
+                isAsyncPrefixed(fragment) ||
+                (directive && (flags & F_DIRECTIVE_CTX) && stmt.expression.type === estraverse_1.Syntax.Literal && typeof stmt.expression.value === 'string')) {
                 result = ['(', result, ')' + this.semicolon(flags)];
             }
             else {
@@ -1166,6 +1173,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                 return [
                     'import',
                     space,
+                    // ModuleSpecifier
                     this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                     this.semicolon(flags)
                 ];
@@ -1176,7 +1184,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             ];
             cursor = 0;
             // ImportedBinding
-            if (stmt.specifiers[cursor].type === Syntax.ImportDefaultSpecifier) {
+            if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportDefaultSpecifier) {
                 result = join(result, [
                     this.generateExpression(stmt.specifiers[cursor], Precedence.Sequence, E_TTT)
                 ]);
@@ -1186,7 +1194,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                 if (cursor !== 0) {
                     result.push(',');
                 }
-                if (stmt.specifiers[cursor].type === Syntax.ImportNamespaceSpecifier) {
+                if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportNamespaceSpecifier) {
                     // NameSpaceImport
                     result = join(result, [
                         space,
@@ -1227,6 +1235,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             }
             result = join(result, [
                 'from' + space,
+                // ModuleSpecifier
                 this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                 this.semicolon(flags)
             ]);
@@ -1291,6 +1300,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             result = ['try', this.maybeBlock(stmt.block, S_TFFF)];
             result = this.maybeBlockSuffix(stmt.block, result);
             if (stmt.handlers) {
+                // old interface
                 for (i = 0, iz = stmt.handlers.length; i < iz; ++i) {
                     result = join(result, this.generateStatement(stmt.handlers[i], S_TFFF));
                     if (stmt.finalizer || i + 1 !== iz) {
@@ -1368,7 +1378,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                 }
                 i = 0;
                 iz = stmt.consequent.length;
-                if (iz && stmt.consequent[0].type === Syntax.BlockStatement) {
+                if (iz && stmt.consequent[0].type === estraverse_1.Syntax.BlockStatement) {
                     fragment = that.maybeBlock(stmt.consequent[0], S_TFFF);
                     result.push(fragment);
                     i = 1;
@@ -1407,7 +1417,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             if (stmt.alternate) {
                 result.push(this.maybeBlock(stmt.consequent, S_TFFF));
                 result = this.maybeBlockSuffix(stmt.consequent, result);
-                if (stmt.alternate.type === Syntax.IfStatement) {
+                if (stmt.alternate.type === estraverse_1.Syntax.IfStatement) {
                     result = join(result, ['else ', this.generateStatement(stmt.alternate, bodyFlags)]);
                 }
                 else {
@@ -1424,7 +1434,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             withIndent(function () {
                 result = ['for' + space + '('];
                 if (stmt.init) {
-                    if (stmt.init.type === Syntax.VariableDeclaration) {
+                    if (stmt.init.type === estraverse_1.Syntax.VariableDeclaration) {
                         result.push(that.generateStatement(stmt.init, S_FFFF));
                     }
                     else {
@@ -1597,14 +1607,15 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             }
             fragment = this.generateExpression(expr.left, currentPrecedence, flags);
             leftSource = fragment.toString();
-            if (leftSource.charCodeAt(leftSource.length - 1) === 0x2F && esutils.code.isIdentifierPart(expr.operator.charCodeAt(0))) {
+            if (leftSource.charCodeAt(leftSource.length - 1) === 0x2F /* / */ && code_3.isIdentifierPart(expr.operator.charCodeAt(0))) {
                 result = [fragment, noEmptySpace(), expr.operator];
             }
             else {
                 result = join(fragment, expr.operator);
             }
             fragment = this.generateExpression(expr.right, currentPrecedence + 1, flags);
-            if (expr.operator === '/' && fragment.toString().charAt(0) === '/' || expr.operator.slice(-1) === '<' && fragment.toString().slice(0, 3) === '!--') {
+            if (expr.operator === '/' && fragment.toString().charAt(0) === '/' ||
+                expr.operator.slice(-1) === '<' && fragment.toString().slice(0, 3) === '!--') {
                 // If '/' concats with '/' or `<` concats with `!--`, it is interpreted as comment start
                 result.push(noEmptySpace());
                 result.push(fragment);
@@ -1663,7 +1674,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                 result.push(']');
             }
             else {
-                if (expr.object.type === Syntax.Literal && typeof expr.object.value === 'number') {
+                if (expr.object.type === estraverse_1.Syntax.Literal && typeof expr.object.value === 'number') {
                     fragment = toSourceNodeWhenNeeded(result).toString();
                     // When the following conditions are all true,
                     //   1. No floating point
@@ -1671,7 +1682,11 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                     //   3. The last character is a decimal digit
                     //   4. Not hexadecimal OR octal number literal
                     // we should add a floating point.
-                    if (fragment.indexOf('.') < 0 && !/[eExX]/.test(fragment) && esutils.code.isDecimalDigit(fragment.charCodeAt(fragment.length - 1)) && !(fragment.length >= 2 && fragment.charCodeAt(0) === 48)) {
+                    if (fragment.indexOf('.') < 0 &&
+                        !/[eExX]/.test(fragment) &&
+                        code_2.isDecimalDigit(fragment.charCodeAt(fragment.length - 1)) &&
+                        !(fragment.length >= 2 && fragment.charCodeAt(0) === 48) // '0'
+                    ) {
                         result.push('.');
                     }
                 }
@@ -1699,7 +1714,8 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                     leftSource = toSourceNodeWhenNeeded(result).toString();
                     leftCharCode = leftSource.charCodeAt(leftSource.length - 1);
                     rightCharCode = fragment.toString().charCodeAt(0);
-                    if (((leftCharCode === 0x2B || leftCharCode === 0x2D) && leftCharCode === rightCharCode) || (esutils.code.isIdentifierPart(leftCharCode) && esutils.code.isIdentifierPart(rightCharCode))) {
+                    if (((leftCharCode === 0x2B /* + */ || leftCharCode === 0x2D /* - */) && leftCharCode === rightCharCode) ||
+                        (code_3.isIdentifierPart(leftCharCode) && code_3.isIdentifierPart(rightCharCode))) {
                         result.push(noEmptySpace());
                         result.push(fragment);
                     }
@@ -1834,8 +1850,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         Property: function (expr, precedence, flags) {
             if (expr.kind === 'get' || expr.kind === 'set') {
                 return [
-                    expr.kind,
-                    noEmptySpace(),
+                    expr.kind, noEmptySpace(),
                     this.generatePropertyKey(expr.key, expr.computed),
                     this.generateFunctionBody(expr.value)
                 ];
@@ -1907,7 +1922,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             multiline = false;
             if (expr.properties.length === 1) {
                 property = expr.properties[0];
-                if (property.value.type !== Syntax.Identifier) {
+                if (property.value.type !== estraverse_1.Syntax.Identifier) {
                     multiline = true;
                 }
             }
@@ -1969,7 +1984,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             if (expr.hasOwnProperty('raw') && parse && extra.raw) {
                 try {
                     raw = parse(expr.raw).body[0].expression;
-                    if (raw.type === Syntax.Literal) {
+                    if (raw.type === estraverse_1.Syntax.Literal) {
                         if (raw.value === expr.value) {
                             return expr.raw;
                         }
@@ -1999,7 +2014,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
             // GeneratorExpression should be parenthesized with (...), ComprehensionExpression with [...]
             // Due to https://bugzilla.mozilla.org/show_bug.cgi?id=883468 position of expr.body can differ in Spidermonkey and ES6
             var result, i, iz, fragment, that = this;
-            result = (expr.type === Syntax.GeneratorExpression) ? ['('] : ['['];
+            result = (expr.type === estraverse_1.Syntax.GeneratorExpression) ? ['('] : ['['];
             if (extra.moz.comprehensionExpressionStartsWithAssignment) {
                 fragment = this.generateExpression(expr.body, Precedence.Assignment, E_TTT);
                 result.push(fragment);
@@ -2026,15 +2041,14 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
                 fragment = this.generateExpression(expr.body, Precedence.Assignment, E_TTT);
                 result = join(result, fragment);
             }
-            result.push((expr.type === Syntax.GeneratorExpression) ? ')' : ']');
+            result.push((expr.type === estraverse_1.Syntax.GeneratorExpression) ? ')' : ']');
             return result;
         },
         ComprehensionBlock: function (expr, precedence, flags) {
             var fragment;
-            if (expr.left.type === Syntax.VariableDeclaration) {
+            if (expr.left.type === estraverse_1.Syntax.VariableDeclaration) {
                 fragment = [
-                    expr.left.kind,
-                    noEmptySpace(),
+                    expr.left.kind, noEmptySpace(),
                     this.generateStatement(expr.left.declarations[0], S_FFFF)
                 ];
             }
@@ -2162,6 +2176,7 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         }
         return pair.map.toString();
     }
+    exports.generate = generate;
     FORMAT_MINIFY = {
         indent: {
             style: '',
@@ -2182,5 +2197,4 @@ define(["require", "exports", 'davinci-mathscript/estraverse', 'davinci-mathscri
         FORMAT_MINIFY: FORMAT_MINIFY,
         FORMAT_DEFAULT: FORMAT_DEFAULTS
     };
-    return escodegen;
 });

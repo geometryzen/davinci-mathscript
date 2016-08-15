@@ -1,4 +1,1 @@
-declare var core: {
-    VERSION: string;
-};
-export = core;
+export declare const VERSION: string;

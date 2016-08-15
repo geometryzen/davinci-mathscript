@@ -22,8 +22,6 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 define(["require", "exports"], function (require, exports) {
-    var core = {
-        VERSION: '1.0.11'
-    };
-    return core;
+    "use strict";
+    exports.VERSION = '1.1.0';
 });

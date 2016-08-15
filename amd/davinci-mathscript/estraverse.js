@@ -1,36 +1,35 @@
-/*
-  Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
-  Copyright (C) 2012-2013 Yusuke Suzuki <utatane.tea@gmail.com>
-  Copyright (C) 2012 Ariya Hidayat <ariya.hidayat@gmail.com>
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-/*jslint vars:false, bitwise:true*/
-/*jshint indent:4*/
-/*global exports:true*/
-'use strict';
 define(["require", "exports"], function (require, exports) {
-    var Syntax, isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE;
-    function ignoreJSHintError(what) {
-    }
+    /*
+      Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
+      Copyright (C) 2012-2013 Yusuke Suzuki <utatane.tea@gmail.com>
+      Copyright (C) 2012 Ariya Hidayat <ariya.hidayat@gmail.com>
+    
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions are met:
+    
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in the
+          documentation and/or other materials provided with the distribution.
+    
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+      ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+      DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+      (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+      ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+      THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    */
+    /*jslint vars:false, bitwise:true*/
+    /*jshint indent:4*/
+    /*global exports:true*/
+    'use strict';
+    var isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE;
+    function ignoreJSHintError(what) { }
     isArray = Array.isArray;
     if (!isArray) {
         isArray = function isArray(array) {
@@ -100,8 +99,7 @@ define(["require", "exports"], function (require, exports) {
     }
     ignoreJSHintError(lowerBound);
     objectCreate = Object.create || (function () {
-        function F() {
-        }
+        function F() { }
         return function (o) {
             F.prototype = o;
             return new F();
@@ -122,7 +120,7 @@ define(["require", "exports"], function (require, exports) {
         }
         return to;
     }
-    Syntax = {
+    exports.Syntax = {
         AssignmentExpression: 'AssignmentExpression',
         AssignmentPattern: 'AssignmentPattern',
         ArrayExpression: 'ArrayExpression',
@@ -292,14 +290,13 @@ define(["require", "exports"], function (require, exports) {
             return false;
         }
     };
-    function Element(node, path, wrap, ref) {
+    function ElementNode(node, path, wrap, ref) {
         this.node = node;
         this.path = path;
         this.wrap = wrap;
         this.ref = ref;
     }
-    function Controller() {
-    }
+    function Controller() { }
     // API:
     // return property path array from root to current node
     Controller.prototype.path = function path() {
@@ -401,7 +398,7 @@ define(["require", "exports"], function (require, exports) {
         return typeof node === 'object' && typeof node.type === 'string';
     }
     function isProperty(nodeType, key) {
-        return (nodeType === Syntax.ObjectExpression || nodeType === Syntax.ObjectPattern) && 'properties' === key;
+        return (nodeType === exports.Syntax.ObjectExpression || nodeType === exports.Syntax.ObjectPattern) && 'properties' === key;
     }
     Controller.prototype.traverse = function traverse(root, visitor) {
         var worklist, leavelist, element, node, nodeType, ret, key, current, current2, candidates, candidate, sentinel;
@@ -411,8 +408,8 @@ define(["require", "exports"], function (require, exports) {
         worklist = this.__worklist;
         leavelist = this.__leavelist;
         // initialize
-        worklist.push(new Element(root, null, null, null));
-        leavelist.push(new Element(null, null, null, null));
+        worklist.push(new ElementNode(root, null, null, null));
+        leavelist.push(new ElementNode(null, null, null, null));
         while (worklist.length) {
             element = worklist.pop();
             if (element === sentinel) {
@@ -458,10 +455,10 @@ define(["require", "exports"], function (require, exports) {
                                 continue;
                             }
                             if (isProperty(nodeType, candidates[current])) {
-                                element = new Element(candidate[current2], [key, current2], 'Property', null);
+                                element = new ElementNode(candidate[current2], [key, current2], 'Property', null);
                             }
                             else if (isNode(candidate[current2])) {
-                                element = new Element(candidate[current2], [key, current2], null, null);
+                                element = new ElementNode(candidate[current2], [key, current2], null, null);
                             }
                             else {
                                 continue;
@@ -470,7 +467,7 @@ define(["require", "exports"], function (require, exports) {
                         }
                     }
                     else if (isNode(candidate)) {
-                        worklist.push(new Element(candidate, key, null, null));
+                        worklist.push(new ElementNode(candidate, key, null, null));
                     }
                 }
             }
@@ -506,7 +503,7 @@ define(["require", "exports"], function (require, exports) {
         outer = {
             root: root
         };
-        element = new Element(root, null, null, new Reference(outer, 'root'));
+        element = new ElementNode(root, null, null, new Reference(outer, 'root'));
         worklist.push(element);
         leavelist.push(element);
         while (worklist.length) {
@@ -577,10 +574,10 @@ define(["require", "exports"], function (require, exports) {
                             continue;
                         }
                         if (isProperty(nodeType, candidates[current])) {
-                            element = new Element(candidate[current2], [key, current2], 'Property', new Reference(candidate, current2));
+                            element = new ElementNode(candidate[current2], [key, current2], 'Property', new Reference(candidate, current2));
                         }
                         else if (isNode(candidate[current2])) {
-                            element = new Element(candidate[current2], [key, current2], null, new Reference(candidate, current2));
+                            element = new ElementNode(candidate[current2], [key, current2], null, new Reference(candidate, current2));
                         }
                         else {
                             continue;
@@ -589,7 +586,7 @@ define(["require", "exports"], function (require, exports) {
                     }
                 }
                 else if (isNode(candidate)) {
-                    worklist.push(new Element(candidate, key, null, new Reference(node, key)));
+                    worklist.push(new ElementNode(candidate, key, null, new Reference(node, key)));
                 }
             }
         }
@@ -700,14 +697,4 @@ define(["require", "exports"], function (require, exports) {
         });
         return tree;
     }
-    var estraverse = {
-        Syntax: Syntax,
-        traverse: traverse,
-        replace: replace,
-        attachComments: attachComments,
-        VisitorKeys: VisitorKeys,
-        VisitorOption: VisitorOption,
-        Controller: Controller
-    };
-    return estraverse;
 });

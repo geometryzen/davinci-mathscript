@@ -1,17 +1,11 @@
-// test/config/amd/davinci-blade/config.js
+// test/config/amd/davinci-mathscript/config.js
 // TODO: automate generation of this file.
 require([
-    'davinci-blade/Rational',
-    'davinci-blade/Dimensions',
-    'davinci-blade/Unit',
-    'davinci-blade/Euclidean2',
-    'davinci-blade/Euclidean3'
+    'davinci-mathscript'
 ], function(){ require([
-    'test/amd/Rational_test.js',
-    'test/amd/Dimensions_test.js',
-    'test/amd/Unit_test.js',
-    'test/amd/Euclidean2_test.js',
-    'test/amd/Euclidean3_test.js'
+    'test/amd/escodegen_test.js',
+    'test/amd/esprima_test.js',
+    'test/amd/mathscript_test.js'
 ], function() {
     window.initializeJasmine();
 });});

@@ -17,7 +17,7 @@
                 <h1><img src="../../assets/logo.png" title="davinci-mathscript"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.0.11</em>
+            <em>API Docs for: 1.1.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -79,47 +79,44 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-/*
-  Copyright (C) 2015 David Holmes &lt;david.geo.holmes@gmail.com&gt;
-  Copyright (C) 2012-2014 Yusuke Suzuki &lt;utatane.tea@gmail.com&gt;
-  Copyright (C) 2015 Ingvar Stepanyan &lt;me@rreverser.com&gt;
-  Copyright (C) 2014 Ivan Nikulin &lt;ifaaan@gmail.com&gt;
-  Copyright (C) 2012-2013 Michael Ficarra &lt;escodegen.copyright@michael.ficarra.me&gt;
-  Copyright (C) 2012-2013 Mathias Bynens &lt;mathias@qiwi.be&gt;
-  Copyright (C) 2013 Irakli Gozalishvili &lt;rfobic@gmail.com&gt;
-  Copyright (C) 2012 Robert Gust-Bardon &lt;donate@robert.gust-bardon.org&gt;
-  Copyright (C) 2012 John Freeman &lt;jfreeman08@gmail.com&gt;
-  Copyright (C) 2011-2012 Ariya Hidayat &lt;ariya.hidayat@gmail.com&gt;
-  Copyright (C) 2012 Joost-Wim Boekesteijn &lt;joost-wim@boekesteijn.nl&gt;
-  Copyright (C) 2012 Kris Kowal &lt;kris.kowal@cixar.com&gt;
-  Copyright (C) 2012 Arpad Borsos &lt;arpad.borsos@googlemail.com&gt;
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY
-  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-/*global exports:true, require:true, global:true*/
-&#x27;use strict&#x27;;
-define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estraverse&#x27;, &#x27;davinci-mathscript/esutils&#x27;], function (require, exports, estraverse, esutils) {
-    var Syntax, Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
-    //esutils = require(&#x27;esutils&#x27;);
-    Syntax = estraverse.Syntax;
+define([&quot;require&quot;, &quot;exports&quot;, &#x27;./estraverse&#x27;, &#x27;./code&#x27;, &#x27;./code&#x27;, &#x27;./code&#x27;, &#x27;./code&#x27;], function (require, exports, estraverse_1, code_1, code_2, code_3, code_4) {
+    &quot;use strict&quot;;
+    /*
+      Copyright (C) 2015 David Holmes &lt;david.geo.holmes@gmail.com&gt;
+      Copyright (C) 2012-2014 Yusuke Suzuki &lt;utatane.tea@gmail.com&gt;
+      Copyright (C) 2015 Ingvar Stepanyan &lt;me@rreverser.com&gt;
+      Copyright (C) 2014 Ivan Nikulin &lt;ifaaan@gmail.com&gt;
+      Copyright (C) 2012-2013 Michael Ficarra &lt;escodegen.copyright@michael.ficarra.me&gt;
+      Copyright (C) 2012-2013 Mathias Bynens &lt;mathias@qiwi.be&gt;
+      Copyright (C) 2013 Irakli Gozalishvili &lt;rfobic@gmail.com&gt;
+      Copyright (C) 2012 Robert Gust-Bardon &lt;donate@robert.gust-bardon.org&gt;
+      Copyright (C) 2012 John Freeman &lt;jfreeman08@gmail.com&gt;
+      Copyright (C) 2011-2012 Ariya Hidayat &lt;ariya.hidayat@gmail.com&gt;
+      Copyright (C) 2012 Joost-Wim Boekesteijn &lt;joost-wim@boekesteijn.nl&gt;
+      Copyright (C) 2012 Kris Kowal &lt;kris.kowal@cixar.com&gt;
+      Copyright (C) 2012 Arpad Borsos &lt;arpad.borsos@googlemail.com&gt;
+    
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions are met:
+    
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in the
+          documentation and/or other materials provided with the distribution.
+    
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+      ARE DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY
+      DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+      (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+      ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+      THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    */
+    var Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
     // Generation is done by generateExpression.
     function isExpression(node) {
         return CodeGenerator.Expression.hasOwnProperty(node.type);
@@ -254,7 +251,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
     }
     function endsWithLineTerminator(str) {
         var len = str.length;
-        return len &amp;&amp; esutils.code.isLineTerminator(str.charCodeAt(len - 1));
+        return len &amp;&amp; code_1.isLineTerminator(str.charCodeAt(len - 1));
     }
     function merge(target, override) {
         var key;
@@ -304,7 +301,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             return result;
         }
         point = result.indexOf(&#x27;.&#x27;);
-        if (!json &amp;&amp; result.charCodeAt(0) === 0x30 &amp;&amp; point === 1) {
+        if (!json &amp;&amp; result.charCodeAt(0) === 0x30 /* 0 */ &amp;&amp; point === 1) {
             point = 0;
             result = result.slice(1);
         }
@@ -320,7 +317,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             temp = +(temp.slice(0, point) + temp.slice(point + 1)) + &#x27;&#x27;;
         }
         pos = 0;
-        while (temp.charCodeAt(temp.length + pos - 1) === 0x30) {
+        while (temp.charCodeAt(temp.length + pos - 1) === 0x30 /* 0 */) {
             --pos;
         }
         if (pos !== 0) {
@@ -330,7 +327,9 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         if (exponent !== 0) {
             temp += &#x27;e&#x27; + exponent;
         }
-        if ((temp.length &lt; result.length || (hexadecimal &amp;&amp; value &gt; 1e12 &amp;&amp; Math.floor(value) === value &amp;&amp; (temp = &#x27;0x&#x27; + value.toString(16)).length &lt; result.length)) &amp;&amp; +temp === value) {
+        if ((temp.length &lt; result.length ||
+            (hexadecimal &amp;&amp; value &gt; 1e12 &amp;&amp; Math.floor(value) === value &amp;&amp; (temp = &#x27;0x&#x27; + value.toString(16)).length &lt; result.length)) &amp;&amp;
+            +temp === value) {
             result = temp;
         }
         return result;
@@ -392,23 +391,23 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
     }
     function escapeAllowedCharacter(code, next) {
         var hex;
-        if (code === 0x08) {
+        if (code === 0x08 /* \b */) {
             return &#x27;\\b&#x27;;
         }
-        if (code === 0x0C) {
+        if (code === 0x0C /* \f */) {
             return &#x27;\\f&#x27;;
         }
-        if (code === 0x09) {
+        if (code === 0x09 /* \t */) {
             return &#x27;\\t&#x27;;
         }
         hex = code.toString(16).toUpperCase();
         if (json || code &gt; 0xFF) {
             return &#x27;\\u&#x27; + &#x27;0000&#x27;.slice(hex.length) + hex;
         }
-        else if (code === 0x0000 &amp;&amp; !esutils.code.isDecimalDigit(next)) {
+        else if (code === 0x0000 &amp;&amp; !code_2.isDecimalDigit(next)) {
             return &#x27;\\0&#x27;;
         }
-        else if (code === 0x000B) {
+        else if (code === 0x000B /* \v */) {
             return &#x27;\\x0B&#x27;;
         }
         else {
@@ -416,13 +415,13 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         }
     }
     function escapeDisallowedCharacter(code) {
-        if (code === 0x5C) {
+        if (code === 0x5C /* \ */) {
             return &#x27;\\\\&#x27;;
         }
-        if (code === 0x0A) {
+        if (code === 0x0A /* \n */) {
             return &#x27;\\n&#x27;;
         }
-        if (code === 0x0D) {
+        if (code === 0x0D /* \r */) {
             return &#x27;\\r&#x27;;
         }
         if (code === 0x2028) {
@@ -438,15 +437,15 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         quote = quotes === &#x27;double&#x27; ? &#x27;&quot;&#x27; : &#x27;\&#x27;&#x27;;
         for (i = 0, iz = str.length; i &lt; iz; ++i) {
             code = str.charCodeAt(i);
-            if (code === 0x27) {
+            if (code === 0x27 /* &#x27; */) {
                 quote = &#x27;&quot;&#x27;;
                 break;
             }
-            else if (code === 0x22) {
+            else if (code === 0x22 /* &quot; */) {
                 quote = &#x27;\&#x27;&#x27;;
                 break;
             }
-            else if (code === 0x5C) {
+            else if (code === 0x5C /* \ */) {
                 ++i;
             }
         }
@@ -456,20 +455,20 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         var result = &#x27;&#x27;, i, len, code, singleQuotes = 0, doubleQuotes = 0, single, quote;
         for (i = 0, len = str.length; i &lt; len; ++i) {
             code = str.charCodeAt(i);
-            if (code === 0x27) {
+            if (code === 0x27 /* &#x27; */) {
                 ++singleQuotes;
             }
-            else if (code === 0x22) {
+            else if (code === 0x22 /* &quot; */) {
                 ++doubleQuotes;
             }
-            else if (code === 0x2F &amp;&amp; json) {
+            else if (code === 0x2F /* / */ &amp;&amp; json) {
                 result += &#x27;\\&#x27;;
             }
-            else if (esutils.code.isLineTerminator(code) || code === 0x5C) {
+            else if (code_1.isLineTerminator(code) || code === 0x5C /* \ */) {
                 result += escapeDisallowedCharacter(code);
                 continue;
             }
-            else if ((json &amp;&amp; code &lt; 0x20) || !(json || escapeless || (code &gt;= 0x20 &amp;&amp; code &lt;= 0x7E))) {
+            else if ((json &amp;&amp; code &lt; 0x20 /* SP */) || !(json || escapeless || (code &gt;= 0x20 /* SP */ &amp;&amp; code &lt;= 0x7E /* ~ */))) {
                 result += escapeAllowedCharacter(code, str.charCodeAt(i + 1));
                 continue;
             }
@@ -484,7 +483,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         result = quote;
         for (i = 0, len = str.length; i &lt; len; ++i) {
             code = str.charCodeAt(i);
-            if ((code === 0x27 &amp;&amp; single) || (code === 0x22 &amp;&amp; !single)) {
+            if ((code === 0x27 /* &#x27; */ &amp;&amp; single) || (code === 0x22 /* &quot; */ &amp;&amp; !single)) {
                 result += &#x27;\\&#x27;;
             }
             result += String.fromCharCode(code);
@@ -546,10 +545,13 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         }
         leftCharCode = leftSource.charCodeAt(leftSource.length - 1);
         rightCharCode = rightSource.charCodeAt(0);
-        if ((leftCharCode === 0x2B || leftCharCode === 0x2D) &amp;&amp; leftCharCode === rightCharCode || esutils.code.isIdentifierPart(leftCharCode) &amp;&amp; esutils.code.isIdentifierPart(rightCharCode) || leftCharCode === 0x2F &amp;&amp; rightCharCode === 0x69) {
+        if ((leftCharCode === 0x2B /* + */ || leftCharCode === 0x2D /* - */) &amp;&amp; leftCharCode === rightCharCode ||
+            code_3.isIdentifierPart(leftCharCode) &amp;&amp; code_3.isIdentifierPart(rightCharCode) ||
+            leftCharCode === 0x2F /* / */ &amp;&amp; rightCharCode === 0x69 /* i */) {
             return [left, noEmptySpace(), right];
         }
-        else if (esutils.code.isWhiteSpace(leftCharCode) || esutils.code.isLineTerminator(leftCharCode) || esutils.code.isWhiteSpace(rightCharCode) || esutils.code.isLineTerminator(rightCharCode)) {
+        else if (code_4.isWhiteSpace(leftCharCode) || code_1.isLineTerminator(leftCharCode) ||
+            code_4.isWhiteSpace(rightCharCode) || code_1.isLineTerminator(rightCharCode)) {
             return [left, right];
         }
         return [left, space, right];
@@ -567,7 +569,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
     function calculateSpaces(str) {
         var i;
         for (i = str.length - 1; i &gt;= 0; --i) {
-            if (esutils.code.isLineTerminator(str.charCodeAt(i))) {
+            if (code_1.isLineTerminator(str.charCodeAt(i))) {
                 break;
             }
         }
@@ -577,10 +579,11 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         var array, i, len, line, j, spaces, previousBase, sn;
         array = value.split(/\r\n|[\r\n]/);
         spaces = Number.MAX_VALUE;
+        // first line doesn&#x27;t have indentation
         for (i = 1, len = array.length; i &lt; len; ++i) {
             line = array[i];
             j = 0;
-            while (j &lt; line.length &amp;&amp; esutils.code.isWhiteSpace(line.charCodeAt(j))) {
+            while (j &lt; line.length &amp;&amp; code_4.isWhiteSpace(line.charCodeAt(j))) {
                 ++j;
             }
             if (spaces &gt; j) {
@@ -673,7 +676,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             else {
                 comment = stmt.leadingComments[0];
                 result = [];
-                if (safeConcatenation &amp;&amp; stmt.type === Syntax.Program &amp;&amp; stmt.body.length === 0) {
+                if (safeConcatenation &amp;&amp; stmt.type === estraverse_1.Syntax.Program &amp;&amp; stmt.body.length === 0) {
                     result.push(&#x27;\n&#x27;);
                 }
                 result.push(generateComment(comment));
@@ -783,12 +786,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         CodeGenerator.prototype.generateFunctionParams = function (node) {
             var i, iz, result, hasDefault;
             hasDefault = false;
-            if (node.type === Syntax.ArrowFunctionExpression &amp;&amp; !node.rest &amp;&amp; (!node.defaults || node.defaults.length === 0) &amp;&amp; node.params.length === 1 &amp;&amp; node.params[0].type === Syntax.Identifier) {
+            if (node.type === estraverse_1.Syntax.ArrowFunctionExpression &amp;&amp;
+                !node.rest &amp;&amp; (!node.defaults || node.defaults.length === 0) &amp;&amp;
+                node.params.length === 1 &amp;&amp; node.params[0].type === estraverse_1.Syntax.Identifier) {
                 // arg =&gt; { } case
                 result = [generateAsyncPrefix(node, true), generateIdentifier(node.params[0])];
             }
             else {
-                result = node.type === Syntax.ArrowFunctionExpression ? [generateAsyncPrefix(node, false)] : [];
+                result = node.type === estraverse_1.Syntax.ArrowFunctionExpression ? [generateAsyncPrefix(node, false)] : [];
                 result.push(&#x27;(&#x27;);
                 if (node.defaults) {
                     hasDefault = true;
@@ -817,7 +822,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             return result;
         };
         CodeGenerator.prototype.generatePattern = function (node, precedence, flags) {
-            if (node.type === Syntax.Identifier) {
+            if (node.type === estraverse_1.Syntax.Identifier) {
                 return generateIdentifier(node);
             }
             return this.generateExpression(node, precedence, flags);
@@ -830,14 +835,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                 result = addComments(stmt, result);
             }
             fragment = toSourceNodeWhenNeeded(result).toString();
-            if (stmt.type === Syntax.Program &amp;&amp; !safeConcatenation &amp;&amp; newline === &#x27;&#x27; &amp;&amp; fragment.charAt(fragment.length - 1) === &#x27;\n&#x27;) {
+            if (stmt.type === estraverse_1.Syntax.Program &amp;&amp; !safeConcatenation &amp;&amp; newline === &#x27;&#x27; &amp;&amp; fragment.charAt(fragment.length - 1) === &#x27;\n&#x27;) {
                 result = sourceMap ? toSourceNodeWhenNeeded(result).replaceRight(/\s+$/, &#x27;&#x27;) : fragment.replace(/\s+$/, &#x27;&#x27;);
             }
             return toSourceNodeWhenNeeded(result, stmt);
         };
         CodeGenerator.prototype.generateExpression = function (expr, precedence, flags) {
             var result, type;
-            type = expr.type || Syntax.Property;
+            type = expr.type || estraverse_1.Syntax.Property;
             if (extra.verbatim &amp;&amp; expr.hasOwnProperty(extra.verbatim)) {
                 return generateVerbatim(expr, precedence);
             }
@@ -850,10 +855,10 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         CodeGenerator.prototype.maybeBlock = function (stmt, flags) {
             var result, noLeadingComment, that = this;
             noLeadingComment = !extra.comment || !stmt.leadingComments;
-            if (stmt.type === Syntax.BlockStatement &amp;&amp; noLeadingComment) {
+            if (stmt.type === estraverse_1.Syntax.BlockStatement &amp;&amp; noLeadingComment) {
                 return [space, this.generateStatement(stmt, flags)];
             }
-            if (stmt.type === Syntax.EmptyStatement &amp;&amp; noLeadingComment) {
+            if (stmt.type === estraverse_1.Syntax.EmptyStatement &amp;&amp; noLeadingComment) {
                 return &#x27;;&#x27;;
             }
             withIndent(function () {
@@ -866,7 +871,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         };
         CodeGenerator.prototype.maybeBlockSuffix = function (stmt, result) {
             var ends = endsWithLineTerminator(toSourceNodeWhenNeeded(result).toString());
-            if (stmt.type === Syntax.BlockStatement &amp;&amp; (!extra.comment || !stmt.leadingComments) &amp;&amp; !ends) {
+            if (stmt.type === estraverse_1.Syntax.BlockStatement &amp;&amp; (!extra.comment || !stmt.leadingComments) &amp;&amp; !ends) {
                 return [result, space];
             }
             if (ends) {
@@ -877,7 +882,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         CodeGenerator.prototype.generateFunctionBody = function (node) {
             var result, expr;
             result = this.generateFunctionParams(node);
-            if (node.type === Syntax.ArrowFunctionExpression) {
+            if (node.type === estraverse_1.Syntax.ArrowFunctionExpression) {
                 result.push(space);
                 result.push(&#x27;=&gt;&#x27;);
             }
@@ -897,7 +902,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         CodeGenerator.prototype.generateIterationForStatement = function (operator, stmt, flags) {
             var result = [&#x27;for&#x27; + space + &#x27;(&#x27;], that = this;
             withIndent(function () {
-                if (stmt.left.type === Syntax.VariableDeclaration) {
+                if (stmt.left.type === estraverse_1.Syntax.VariableDeclaration) {
                     withIndent(function () {
                         result.push(stmt.left.kind + noEmptySpace());
                         result.push(that.generateStatement(stmt.left.declarations[0], S_FFFF));
@@ -940,7 +945,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             return &#x27;;&#x27;;
         };
         return CodeGenerator;
-    })();
+    }());
     // Helpers.
     function generateIdentifier(node) {
         return toSourceNodeWhenNeeded(node.name, node);
@@ -1148,9 +1153,6 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                 if (stmt.specifiers.length === 0) {
                     result = join(result, &#x27;{&#x27; + space + &#x27;}&#x27;);
                 }
-                else if (stmt.specifiers[0].type === Syntax.ExportBatchSpecifier) {
-                    result = join(result, this.generateExpression(stmt.specifiers[0], Precedence.Sequence, E_TTT));
-                }
                 else {
                     result = join(result, &#x27;{&#x27;);
                     withIndent(function (indent) {
@@ -1172,6 +1174,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                 if (stmt.source) {
                     result = join(result, [
                         &#x27;from&#x27; + space,
+                        // ModuleSpecifier
                         this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                         this.semicolon(flags)
                     ]);
@@ -1190,7 +1193,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                     return false;
                 }
                 code = fragment.charCodeAt(5);
-                return code === 0x7B || esutils.code.isWhiteSpace(code) || esutils.code.isLineTerminator(code);
+                return code === 0x7B /* &#x27;{&#x27; */ || code_4.isWhiteSpace(code) || code_1.isLineTerminator(code);
             }
             function isFunctionPrefixed(fragment) {
                 var code;
@@ -1198,18 +1201,18 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                     return false;
                 }
                 code = fragment.charCodeAt(8);
-                return code === 0x28 || esutils.code.isWhiteSpace(code) || code === 0x2A || esutils.code.isLineTerminator(code);
+                return code === 0x28 /* &#x27;(&#x27; */ || code_4.isWhiteSpace(code) || code === 0x2A /* &#x27;*&#x27; */ || code_1.isLineTerminator(code);
             }
             function isAsyncPrefixed(fragment) {
                 var code, i, iz;
                 if (fragment.slice(0, 5) !== &#x27;async&#x27;) {
                     return false;
                 }
-                if (!esutils.code.isWhiteSpace(fragment.charCodeAt(5))) {
+                if (!code_4.isWhiteSpace(fragment.charCodeAt(5))) {
                     return false;
                 }
                 for (i = 6, iz = fragment.length; i &lt; iz; ++i) {
-                    if (!esutils.code.isWhiteSpace(fragment.charCodeAt(i))) {
+                    if (!code_4.isWhiteSpace(fragment.charCodeAt(i))) {
                         break;
                     }
                 }
@@ -1220,13 +1223,17 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                     return false;
                 }
                 code = fragment.charCodeAt(i + 8);
-                return code === 0x28 || esutils.code.isWhiteSpace(code) || code === 0x2A || esutils.code.isLineTerminator(code);
+                return code === 0x28 /* &#x27;(&#x27; */ || code_4.isWhiteSpace(code) || code === 0x2A /* &#x27;*&#x27; */ || code_1.isLineTerminator(code);
             }
             result = [this.generateExpression(stmt.expression, Precedence.Sequence, E_TTT)];
             // 12.4 &#x27;{&#x27;, &#x27;function&#x27;, &#x27;class&#x27; is not allowed in this position.
             // wrap expression with parentheses
             fragment = toSourceNodeWhenNeeded(result).toString();
-            if (fragment.charCodeAt(0) === 0x7B || isClassPrefixed(fragment) || isFunctionPrefixed(fragment) || isAsyncPrefixed(fragment) || (directive &amp;&amp; (flags &amp; F_DIRECTIVE_CTX) &amp;&amp; stmt.expression.type === Syntax.Literal &amp;&amp; typeof stmt.expression.value === &#x27;string&#x27;)) {
+            if (fragment.charCodeAt(0) === 0x7B /* &#x27;{&#x27; */ ||
+                isClassPrefixed(fragment) ||
+                isFunctionPrefixed(fragment) ||
+                isAsyncPrefixed(fragment) ||
+                (directive &amp;&amp; (flags &amp; F_DIRECTIVE_CTX) &amp;&amp; stmt.expression.type === estraverse_1.Syntax.Literal &amp;&amp; typeof stmt.expression.value === &#x27;string&#x27;)) {
                 result = [&#x27;(&#x27;, result, &#x27;)&#x27; + this.semicolon(flags)];
             }
             else {
@@ -1247,6 +1254,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                 return [
                     &#x27;import&#x27;,
                     space,
+                    // ModuleSpecifier
                     this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                     this.semicolon(flags)
                 ];
@@ -1257,7 +1265,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             ];
             cursor = 0;
             // ImportedBinding
-            if (stmt.specifiers[cursor].type === Syntax.ImportDefaultSpecifier) {
+            if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportDefaultSpecifier) {
                 result = join(result, [
                     this.generateExpression(stmt.specifiers[cursor], Precedence.Sequence, E_TTT)
                 ]);
@@ -1267,7 +1275,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                 if (cursor !== 0) {
                     result.push(&#x27;,&#x27;);
                 }
-                if (stmt.specifiers[cursor].type === Syntax.ImportNamespaceSpecifier) {
+                if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportNamespaceSpecifier) {
                     // NameSpaceImport
                     result = join(result, [
                         space,
@@ -1308,6 +1316,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             }
             result = join(result, [
                 &#x27;from&#x27; + space,
+                // ModuleSpecifier
                 this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                 this.semicolon(flags)
             ]);
@@ -1372,6 +1381,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             result = [&#x27;try&#x27;, this.maybeBlock(stmt.block, S_TFFF)];
             result = this.maybeBlockSuffix(stmt.block, result);
             if (stmt.handlers) {
+                // old interface
                 for (i = 0, iz = stmt.handlers.length; i &lt; iz; ++i) {
                     result = join(result, this.generateStatement(stmt.handlers[i], S_TFFF));
                     if (stmt.finalizer || i + 1 !== iz) {
@@ -1449,7 +1459,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                 }
                 i = 0;
                 iz = stmt.consequent.length;
-                if (iz &amp;&amp; stmt.consequent[0].type === Syntax.BlockStatement) {
+                if (iz &amp;&amp; stmt.consequent[0].type === estraverse_1.Syntax.BlockStatement) {
                     fragment = that.maybeBlock(stmt.consequent[0], S_TFFF);
                     result.push(fragment);
                     i = 1;
@@ -1488,7 +1498,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             if (stmt.alternate) {
                 result.push(this.maybeBlock(stmt.consequent, S_TFFF));
                 result = this.maybeBlockSuffix(stmt.consequent, result);
-                if (stmt.alternate.type === Syntax.IfStatement) {
+                if (stmt.alternate.type === estraverse_1.Syntax.IfStatement) {
                     result = join(result, [&#x27;else &#x27;, this.generateStatement(stmt.alternate, bodyFlags)]);
                 }
                 else {
@@ -1505,7 +1515,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             withIndent(function () {
                 result = [&#x27;for&#x27; + space + &#x27;(&#x27;];
                 if (stmt.init) {
-                    if (stmt.init.type === Syntax.VariableDeclaration) {
+                    if (stmt.init.type === estraverse_1.Syntax.VariableDeclaration) {
                         result.push(that.generateStatement(stmt.init, S_FFFF));
                     }
                     else {
@@ -1678,14 +1688,15 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             }
             fragment = this.generateExpression(expr.left, currentPrecedence, flags);
             leftSource = fragment.toString();
-            if (leftSource.charCodeAt(leftSource.length - 1) === 0x2F &amp;&amp; esutils.code.isIdentifierPart(expr.operator.charCodeAt(0))) {
+            if (leftSource.charCodeAt(leftSource.length - 1) === 0x2F /* / */ &amp;&amp; code_3.isIdentifierPart(expr.operator.charCodeAt(0))) {
                 result = [fragment, noEmptySpace(), expr.operator];
             }
             else {
                 result = join(fragment, expr.operator);
             }
             fragment = this.generateExpression(expr.right, currentPrecedence + 1, flags);
-            if (expr.operator === &#x27;/&#x27; &amp;&amp; fragment.toString().charAt(0) === &#x27;/&#x27; || expr.operator.slice(-1) === &#x27;&lt;&#x27; &amp;&amp; fragment.toString().slice(0, 3) === &#x27;!--&#x27;) {
+            if (expr.operator === &#x27;/&#x27; &amp;&amp; fragment.toString().charAt(0) === &#x27;/&#x27; ||
+                expr.operator.slice(-1) === &#x27;&lt;&#x27; &amp;&amp; fragment.toString().slice(0, 3) === &#x27;!--&#x27;) {
                 // If &#x27;/&#x27; concats with &#x27;/&#x27; or &#x60;&lt;&#x60; concats with &#x60;!--&#x60;, it is interpreted as comment start
                 result.push(noEmptySpace());
                 result.push(fragment);
@@ -1744,7 +1755,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                 result.push(&#x27;]&#x27;);
             }
             else {
-                if (expr.object.type === Syntax.Literal &amp;&amp; typeof expr.object.value === &#x27;number&#x27;) {
+                if (expr.object.type === estraverse_1.Syntax.Literal &amp;&amp; typeof expr.object.value === &#x27;number&#x27;) {
                     fragment = toSourceNodeWhenNeeded(result).toString();
                     // When the following conditions are all true,
                     //   1. No floating point
@@ -1752,7 +1763,11 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                     //   3. The last character is a decimal digit
                     //   4. Not hexadecimal OR octal number literal
                     // we should add a floating point.
-                    if (fragment.indexOf(&#x27;.&#x27;) &lt; 0 &amp;&amp; !/[eExX]/.test(fragment) &amp;&amp; esutils.code.isDecimalDigit(fragment.charCodeAt(fragment.length - 1)) &amp;&amp; !(fragment.length &gt;= 2 &amp;&amp; fragment.charCodeAt(0) === 48)) {
+                    if (fragment.indexOf(&#x27;.&#x27;) &lt; 0 &amp;&amp;
+                        !/[eExX]/.test(fragment) &amp;&amp;
+                        code_2.isDecimalDigit(fragment.charCodeAt(fragment.length - 1)) &amp;&amp;
+                        !(fragment.length &gt;= 2 &amp;&amp; fragment.charCodeAt(0) === 48) // &#x27;0&#x27;
+                    ) {
                         result.push(&#x27;.&#x27;);
                     }
                 }
@@ -1780,7 +1795,8 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                     leftSource = toSourceNodeWhenNeeded(result).toString();
                     leftCharCode = leftSource.charCodeAt(leftSource.length - 1);
                     rightCharCode = fragment.toString().charCodeAt(0);
-                    if (((leftCharCode === 0x2B || leftCharCode === 0x2D) &amp;&amp; leftCharCode === rightCharCode) || (esutils.code.isIdentifierPart(leftCharCode) &amp;&amp; esutils.code.isIdentifierPart(rightCharCode))) {
+                    if (((leftCharCode === 0x2B /* + */ || leftCharCode === 0x2D /* - */) &amp;&amp; leftCharCode === rightCharCode) ||
+                        (code_3.isIdentifierPart(leftCharCode) &amp;&amp; code_3.isIdentifierPart(rightCharCode))) {
                         result.push(noEmptySpace());
                         result.push(fragment);
                     }
@@ -1915,8 +1931,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         Property: function (expr, precedence, flags) {
             if (expr.kind === &#x27;get&#x27; || expr.kind === &#x27;set&#x27;) {
                 return [
-                    expr.kind,
-                    noEmptySpace(),
+                    expr.kind, noEmptySpace(),
                     this.generatePropertyKey(expr.key, expr.computed),
                     this.generateFunctionBody(expr.value)
                 ];
@@ -1988,7 +2003,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             multiline = false;
             if (expr.properties.length === 1) {
                 property = expr.properties[0];
-                if (property.value.type !== Syntax.Identifier) {
+                if (property.value.type !== estraverse_1.Syntax.Identifier) {
                     multiline = true;
                 }
             }
@@ -2050,7 +2065,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             if (expr.hasOwnProperty(&#x27;raw&#x27;) &amp;&amp; parse &amp;&amp; extra.raw) {
                 try {
                     raw = parse(expr.raw).body[0].expression;
-                    if (raw.type === Syntax.Literal) {
+                    if (raw.type === estraverse_1.Syntax.Literal) {
                         if (raw.value === expr.value) {
                             return expr.raw;
                         }
@@ -2080,7 +2095,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
             // GeneratorExpression should be parenthesized with (...), ComprehensionExpression with [...]
             // Due to https://bugzilla.mozilla.org/show_bug.cgi?id=883468 position of expr.body can differ in Spidermonkey and ES6
             var result, i, iz, fragment, that = this;
-            result = (expr.type === Syntax.GeneratorExpression) ? [&#x27;(&#x27;] : [&#x27;[&#x27;];
+            result = (expr.type === estraverse_1.Syntax.GeneratorExpression) ? [&#x27;(&#x27;] : [&#x27;[&#x27;];
             if (extra.moz.comprehensionExpressionStartsWithAssignment) {
                 fragment = this.generateExpression(expr.body, Precedence.Assignment, E_TTT);
                 result.push(fragment);
@@ -2107,15 +2122,14 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
                 fragment = this.generateExpression(expr.body, Precedence.Assignment, E_TTT);
                 result = join(result, fragment);
             }
-            result.push((expr.type === Syntax.GeneratorExpression) ? &#x27;)&#x27; : &#x27;]&#x27;);
+            result.push((expr.type === estraverse_1.Syntax.GeneratorExpression) ? &#x27;)&#x27; : &#x27;]&#x27;);
             return result;
         },
         ComprehensionBlock: function (expr, precedence, flags) {
             var fragment;
-            if (expr.left.type === Syntax.VariableDeclaration) {
+            if (expr.left.type === estraverse_1.Syntax.VariableDeclaration) {
                 fragment = [
-                    expr.left.kind,
-                    noEmptySpace(),
+                    expr.left.kind, noEmptySpace(),
                     this.generateStatement(expr.left.declarations[0], S_FFFF)
                 ];
             }
@@ -2243,6 +2257,7 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         }
         return pair.map.toString();
     }
+    exports.generate = generate;
     FORMAT_MINIFY = {
         indent: {
             style: &#x27;&#x27;,
@@ -2263,7 +2278,6 @@ define([&quot;require&quot;, &quot;exports&quot;, &#x27;davinci-mathscript/estra
         FORMAT_MINIFY: FORMAT_MINIFY,
         FORMAT_DEFAULT: FORMAT_DEFAULTS
     };
-    return escodegen;
 });
 
     </pre>

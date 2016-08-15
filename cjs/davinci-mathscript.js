@@ -1,6 +1,7 @@
-var core = require('davinci-mathscript/core');
-var esprima = require('davinci-mathscript/esprima');
-var escodegen = require('davinci-mathscript/escodegen');
+"use strict";
+var core_1 = require('./davinci-mathscript/core');
+var esprima_1 = require('./davinci-mathscript/esprima');
+var escodegen_1 = require('./davinci-mathscript/escodegen');
 /**
  * Provides the MathScript module
  *
@@ -23,7 +24,11 @@ var binOp = {
     '>>': 'rshift',
     '%': 'mod',
     '===': 'eq',
-    '!==': 'ne'
+    '!==': 'ne',
+    '>': 'gt',
+    '>=': 'ge',
+    '<': 'lt',
+    '<=': 'le'
 };
 // The increment and decrement operators are problematic from a timing perspective.
 var unaryOp = {
@@ -33,30 +38,26 @@ var unaryOp = {
     '~': 'tilde' /*,'++':'increment','--':'decrement'*/
 };
 function parse(code, options) {
-    var tree = esprima.parse(code, options);
+    var tree = esprima_1.esprimaParse(code, options);
     //console.log(JSON.stringify(tree), null, '\t');
     visit(tree);
     return tree;
 }
 function transpile(code, options) {
     var tree = parse(code, options);
-    return escodegen.generate(tree, null);
+    return escodegen_1.generate(tree, null);
 }
 function visit(node) {
     if (node && node.type) {
         switch (node.type) {
             case 'BlockStatement':
                 {
-                    node.body.forEach(function (part, index) {
-                        visit(part);
-                    });
+                    node.body.forEach(function (part, index) { visit(part); });
                 }
                 break;
             case 'FunctionDeclaration':
                 {
-                    node.params.forEach(function (param, index) {
-                        visit(param);
-                    });
+                    node.params.forEach(function (param, index) { visit(param); });
                     visit(node.body);
                 }
                 break;
@@ -69,9 +70,7 @@ function visit(node) {
                 break;
             case 'VariableDeclaration':
                 {
-                    node.declarations.forEach(function (declaration, index) {
-                        visit(declaration);
-                    });
+                    node.declarations.forEach(function (declaration, index) { visit(declaration); });
                 }
                 break;
             case 'VariableDeclarator':
@@ -98,8 +97,7 @@ function visit(node) {
                             'computed': false,
                             'object': { 'type': 'Identifier', 'name': MATHSCRIPT_NAMESPACE },
                             'property': {
-                                'type': 'Identifier',
-                                'name': binOp[node.operator]
+                                'type': 'Identifier', 'name': binOp[node.operator]
                             }
                         };
                         visit(node.left);
@@ -141,9 +139,7 @@ function visit(node) {
                 break;
             case 'ArrayExpression':
                 {
-                    node['elements'].forEach(function (elem, index) {
-                        visit(elem);
-                    });
+                    node['elements'].forEach(function (elem, index) { visit(elem); });
                 }
                 break;
             case 'AssignmentExpression':
@@ -161,9 +157,7 @@ function visit(node) {
             case 'CallExpression':
                 {
                     visit(node.callee);
-                    node['arguments'].forEach(function (argument, index) {
-                        visit(argument);
-                    });
+                    node['arguments'].forEach(function (argument, index) { visit(argument); });
                 }
                 break;
             case 'CatchClause':
@@ -185,16 +179,12 @@ function visit(node) {
             case 'NewExpression':
                 {
                     visit(node.callee);
-                    node['arguments'].forEach(function (argument, index) {
-                        visit(argument);
-                    });
+                    node['arguments'].forEach(function (argument, index) { visit(argument); });
                 }
                 break;
             case 'ObjectExpression':
                 {
-                    node['properties'].forEach(function (prop, index) {
-                        visit(prop);
-                    });
+                    node['properties'].forEach(function (prop, index) { visit(prop); });
                 }
                 break;
             case 'ReturnStatement':
@@ -204,25 +194,19 @@ function visit(node) {
                 break;
             case 'SequenceExpression':
                 {
-                    node['expressions'].forEach(function (expr, index) {
-                        visit(expr);
-                    });
+                    node['expressions'].forEach(function (expr, index) { visit(expr); });
                 }
                 break;
             case 'SwitchCase':
                 {
                     visit(node.test);
-                    node['consequent'].forEach(function (expr, index) {
-                        visit(expr);
-                    });
+                    node['consequent'].forEach(function (expr, index) { visit(expr); });
                 }
                 break;
             case 'SwitchStatement':
                 {
                     visit(node.discriminant);
-                    node['cases'].forEach(function (kase, index) {
-                        visit(kase);
-                    });
+                    node['cases'].forEach(function (kase, index) { visit(kase); });
                 }
                 break;
             case 'ThrowStatement':
@@ -233,12 +217,8 @@ function visit(node) {
             case 'TryStatement':
                 {
                     visit(node.block);
-                    node['guardedHandlers'].forEach(function (guardedHandler, index) {
-                        visit(guardedHandler);
-                    });
-                    node['handlers'].forEach(function (handler, index) {
-                        visit(handler);
-                    });
+                    node['guardedHandlers'].forEach(function (guardedHandler, index) { visit(guardedHandler); });
+                    node['handlers'].forEach(function (handler, index) { visit(handler); });
                     visit(node.finalizer);
                 }
                 break;
@@ -270,18 +250,19 @@ function visit(node) {
                 {
                     if (node.operator && unaryOp[node.operator]) {
                         node.type = 'CallExpression';
-                        node.callee = {
-                            'type': 'MemberExpression',
-                            'computed': false,
-                            'object': {
-                                'type': 'Identifier',
-                                'name': MATHSCRIPT_NAMESPACE
-                            },
-                            'property': {
-                                'type': 'Identifier',
-                                'name': unaryOp[node.operator]
-                            }
-                        };
+                        node.callee =
+                            {
+                                'type': 'MemberExpression',
+                                'computed': false,
+                                'object': {
+                                    'type': 'Identifier',
+                                    'name': MATHSCRIPT_NAMESPACE
+                                },
+                                'property': {
+                                    'type': 'Identifier',
+                                    'name': unaryOp[node.operator]
+                                }
+                            };
                         visit(node.argument);
                         node['arguments'] = [node.argument];
                     }
@@ -349,61 +330,21 @@ function binEval(lhs, rhs, lprop, rprop, fallback) {
     // The fallback is for native types.
     return fallback(lhs, rhs);
 }
-function add(p, q) {
-    return binEval(p, q, '__add__', '__radd__', function (a, b) {
-        return a + b;
-    });
-}
-function sub(p, q) {
-    return binEval(p, q, '__sub__', '__rsub__', function (a, b) {
-        return a - b;
-    });
-}
-function mul(p, q) {
-    return binEval(p, q, '__mul__', '__rmul__', function (a, b) {
-        return a * b;
-    });
-}
-function div(p, q) {
-    return binEval(p, q, '__div__', '__rdiv__', function (a, b) {
-        return a / b;
-    });
-}
-function mod(p, q) {
-    return binEval(p, q, '__mod__', '__rmod__', function (a, b) {
-        return a % b;
-    });
-}
-function bitwiseIOR(p, q) {
-    return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) {
-        return a | b;
-    });
-}
-function bitwiseXOR(p, q) {
-    return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) {
-        return a ^ b;
-    });
-}
-function lshift(p, q) {
-    return binEval(p, q, '__lshift__', '__rlshift__', function (a, b) {
-        return a << b;
-    });
-}
-function rshift(p, q) {
-    return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) {
-        return a >> b;
-    });
-}
-function eq(p, q) {
-    return binEval(p, q, '__eq__', '__req__', function (a, b) {
-        return a === b;
-    });
-}
-function ne(p, q) {
-    return binEval(p, q, '__ne__', '__rne__', function (a, b) {
-        return a !== b;
-    });
-}
+function add(p, q) { return binEval(p, q, '__add__', '__radd__', function (a, b) { return a + b; }); }
+function sub(p, q) { return binEval(p, q, '__sub__', '__rsub__', function (a, b) { return a - b; }); }
+function mul(p, q) { return binEval(p, q, '__mul__', '__rmul__', function (a, b) { return a * b; }); }
+function div(p, q) { return binEval(p, q, '__div__', '__rdiv__', function (a, b) { return a / b; }); }
+function mod(p, q) { return binEval(p, q, '__mod__', '__rmod__', function (a, b) { return a % b; }); }
+function bitwiseIOR(p, q) { return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) { return a | b; }); }
+function bitwiseXOR(p, q) { return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) { return a ^ b; }); }
+function lshift(p, q) { return binEval(p, q, '__lshift__', '__rlshift__', function (a, b) { return a << b; }); }
+function rshift(p, q) { return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) { return a >> b; }); }
+function eq(p, q) { return binEval(p, q, '__eq__', '__req__', function (a, b) { return a === b; }); }
+function ne(p, q) { return binEval(p, q, '__ne__', '__rne__', function (a, b) { return a !== b; }); }
+function ge(p, q) { return binEval(p, q, '__ge__', '__rge__', function (a, b) { return a >= b; }); }
+function gt(p, q) { return binEval(p, q, '__gt__', '__rgt__', function (a, b) { return a > b; }); }
+function le(p, q) { return binEval(p, q, '__le__', '__rle__', function (a, b) { return a <= b; }); }
+function lt(p, q) { return binEval(p, q, '__lt__', '__rlt__', function (a, b) { return a < b; }); }
 function exp(x) {
     if (specialMethod(x, '__exp__')) {
         return x['__exp__']();
@@ -447,7 +388,7 @@ function tilde(x) {
     }
 }
 var Ms = {
-    'VERSION': core.VERSION,
+    'VERSION': core_1.VERSION,
     parse: parse,
     transpile: transpile,
     add: add,
@@ -461,6 +402,10 @@ var Ms = {
     mod: mod,
     eq: eq,
     ne: ne,
+    ge: ge,
+    gt: gt,
+    le: le,
+    lt: lt,
     neg: neg,
     pos: pos,
     bang: bang,

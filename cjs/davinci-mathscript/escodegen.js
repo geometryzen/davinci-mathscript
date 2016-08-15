@@ -1,3 +1,9 @@
+"use strict";
+var estraverse_1 = require('./estraverse');
+var code_1 = require('./code');
+var code_2 = require('./code');
+var code_3 = require('./code');
+var code_4 = require('./code');
 /*
   Copyright (C) 2015 David Holmes <david.geo.holmes@gmail.com>
   Copyright (C) 2012-2014 Yusuke Suzuki <utatane.tea@gmail.com>
@@ -33,13 +39,7 @@
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-/*global exports:true, require:true, global:true*/
-'use strict';
-var estraverse = require('davinci-mathscript/estraverse');
-var esutils = require('davinci-mathscript/esutils');
-var Syntax, Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
-//esutils = require('esutils');
-Syntax = estraverse.Syntax;
+var Precedence, BinaryPrecedence, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
 // Generation is done by generateExpression.
 function isExpression(node) {
     return CodeGenerator.Expression.hasOwnProperty(node.type);
@@ -174,7 +174,7 @@ function hasLineTerminator(str) {
 }
 function endsWithLineTerminator(str) {
     var len = str.length;
-    return len && esutils.code.isLineTerminator(str.charCodeAt(len - 1));
+    return len && code_1.isLineTerminator(str.charCodeAt(len - 1));
 }
 function merge(target, override) {
     var key;
@@ -224,7 +224,7 @@ function generateNumber(value) {
         return result;
     }
     point = result.indexOf('.');
-    if (!json && result.charCodeAt(0) === 0x30 && point === 1) {
+    if (!json && result.charCodeAt(0) === 0x30 /* 0 */ && point === 1) {
         point = 0;
         result = result.slice(1);
     }
@@ -240,7 +240,7 @@ function generateNumber(value) {
         temp = +(temp.slice(0, point) + temp.slice(point + 1)) + '';
     }
     pos = 0;
-    while (temp.charCodeAt(temp.length + pos - 1) === 0x30) {
+    while (temp.charCodeAt(temp.length + pos - 1) === 0x30 /* 0 */) {
         --pos;
     }
     if (pos !== 0) {
@@ -250,7 +250,9 @@ function generateNumber(value) {
     if (exponent !== 0) {
         temp += 'e' + exponent;
     }
-    if ((temp.length < result.length || (hexadecimal && value > 1e12 && Math.floor(value) === value && (temp = '0x' + value.toString(16)).length < result.length)) && +temp === value) {
+    if ((temp.length < result.length ||
+        (hexadecimal && value > 1e12 && Math.floor(value) === value && (temp = '0x' + value.toString(16)).length < result.length)) &&
+        +temp === value) {
         result = temp;
     }
     return result;
@@ -312,23 +314,23 @@ function generateRegExp(reg) {
 }
 function escapeAllowedCharacter(code, next) {
     var hex;
-    if (code === 0x08) {
+    if (code === 0x08 /* \b */) {
         return '\\b';
     }
-    if (code === 0x0C) {
+    if (code === 0x0C /* \f */) {
         return '\\f';
     }
-    if (code === 0x09) {
+    if (code === 0x09 /* \t */) {
         return '\\t';
     }
     hex = code.toString(16).toUpperCase();
     if (json || code > 0xFF) {
         return '\\u' + '0000'.slice(hex.length) + hex;
     }
-    else if (code === 0x0000 && !esutils.code.isDecimalDigit(next)) {
+    else if (code === 0x0000 && !code_2.isDecimalDigit(next)) {
         return '\\0';
     }
-    else if (code === 0x000B) {
+    else if (code === 0x000B /* \v */) {
         return '\\x0B';
     }
     else {
@@ -336,13 +338,13 @@ function escapeAllowedCharacter(code, next) {
     }
 }
 function escapeDisallowedCharacter(code) {
-    if (code === 0x5C) {
+    if (code === 0x5C /* \ */) {
         return '\\\\';
     }
-    if (code === 0x0A) {
+    if (code === 0x0A /* \n */) {
         return '\\n';
     }
-    if (code === 0x0D) {
+    if (code === 0x0D /* \r */) {
         return '\\r';
     }
     if (code === 0x2028) {
@@ -358,15 +360,15 @@ function escapeDirective(str) {
     quote = quotes === 'double' ? '"' : '\'';
     for (i = 0, iz = str.length; i < iz; ++i) {
         code = str.charCodeAt(i);
-        if (code === 0x27) {
+        if (code === 0x27 /* ' */) {
             quote = '"';
             break;
         }
-        else if (code === 0x22) {
+        else if (code === 0x22 /* " */) {
             quote = '\'';
             break;
         }
-        else if (code === 0x5C) {
+        else if (code === 0x5C /* \ */) {
             ++i;
         }
     }
@@ -376,20 +378,20 @@ function escapeString(str) {
     var result = '', i, len, code, singleQuotes = 0, doubleQuotes = 0, single, quote;
     for (i = 0, len = str.length; i < len; ++i) {
         code = str.charCodeAt(i);
-        if (code === 0x27) {
+        if (code === 0x27 /* ' */) {
             ++singleQuotes;
         }
-        else if (code === 0x22) {
+        else if (code === 0x22 /* " */) {
             ++doubleQuotes;
         }
-        else if (code === 0x2F && json) {
+        else if (code === 0x2F /* / */ && json) {
             result += '\\';
         }
-        else if (esutils.code.isLineTerminator(code) || code === 0x5C) {
+        else if (code_1.isLineTerminator(code) || code === 0x5C /* \ */) {
             result += escapeDisallowedCharacter(code);
             continue;
         }
-        else if ((json && code < 0x20) || !(json || escapeless || (code >= 0x20 && code <= 0x7E))) {
+        else if ((json && code < 0x20 /* SP */) || !(json || escapeless || (code >= 0x20 /* SP */ && code <= 0x7E /* ~ */))) {
             result += escapeAllowedCharacter(code, str.charCodeAt(i + 1));
             continue;
         }
@@ -404,7 +406,7 @@ function escapeString(str) {
     result = quote;
     for (i = 0, len = str.length; i < len; ++i) {
         code = str.charCodeAt(i);
-        if ((code === 0x27 && single) || (code === 0x22 && !single)) {
+        if ((code === 0x27 /* ' */ && single) || (code === 0x22 /* " */ && !single)) {
             result += '\\';
         }
         result += String.fromCharCode(code);
@@ -466,10 +468,13 @@ function join(left, right) {
     }
     leftCharCode = leftSource.charCodeAt(leftSource.length - 1);
     rightCharCode = rightSource.charCodeAt(0);
-    if ((leftCharCode === 0x2B || leftCharCode === 0x2D) && leftCharCode === rightCharCode || esutils.code.isIdentifierPart(leftCharCode) && esutils.code.isIdentifierPart(rightCharCode) || leftCharCode === 0x2F && rightCharCode === 0x69) {
+    if ((leftCharCode === 0x2B /* + */ || leftCharCode === 0x2D /* - */) && leftCharCode === rightCharCode ||
+        code_3.isIdentifierPart(leftCharCode) && code_3.isIdentifierPart(rightCharCode) ||
+        leftCharCode === 0x2F /* / */ && rightCharCode === 0x69 /* i */) {
         return [left, noEmptySpace(), right];
     }
-    else if (esutils.code.isWhiteSpace(leftCharCode) || esutils.code.isLineTerminator(leftCharCode) || esutils.code.isWhiteSpace(rightCharCode) || esutils.code.isLineTerminator(rightCharCode)) {
+    else if (code_4.isWhiteSpace(leftCharCode) || code_1.isLineTerminator(leftCharCode) ||
+        code_4.isWhiteSpace(rightCharCode) || code_1.isLineTerminator(rightCharCode)) {
         return [left, right];
     }
     return [left, space, right];
@@ -487,7 +492,7 @@ function withIndent(fn) {
 function calculateSpaces(str) {
     var i;
     for (i = str.length - 1; i >= 0; --i) {
-        if (esutils.code.isLineTerminator(str.charCodeAt(i))) {
+        if (code_1.isLineTerminator(str.charCodeAt(i))) {
             break;
         }
     }
@@ -497,10 +502,11 @@ function adjustMultilineComment(value, specialBase) {
     var array, i, len, line, j, spaces, previousBase, sn;
     array = value.split(/\r\n|[\r\n]/);
     spaces = Number.MAX_VALUE;
+    // first line doesn't have indentation
     for (i = 1, len = array.length; i < len; ++i) {
         line = array[i];
         j = 0;
-        while (j < line.length && esutils.code.isWhiteSpace(line.charCodeAt(j))) {
+        while (j < line.length && code_4.isWhiteSpace(line.charCodeAt(j))) {
             ++j;
         }
         if (spaces > j) {
@@ -593,7 +599,7 @@ function addComments(stmt, result) {
         else {
             comment = stmt.leadingComments[0];
             result = [];
-            if (safeConcatenation && stmt.type === Syntax.Program && stmt.body.length === 0) {
+            if (safeConcatenation && stmt.type === estraverse_1.Syntax.Program && stmt.body.length === 0) {
                 result.push('\n');
             }
             result.push(generateComment(comment));
@@ -703,12 +709,14 @@ var CodeGenerator = (function () {
     CodeGenerator.prototype.generateFunctionParams = function (node) {
         var i, iz, result, hasDefault;
         hasDefault = false;
-        if (node.type === Syntax.ArrowFunctionExpression && !node.rest && (!node.defaults || node.defaults.length === 0) && node.params.length === 1 && node.params[0].type === Syntax.Identifier) {
+        if (node.type === estraverse_1.Syntax.ArrowFunctionExpression &&
+            !node.rest && (!node.defaults || node.defaults.length === 0) &&
+            node.params.length === 1 && node.params[0].type === estraverse_1.Syntax.Identifier) {
             // arg => { } case
             result = [generateAsyncPrefix(node, true), generateIdentifier(node.params[0])];
         }
         else {
-            result = node.type === Syntax.ArrowFunctionExpression ? [generateAsyncPrefix(node, false)] : [];
+            result = node.type === estraverse_1.Syntax.ArrowFunctionExpression ? [generateAsyncPrefix(node, false)] : [];
             result.push('(');
             if (node.defaults) {
                 hasDefault = true;
@@ -737,7 +745,7 @@ var CodeGenerator = (function () {
         return result;
     };
     CodeGenerator.prototype.generatePattern = function (node, precedence, flags) {
-        if (node.type === Syntax.Identifier) {
+        if (node.type === estraverse_1.Syntax.Identifier) {
             return generateIdentifier(node);
         }
         return this.generateExpression(node, precedence, flags);
@@ -750,14 +758,14 @@ var CodeGenerator = (function () {
             result = addComments(stmt, result);
         }
         fragment = toSourceNodeWhenNeeded(result).toString();
-        if (stmt.type === Syntax.Program && !safeConcatenation && newline === '' && fragment.charAt(fragment.length - 1) === '\n') {
+        if (stmt.type === estraverse_1.Syntax.Program && !safeConcatenation && newline === '' && fragment.charAt(fragment.length - 1) === '\n') {
             result = sourceMap ? toSourceNodeWhenNeeded(result).replaceRight(/\s+$/, '') : fragment.replace(/\s+$/, '');
         }
         return toSourceNodeWhenNeeded(result, stmt);
     };
     CodeGenerator.prototype.generateExpression = function (expr, precedence, flags) {
         var result, type;
-        type = expr.type || Syntax.Property;
+        type = expr.type || estraverse_1.Syntax.Property;
         if (extra.verbatim && expr.hasOwnProperty(extra.verbatim)) {
             return generateVerbatim(expr, precedence);
         }
@@ -770,10 +778,10 @@ var CodeGenerator = (function () {
     CodeGenerator.prototype.maybeBlock = function (stmt, flags) {
         var result, noLeadingComment, that = this;
         noLeadingComment = !extra.comment || !stmt.leadingComments;
-        if (stmt.type === Syntax.BlockStatement && noLeadingComment) {
+        if (stmt.type === estraverse_1.Syntax.BlockStatement && noLeadingComment) {
             return [space, this.generateStatement(stmt, flags)];
         }
-        if (stmt.type === Syntax.EmptyStatement && noLeadingComment) {
+        if (stmt.type === estraverse_1.Syntax.EmptyStatement && noLeadingComment) {
             return ';';
         }
         withIndent(function () {
@@ -786,7 +794,7 @@ var CodeGenerator = (function () {
     };
     CodeGenerator.prototype.maybeBlockSuffix = function (stmt, result) {
         var ends = endsWithLineTerminator(toSourceNodeWhenNeeded(result).toString());
-        if (stmt.type === Syntax.BlockStatement && (!extra.comment || !stmt.leadingComments) && !ends) {
+        if (stmt.type === estraverse_1.Syntax.BlockStatement && (!extra.comment || !stmt.leadingComments) && !ends) {
             return [result, space];
         }
         if (ends) {
@@ -797,7 +805,7 @@ var CodeGenerator = (function () {
     CodeGenerator.prototype.generateFunctionBody = function (node) {
         var result, expr;
         result = this.generateFunctionParams(node);
-        if (node.type === Syntax.ArrowFunctionExpression) {
+        if (node.type === estraverse_1.Syntax.ArrowFunctionExpression) {
             result.push(space);
             result.push('=>');
         }
@@ -817,7 +825,7 @@ var CodeGenerator = (function () {
     CodeGenerator.prototype.generateIterationForStatement = function (operator, stmt, flags) {
         var result = ['for' + space + '('], that = this;
         withIndent(function () {
-            if (stmt.left.type === Syntax.VariableDeclaration) {
+            if (stmt.left.type === estraverse_1.Syntax.VariableDeclaration) {
                 withIndent(function () {
                     result.push(stmt.left.kind + noEmptySpace());
                     result.push(that.generateStatement(stmt.left.declarations[0], S_FFFF));
@@ -860,7 +868,7 @@ var CodeGenerator = (function () {
         return ';';
     };
     return CodeGenerator;
-})();
+}());
 // Helpers.
 function generateIdentifier(node) {
     return toSourceNodeWhenNeeded(node.name, node);
@@ -1068,9 +1076,6 @@ CodeGenerator.Statement = {
             if (stmt.specifiers.length === 0) {
                 result = join(result, '{' + space + '}');
             }
-            else if (stmt.specifiers[0].type === Syntax.ExportBatchSpecifier) {
-                result = join(result, this.generateExpression(stmt.specifiers[0], Precedence.Sequence, E_TTT));
-            }
             else {
                 result = join(result, '{');
                 withIndent(function (indent) {
@@ -1092,6 +1097,7 @@ CodeGenerator.Statement = {
             if (stmt.source) {
                 result = join(result, [
                     'from' + space,
+                    // ModuleSpecifier
                     this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                     this.semicolon(flags)
                 ]);
@@ -1110,7 +1116,7 @@ CodeGenerator.Statement = {
                 return false;
             }
             code = fragment.charCodeAt(5);
-            return code === 0x7B || esutils.code.isWhiteSpace(code) || esutils.code.isLineTerminator(code);
+            return code === 0x7B /* '{' */ || code_4.isWhiteSpace(code) || code_1.isLineTerminator(code);
         }
         function isFunctionPrefixed(fragment) {
             var code;
@@ -1118,18 +1124,18 @@ CodeGenerator.Statement = {
                 return false;
             }
             code = fragment.charCodeAt(8);
-            return code === 0x28 || esutils.code.isWhiteSpace(code) || code === 0x2A || esutils.code.isLineTerminator(code);
+            return code === 0x28 /* '(' */ || code_4.isWhiteSpace(code) || code === 0x2A /* '*' */ || code_1.isLineTerminator(code);
         }
         function isAsyncPrefixed(fragment) {
             var code, i, iz;
             if (fragment.slice(0, 5) !== 'async') {
                 return false;
             }
-            if (!esutils.code.isWhiteSpace(fragment.charCodeAt(5))) {
+            if (!code_4.isWhiteSpace(fragment.charCodeAt(5))) {
                 return false;
             }
             for (i = 6, iz = fragment.length; i < iz; ++i) {
-                if (!esutils.code.isWhiteSpace(fragment.charCodeAt(i))) {
+                if (!code_4.isWhiteSpace(fragment.charCodeAt(i))) {
                     break;
                 }
             }
@@ -1140,13 +1146,17 @@ CodeGenerator.Statement = {
                 return false;
             }
             code = fragment.charCodeAt(i + 8);
-            return code === 0x28 || esutils.code.isWhiteSpace(code) || code === 0x2A || esutils.code.isLineTerminator(code);
+            return code === 0x28 /* '(' */ || code_4.isWhiteSpace(code) || code === 0x2A /* '*' */ || code_1.isLineTerminator(code);
         }
         result = [this.generateExpression(stmt.expression, Precedence.Sequence, E_TTT)];
         // 12.4 '{', 'function', 'class' is not allowed in this position.
         // wrap expression with parentheses
         fragment = toSourceNodeWhenNeeded(result).toString();
-        if (fragment.charCodeAt(0) === 0x7B || isClassPrefixed(fragment) || isFunctionPrefixed(fragment) || isAsyncPrefixed(fragment) || (directive && (flags & F_DIRECTIVE_CTX) && stmt.expression.type === Syntax.Literal && typeof stmt.expression.value === 'string')) {
+        if (fragment.charCodeAt(0) === 0x7B /* '{' */ ||
+            isClassPrefixed(fragment) ||
+            isFunctionPrefixed(fragment) ||
+            isAsyncPrefixed(fragment) ||
+            (directive && (flags & F_DIRECTIVE_CTX) && stmt.expression.type === estraverse_1.Syntax.Literal && typeof stmt.expression.value === 'string')) {
             result = ['(', result, ')' + this.semicolon(flags)];
         }
         else {
@@ -1167,6 +1177,7 @@ CodeGenerator.Statement = {
             return [
                 'import',
                 space,
+                // ModuleSpecifier
                 this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
                 this.semicolon(flags)
             ];
@@ -1177,7 +1188,7 @@ CodeGenerator.Statement = {
         ];
         cursor = 0;
         // ImportedBinding
-        if (stmt.specifiers[cursor].type === Syntax.ImportDefaultSpecifier) {
+        if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportDefaultSpecifier) {
             result = join(result, [
                 this.generateExpression(stmt.specifiers[cursor], Precedence.Sequence, E_TTT)
             ]);
@@ -1187,7 +1198,7 @@ CodeGenerator.Statement = {
             if (cursor !== 0) {
                 result.push(',');
             }
-            if (stmt.specifiers[cursor].type === Syntax.ImportNamespaceSpecifier) {
+            if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportNamespaceSpecifier) {
                 // NameSpaceImport
                 result = join(result, [
                     space,
@@ -1228,6 +1239,7 @@ CodeGenerator.Statement = {
         }
         result = join(result, [
             'from' + space,
+            // ModuleSpecifier
             this.generateExpression(stmt.source, Precedence.Sequence, E_TTT),
             this.semicolon(flags)
         ]);
@@ -1292,6 +1304,7 @@ CodeGenerator.Statement = {
         result = ['try', this.maybeBlock(stmt.block, S_TFFF)];
         result = this.maybeBlockSuffix(stmt.block, result);
         if (stmt.handlers) {
+            // old interface
             for (i = 0, iz = stmt.handlers.length; i < iz; ++i) {
                 result = join(result, this.generateStatement(stmt.handlers[i], S_TFFF));
                 if (stmt.finalizer || i + 1 !== iz) {
@@ -1369,7 +1382,7 @@ CodeGenerator.Statement = {
             }
             i = 0;
             iz = stmt.consequent.length;
-            if (iz && stmt.consequent[0].type === Syntax.BlockStatement) {
+            if (iz && stmt.consequent[0].type === estraverse_1.Syntax.BlockStatement) {
                 fragment = that.maybeBlock(stmt.consequent[0], S_TFFF);
                 result.push(fragment);
                 i = 1;
@@ -1408,7 +1421,7 @@ CodeGenerator.Statement = {
         if (stmt.alternate) {
             result.push(this.maybeBlock(stmt.consequent, S_TFFF));
             result = this.maybeBlockSuffix(stmt.consequent, result);
-            if (stmt.alternate.type === Syntax.IfStatement) {
+            if (stmt.alternate.type === estraverse_1.Syntax.IfStatement) {
                 result = join(result, ['else ', this.generateStatement(stmt.alternate, bodyFlags)]);
             }
             else {
@@ -1425,7 +1438,7 @@ CodeGenerator.Statement = {
         withIndent(function () {
             result = ['for' + space + '('];
             if (stmt.init) {
-                if (stmt.init.type === Syntax.VariableDeclaration) {
+                if (stmt.init.type === estraverse_1.Syntax.VariableDeclaration) {
                     result.push(that.generateStatement(stmt.init, S_FFFF));
                 }
                 else {
@@ -1598,14 +1611,15 @@ CodeGenerator.Expression = {
         }
         fragment = this.generateExpression(expr.left, currentPrecedence, flags);
         leftSource = fragment.toString();
-        if (leftSource.charCodeAt(leftSource.length - 1) === 0x2F && esutils.code.isIdentifierPart(expr.operator.charCodeAt(0))) {
+        if (leftSource.charCodeAt(leftSource.length - 1) === 0x2F /* / */ && code_3.isIdentifierPart(expr.operator.charCodeAt(0))) {
             result = [fragment, noEmptySpace(), expr.operator];
         }
         else {
             result = join(fragment, expr.operator);
         }
         fragment = this.generateExpression(expr.right, currentPrecedence + 1, flags);
-        if (expr.operator === '/' && fragment.toString().charAt(0) === '/' || expr.operator.slice(-1) === '<' && fragment.toString().slice(0, 3) === '!--') {
+        if (expr.operator === '/' && fragment.toString().charAt(0) === '/' ||
+            expr.operator.slice(-1) === '<' && fragment.toString().slice(0, 3) === '!--') {
             // If '/' concats with '/' or `<` concats with `!--`, it is interpreted as comment start
             result.push(noEmptySpace());
             result.push(fragment);
@@ -1664,7 +1678,7 @@ CodeGenerator.Expression = {
             result.push(']');
         }
         else {
-            if (expr.object.type === Syntax.Literal && typeof expr.object.value === 'number') {
+            if (expr.object.type === estraverse_1.Syntax.Literal && typeof expr.object.value === 'number') {
                 fragment = toSourceNodeWhenNeeded(result).toString();
                 // When the following conditions are all true,
                 //   1. No floating point
@@ -1672,7 +1686,11 @@ CodeGenerator.Expression = {
                 //   3. The last character is a decimal digit
                 //   4. Not hexadecimal OR octal number literal
                 // we should add a floating point.
-                if (fragment.indexOf('.') < 0 && !/[eExX]/.test(fragment) && esutils.code.isDecimalDigit(fragment.charCodeAt(fragment.length - 1)) && !(fragment.length >= 2 && fragment.charCodeAt(0) === 48)) {
+                if (fragment.indexOf('.') < 0 &&
+                    !/[eExX]/.test(fragment) &&
+                    code_2.isDecimalDigit(fragment.charCodeAt(fragment.length - 1)) &&
+                    !(fragment.length >= 2 && fragment.charCodeAt(0) === 48) // '0'
+                ) {
                     result.push('.');
                 }
             }
@@ -1700,7 +1718,8 @@ CodeGenerator.Expression = {
                 leftSource = toSourceNodeWhenNeeded(result).toString();
                 leftCharCode = leftSource.charCodeAt(leftSource.length - 1);
                 rightCharCode = fragment.toString().charCodeAt(0);
-                if (((leftCharCode === 0x2B || leftCharCode === 0x2D) && leftCharCode === rightCharCode) || (esutils.code.isIdentifierPart(leftCharCode) && esutils.code.isIdentifierPart(rightCharCode))) {
+                if (((leftCharCode === 0x2B /* + */ || leftCharCode === 0x2D /* - */) && leftCharCode === rightCharCode) ||
+                    (code_3.isIdentifierPart(leftCharCode) && code_3.isIdentifierPart(rightCharCode))) {
                     result.push(noEmptySpace());
                     result.push(fragment);
                 }
@@ -1835,8 +1854,7 @@ CodeGenerator.Expression = {
     Property: function (expr, precedence, flags) {
         if (expr.kind === 'get' || expr.kind === 'set') {
             return [
-                expr.kind,
-                noEmptySpace(),
+                expr.kind, noEmptySpace(),
                 this.generatePropertyKey(expr.key, expr.computed),
                 this.generateFunctionBody(expr.value)
             ];
@@ -1908,7 +1926,7 @@ CodeGenerator.Expression = {
         multiline = false;
         if (expr.properties.length === 1) {
             property = expr.properties[0];
-            if (property.value.type !== Syntax.Identifier) {
+            if (property.value.type !== estraverse_1.Syntax.Identifier) {
                 multiline = true;
             }
         }
@@ -1970,7 +1988,7 @@ CodeGenerator.Expression = {
         if (expr.hasOwnProperty('raw') && parse && extra.raw) {
             try {
                 raw = parse(expr.raw).body[0].expression;
-                if (raw.type === Syntax.Literal) {
+                if (raw.type === estraverse_1.Syntax.Literal) {
                     if (raw.value === expr.value) {
                         return expr.raw;
                     }
@@ -2000,7 +2018,7 @@ CodeGenerator.Expression = {
         // GeneratorExpression should be parenthesized with (...), ComprehensionExpression with [...]
         // Due to https://bugzilla.mozilla.org/show_bug.cgi?id=883468 position of expr.body can differ in Spidermonkey and ES6
         var result, i, iz, fragment, that = this;
-        result = (expr.type === Syntax.GeneratorExpression) ? ['('] : ['['];
+        result = (expr.type === estraverse_1.Syntax.GeneratorExpression) ? ['('] : ['['];
         if (extra.moz.comprehensionExpressionStartsWithAssignment) {
             fragment = this.generateExpression(expr.body, Precedence.Assignment, E_TTT);
             result.push(fragment);
@@ -2027,15 +2045,14 @@ CodeGenerator.Expression = {
             fragment = this.generateExpression(expr.body, Precedence.Assignment, E_TTT);
             result = join(result, fragment);
         }
-        result.push((expr.type === Syntax.GeneratorExpression) ? ')' : ']');
+        result.push((expr.type === estraverse_1.Syntax.GeneratorExpression) ? ')' : ']');
         return result;
     },
     ComprehensionBlock: function (expr, precedence, flags) {
         var fragment;
-        if (expr.left.type === Syntax.VariableDeclaration) {
+        if (expr.left.type === estraverse_1.Syntax.VariableDeclaration) {
             fragment = [
-                expr.left.kind,
-                noEmptySpace(),
+                expr.left.kind, noEmptySpace(),
                 this.generateStatement(expr.left.declarations[0], S_FFFF)
             ];
         }
@@ -2163,6 +2180,7 @@ function generate(node, options) {
     }
     return pair.map.toString();
 }
+exports.generate = generate;
 FORMAT_MINIFY = {
     indent: {
         style: '',
@@ -2183,4 +2201,3 @@ var escodegen = {
     FORMAT_MINIFY: FORMAT_MINIFY,
     FORMAT_DEFAULT: FORMAT_DEFAULTS
 };
-module.exports = escodegen;

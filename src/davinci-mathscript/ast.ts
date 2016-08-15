@@ -25,7 +25,7 @@
 
 'use strict';
 
-function isExpression(node) {
+export function isExpression(node) {
     if (node == null) { return false; }
     switch (node.type) {
         case 'ArrayExpression':
@@ -49,7 +49,7 @@ function isExpression(node) {
     return false;
 }
 
-function isIterationStatement(node) {
+export function isIterationStatement(node) {
     if (node == null) { return false; }
     switch (node.type) {
         case 'DoWhileStatement':
@@ -61,7 +61,7 @@ function isIterationStatement(node) {
     return false;
 }
 
-function isStatement(node) {
+export function isStatement(node) {
     if (node == null) { return false; }
     switch (node.type) {
         case 'BlockStatement':
@@ -87,29 +87,29 @@ function isStatement(node) {
     return false;
 }
 
-function isSourceElement(node) {
-  return isStatement(node) || node != null && node.type === 'FunctionDeclaration';
+export function isSourceElement(node) {
+    return isStatement(node) || node != null && node.type === 'FunctionDeclaration';
 }
 
-function trailingStatement(node) {
+export function trailingStatement(node) {
     switch (node.type) {
-    case 'IfStatement':
-        if (node.alternate != null) {
-            return node.alternate;
-        }
-        return node.consequent;
+        case 'IfStatement':
+            if (node.alternate != null) {
+                return node.alternate;
+            }
+            return node.consequent;
 
-    case 'LabeledStatement':
-    case 'ForStatement':
-    case 'ForInStatement':
-    case 'WhileStatement':
-    case 'WithStatement':
-        return node.body;
+        case 'LabeledStatement':
+        case 'ForStatement':
+        case 'ForInStatement':
+        case 'WhileStatement':
+        case 'WithStatement':
+            return node.body;
     }
     return null;
 }
 
-function isProblematicIfStatement(node) {
+export function isProblematicIfStatement(node) {
     var current;
 
     if (node.type !== 'IfStatement') {
@@ -121,7 +121,7 @@ function isProblematicIfStatement(node) {
     current = node.consequent;
     do {
         if (current.type === 'IfStatement') {
-            if (current.alternate == null)  {
+            if (current.alternate == null) {
                 return true;
             }
         }
@@ -130,15 +130,3 @@ function isProblematicIfStatement(node) {
 
     return false;
 }
-
-var ast = {
-    isExpression: isExpression,
-    isStatement: isStatement,
-    isIterationStatement: isIterationStatement,
-    isSourceElement: isSourceElement,
-    isProblematicIfStatement: isProblematicIfStatement,
-
-    trailingStatement: trailingStatement
-};
-
-export = ast;

@@ -28,8 +28,7 @@
 /*global exports:true*/
 'use strict';
 
-var Syntax,
-    isArray,
+var isArray,
     VisitorOption,
     VisitorKeys,
     objectCreate,
@@ -115,16 +114,16 @@ function lowerBound(array, func) {
 }
 ignoreJSHintError(lowerBound);
 
-objectCreate = Object.create || (function () {
+objectCreate = Object.create || (function() {
     function F() { }
 
-    return function (o) {
+    return function(o) {
         F.prototype = o;
         return new F();
     };
 })();
 
-objectKeys = Object.keys || function (o) {
+objectKeys = Object.keys || function(o) {
     var keys = [], key;
     for (key in o) {
         keys.push(key);
@@ -141,7 +140,7 @@ function extend(to, from) {
     return to;
 }
 
-Syntax = {
+export const Syntax = {
     AssignmentExpression: 'AssignmentExpression',
     AssignmentPattern: 'AssignmentPattern',
     ArrayExpression: 'ArrayExpression',
@@ -265,7 +264,7 @@ VisitorKeys = {
     ObjectPattern: ['properties'],
     Program: ['body'],
     Property: ['key', 'value'],
-    RestElement: [ 'argument' ],
+    RestElement: ['argument'],
     ReturnStatement: ['argument'],
     SequenceExpression: ['expressions'],
     SpreadElement: ['argument'],
@@ -317,7 +316,7 @@ Reference.prototype.remove = function remove() {
     }
 };
 
-function Element(node, path, wrap, ref) {
+function ElementNode(node, path, wrap, ref) {
     this.node = node;
     this.path = path;
     this.wrap = wrap;
@@ -358,7 +357,7 @@ Controller.prototype.path = function path() {
 
 // API:
 // return type of current node
-Controller.prototype.type = function () {
+Controller.prototype.type = function() {
     var node = this.current();
     return node.type || this.__current.wrap;
 };
@@ -388,7 +387,7 @@ Controller.prototype.__execute = function __execute(callback, element) {
 
     result = undefined;
 
-    previous  = this.__current;
+    previous = this.__current;
     this.__current = element;
     this.__state = null;
     if (callback) {
@@ -407,19 +406,19 @@ Controller.prototype.notify = function notify(flag) {
 
 // API:
 // skip child nodes of current node
-Controller.prototype.skip = function () {
+Controller.prototype.skip = function() {
     this.notify(SKIP);
 };
 
 // API:
 // break traversals
-Controller.prototype['break'] = function () {
+Controller.prototype['break'] = function() {
     this.notify(BREAK);
 };
 
 // API:
 // remove node
-Controller.prototype.remove = function () {
+Controller.prototype.remove = function() {
     this.notify(REMOVE);
 };
 
@@ -471,8 +470,8 @@ Controller.prototype.traverse = function traverse(root, visitor) {
     leavelist = this.__leavelist;
 
     // initialize
-    worklist.push(new Element(root, null, null, null));
-    leavelist.push(new Element(null, null, null, null));
+    worklist.push(new ElementNode(root, null, null, null));
+    leavelist.push(new ElementNode(null, null, null, null));
 
     while (worklist.length) {
         element = worklist.pop();
@@ -529,16 +528,16 @@ Controller.prototype.traverse = function traverse(root, visitor) {
                             continue;
                         }
                         if (isProperty(nodeType, candidates[current])) {
-                            element = new Element(candidate[current2], [key, current2], 'Property', null);
+                            element = new ElementNode(candidate[current2], [key, current2], 'Property', null);
                         } else if (isNode(candidate[current2])) {
-                            element = new Element(candidate[current2], [key, current2], null, null);
+                            element = new ElementNode(candidate[current2], [key, current2], null, null);
                         } else {
                             continue;
                         }
                         worklist.push(element);
                     }
                 } else if (isNode(candidate)) {
-                    worklist.push(new Element(candidate, key, null, null));
+                    worklist.push(new ElementNode(candidate, key, null, null));
                 }
             }
         }
@@ -562,7 +561,7 @@ Controller.prototype.replace = function replace(root, visitor) {
             while (i--) {
                 nextElem = worklist[i];
                 if (nextElem.ref && nextElem.ref.parent === parent) {
-                    if  (nextElem.ref.key < key) {
+                    if (nextElem.ref.key < key) {
                         break;
                     }
                     --nextElem.ref.key;
@@ -597,7 +596,7 @@ Controller.prototype.replace = function replace(root, visitor) {
     outer = {
         root: root
     };
-    element = new Element(root, null, null, new Reference(outer, 'root'));
+    element = new ElementNode(root, null, null, new Reference(outer, 'root'));
     worklist.push(element);
     leavelist.push(element);
 
@@ -683,16 +682,16 @@ Controller.prototype.replace = function replace(root, visitor) {
                         continue;
                     }
                     if (isProperty(nodeType, candidates[current])) {
-                        element = new Element(candidate[current2], [key, current2], 'Property', new Reference(candidate, current2));
+                        element = new ElementNode(candidate[current2], [key, current2], 'Property', new Reference(candidate, current2));
                     } else if (isNode(candidate[current2])) {
-                        element = new Element(candidate[current2], [key, current2], null, new Reference(candidate, current2));
+                        element = new ElementNode(candidate[current2], [key, current2], null, new Reference(candidate, current2));
                     } else {
                         continue;
                     }
                     worklist.push(element);
                 }
             } else if (isNode(candidate)) {
-                worklist.push(new Element(candidate, key, null, new Reference(node, key)));
+                worklist.push(new ElementNode(candidate, key, null, new Reference(node, key)));
             }
         }
     }
@@ -759,7 +758,7 @@ function attachComments(tree, providedComments, tokens) {
     // This is based on John Freeman's implementation.
     cursor = 0;
     traverse(tree, {
-        enter: function (node) {
+        enter: function(node) {
             var comment;
 
             while (cursor < comments.length) {
@@ -792,7 +791,7 @@ function attachComments(tree, providedComments, tokens) {
 
     cursor = 0;
     traverse(tree, {
-        leave: function (node) {
+        leave: function(node) {
             var comment;
 
             while (cursor < comments.length) {
@@ -825,15 +824,3 @@ function attachComments(tree, providedComments, tokens) {
 
     return tree;
 }
-
-var estraverse = {
-    Syntax: Syntax,
-    traverse: traverse,
-    replace: replace,
-    attachComments: attachComments,
-    VisitorKeys: VisitorKeys,
-    VisitorOption: VisitorOption,
-    Controller: Controller
-};
-
-export = estraverse;

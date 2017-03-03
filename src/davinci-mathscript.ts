@@ -1,10 +1,42 @@
-import {VERSION} from './davinci-mathscript/core';
-import {esprimaParse} from './davinci-mathscript/esprima';
-import {generate} from './davinci-mathscript/escodegen';
+import { VERSION } from './core';
+import { parse as esprimaParse, parseScript as esprimaParseScript, parseModule as esprimaParseModule } from './esprima';
+import { tokenize as esprimaTokenize } from './esprima';
+import { generate } from './escodegen';
+import { Statement } from './nodes';
+import { BlockStatement } from './nodes';
+import { FunctionDeclaration } from './nodes';
+import { VariableDeclaration } from './nodes';
+import { VariableDeclarator } from './nodes';
+import { ConditionalExpression } from './nodes';
+import { BinaryExpression } from './nodes';
+import { CallExpression } from './nodes';
+import { ExpressionStatement } from './nodes';
+import { ForStatement } from './nodes';
+import { ForInStatement } from './nodes';
+import { IfStatement } from './nodes';
+import { ArrayExpression } from './nodes';
+import { AssignmentExpression } from './nodes';
+import { CatchClause } from './nodes';
+import { FunctionExpression } from './nodes';
+import { StaticMemberExpression } from './nodes';
+import { ComputedMemberExpression } from './nodes';
+import { ObjectExpression } from './nodes';
+import { ReturnStatement } from './nodes';
+import { NewExpression } from './nodes';
+import { SequenceExpression } from './nodes';
+import { SwitchCase } from './nodes';
+import { SwitchStatement } from './nodes';
+import { ThrowStatement } from './nodes';
+import { TryStatement } from './nodes';
+import { UnaryExpression } from './nodes';
+import { UpdateExpression } from './nodes';
+import { Property } from './nodes';
+import { WhileStatement } from './nodes';
+import { Script } from './nodes';
+import { Syntax } from './syntax';
+
 /**
  * Provides the MathScript module
- *
- * @module mathscript
  */
 
 // This should match the global namespace (in build.js).
@@ -14,24 +46,23 @@ var MATHSCRIPT_NAMESPACE = "Ms";
 // interesting mathematical structures don't have an ordering relation.
 // In the following table, the first string is the operator symbol and the second
 // string is the name of the function in the MATHSCRIPT_NAMESPACE.
-var binOp =
-    {
-        '+': 'add',
-        '-': 'sub',
-        '*': 'mul',
-        '/': 'div',
-        '|': 'vbar',
-        '^': 'wedge',
-        '<<': 'lshift',
-        '>>': 'rshift',
-        '%': 'mod',
-        '===': 'eq',
-        '!==': 'ne',
-        '>': 'gt',
-        '>=': 'ge',
-        '<': 'lt',
-        '<=': 'le'
-    };
+var binOp = {
+    '+': 'add',
+    '-': 'sub',
+    '*': 'mul',
+    '/': 'div',
+    '|': 'vbar',
+    '^': 'wedge',
+    '<<': 'lshift',
+    '>>': 'rshift',
+    '%': 'mod',
+    '===': 'eq',
+    '!==': 'ne',
+    '>': 'gt',
+    '>=': 'ge',
+    '<': 'lt',
+    '<=': 'le'
+};
 
 // The increment and decrement operators are problematic from a timing perspective.
 var unaryOp = {
@@ -41,236 +72,271 @@ var unaryOp = {
     '~': 'tilde'/*,'++':'increment','--':'decrement'*/
 };
 
-function parse(code, options) {
-    var tree = esprimaParse(code, options);
-    //console.log(JSON.stringify(tree), null, '\t');
+function transpileTree(code, options) {
+    var tree = esprimaParse(code, options, void 0);
+    // console.log(JSON.stringify(tree), null, '\t');
     visit(tree);
     return tree;
 }
 
 function transpile(code, options) {
-    var tree = parse(code, options);
+    var tree = transpileTree(code, options);
     return generate(tree, null);
 }
 
-function visit(node) {
+function visit(node: { type: string } | null) {
     if (node && node.type) {
         switch (node.type) {
-            case 'BlockStatement': {
-                node.body.forEach(function(part, index) { visit(part); });
-            }
+            case Syntax.BlockStatement: {
+                const block = <BlockStatement>node;
+                block.body.forEach(function (part, index) { visit(part); });
                 break;
-            case 'FunctionDeclaration': {
-                node.params.forEach(function(param, index) { visit(param); });
-                visit(node.body);
             }
+            case Syntax.FunctionDeclaration: {
+                const funcDecl = <FunctionDeclaration>node;
+                funcDecl.params.forEach(function (param, index) { visit(param); });
+                visit(funcDecl.body);
                 break;
-            case 'Program': {
-                node.body.forEach(function(node, index) {
+            }
+            case Syntax.Program: {
+                const script = <Script>node;
+                script.body.forEach(function (node, index) {
                     visit(node);
                 });
-            }
                 break;
-            case 'VariableDeclaration': {
-                node.declarations.forEach(function(declaration, index) { visit(declaration); });
             }
+            case Syntax.VariableDeclaration: {
+                const varDeclaration = <VariableDeclaration>node;
+                varDeclaration.declarations.forEach(function (declaration, index) { visit(declaration); });
                 break;
-            case 'VariableDeclarator': {
-                if (node.init) {
-                    visit(node.init);
-                }
             }
-                break;
-            case 'ConditionalExpression': {
-                visit(node.test);
-                visit(node.consequent);
-                visit(node.alternate);
-            }
-                break;
-            case 'BinaryExpression':
-            case 'LogicalExpression':
-                {
-                    if (node.operator && binOp[node.operator]) {
-                        node.type = 'CallExpression';
-                        node.callee = {
-                            'type': 'MemberExpression',
-                            'computed': false,
-                            'object': { 'type': 'Identifier', 'name': MATHSCRIPT_NAMESPACE },
-                            'property': {
-                                'type': 'Identifier', 'name': binOp[node.operator]
-                            }
-                        };
-                        visit(node.left);
-                        visit(node.right);
-                        node['arguments'] = [node.left, node.right];
-                    }
-                    else {
-                        visit(node.left);
-                        visit(node.right);
-                    }
+            case Syntax.VariableDeclarator: {
+                const varDeclarator = <VariableDeclarator>node;
+                if (varDeclarator.init) {
+                    visit(varDeclarator.init);
                 }
                 break;
-            case 'ExpressionStatement': {
-                visit(node.expression);
             }
+            case Syntax.ConditionalExpression: {
+                const condExpr = <ConditionalExpression>node;
+                visit(condExpr.test);
+                visit(condExpr.consequent);
+                visit(condExpr.alternate);
                 break;
-            case 'ForStatement': {
-                visit(node.init);
-                visit(node.test);
-                visit(node.update);
-                visit(node.body);
             }
-                break;
-            case 'ForInStatement': {
-                visit(node.left);
-                visit(node.right);
-                visit(node.body);
-            }
-                break;
-            case 'IfStatement': {
-                visit(node.test);
-                visit(node.consequent);
-                visit(node.alternate);
-            }
-                break;
-            case 'ArrayExpression': {
-                node['elements'].forEach(function(elem, index) { visit(elem); });
-            }
-                break;
-            case 'AssignmentExpression':
-                {
-                    if (node.operator && binOp[node.operator]) {
-                        visit(node.left);
-                        visit(node.right);
-                    }
-                    else {
-                        visit(node.left);
-                        visit(node.right);
-                    }
-                }
-                break;
-            case 'CallExpression': {
-                visit(node.callee);
-                node['arguments'].forEach(function(argument, index) { visit(argument); });
-            }
-                break;
-            case 'CatchClause': {
-                visit(node.param);
-                visit(node.body);
-            }
-                break;
-            case 'FunctionExpression': {
-                visit(node.body);
-            }
-                break;
-            case 'MemberExpression': {
-                visit(node.object);
-            }
-                break;
-            case 'NewExpression': {
-                visit(node.callee);
-                node['arguments'].forEach(function(argument, index) { visit(argument); });
-            }
-                break;
-            case 'ObjectExpression': {
-                node['properties'].forEach(function(prop, index) { visit(prop); });
-            }
-                break;
-            case 'ReturnStatement': {
-                visit(node.argument);
-            }
-                break;
-            case 'SequenceExpression': {
-                node['expressions'].forEach(function(expr, index) { visit(expr); });
-            }
-                break;
-            case 'SwitchCase': {
-                visit(node.test);
-                node['consequent'].forEach(function(expr, index) { visit(expr); });
-            }
-                break;
-            case 'SwitchStatement': {
-                visit(node.discriminant);
-                node['cases'].forEach(function(kase, index) { visit(kase); });
-            }
-                break;
-            case 'ThrowStatement': {
-                visit(node.argument);
-            }
-                break;
-            case 'TryStatement': {
-                visit(node.block);
-                node['guardedHandlers'].forEach(function(guardedHandler, index) { visit(guardedHandler); });
-                node['handlers'].forEach(function(handler, index) { visit(handler); });
-                visit(node.finalizer);
-            }
-                break;
-            case 'UnaryExpression': {
-                if (node.operator && unaryOp[node.operator]) {
-                    node.type = 'CallExpression';
-                    node.callee = {
-                        'type': 'MemberExpression',
-                        'computed': false,
-                        'object': {
-                            'type': 'Identifier',
-                            'name': MATHSCRIPT_NAMESPACE
-                        },
-                        'property': {
-                            'type': 'Identifier',
-                            'name': unaryOp[node.operator]
+            case Syntax.BinaryExpression:
+            case Syntax.LogicalExpression: {
+                const binExpr = <BinaryExpression>node;
+                const callExpr = <CallExpression>node;
+                if (binExpr.operator && binOp[binExpr.operator]) {
+                    callExpr.type = Syntax.CallExpression;
+                    callExpr.callee = {
+                        type: Syntax.MemberExpression,
+                        computed: false,
+                        object: { type: Syntax.Identifier, name: MATHSCRIPT_NAMESPACE },
+                        property: {
+                            type: Syntax.Identifier, name: binOp[binExpr.operator]
                         }
                     };
-                    visit(node.argument);
-                    node['arguments'] = [node.argument];
-                } else {
-                    visit(node.argument);
+                    visit(binExpr.left);
+                    visit(binExpr.right);
+                    callExpr.arguments = [binExpr.left, binExpr.right];
                 }
-            }
-                break;
-            case 'UpdateExpression':
-                {
-                    if (node.operator && unaryOp[node.operator]) {
-                        node.type = 'CallExpression';
-                        node.callee =
-                            {
-                                'type': 'MemberExpression',
-                                'computed': false,
-                                'object':
-                                {
-                                    'type': 'Identifier',
-                                    'name': MATHSCRIPT_NAMESPACE
-                                },
-                                'property':
-                                {
-                                    'type': 'Identifier',
-                                    'name': unaryOp[node.operator]
-                                }
-                            };
-                        visit(node.argument);
-                        node['arguments'] = [node.argument];
-                    }
-                    else {
-                        visit(node.argument);
-                    }
+                else {
+                    visit(binExpr.left);
+                    visit(binExpr.right);
                 }
                 break;
-            case 'Property': {
-                visit(node.key);
-                visit(node.value);
             }
+            case Syntax.ExpressionStatement: {
+                const exprStmt = <ExpressionStatement>node;
+                visit(exprStmt.expression);
                 break;
-            case 'WhileStatement': {
-                visit(node.test);
-                visit(node.body);
             }
+            case Syntax.ForStatement: {
+                const forStmt = <ForStatement>node;
+                visit(forStmt.init);
+                visit(forStmt.test);
+                visit(forStmt.update);
+                visit(forStmt.body);
                 break;
-            case 'BreakStatement':
-            case 'EmptyStatement':
-            case 'Literal':
-            case 'Identifier':
-            case 'ThisExpression':
-            case 'DebuggerStatement':
+            }
+            case Syntax.ForInStatement: {
+                const forIn = <ForInStatement>node;
+                visit(forIn.left);
+                visit(forIn.right);
+                visit(forIn.body);
                 break;
+            }
+            case Syntax.IfStatement: {
+                const ifStmt = <IfStatement>node;
+                visit(ifStmt.test);
+                visit(ifStmt.consequent);
+                visit(ifStmt.alternate);
+                break;
+            }
+            case Syntax.ArrayExpression: {
+                const arrayExpr = <ArrayExpression>node;
+                arrayExpr.elements.forEach(function (elem, index) { visit(elem); });
+                break;
+            }
+            case Syntax.AssignmentExpression: {
+                const assignExpr = <AssignmentExpression>node;
+                if (assignExpr.operator && binOp[assignExpr.operator]) {
+                    visit(assignExpr.left);
+                    visit(assignExpr.right);
+                }
+                else {
+                    visit(assignExpr.left);
+                    visit(assignExpr.right);
+                }
+                break;
+            }
+            case Syntax.CallExpression: {
+                const callExpr = <CallExpression>node;
+                visit(callExpr.callee);
+                callExpr.arguments.forEach(function (argument, index) { visit(argument); });
+                break;
+            }
+            case Syntax.CatchClause: {
+                const catchClause = <CatchClause>node;
+                visit(catchClause.param);
+                visit(catchClause.body);
+                break;
+            }
+            case Syntax.FunctionExpression: {
+                const funcExpr = <FunctionExpression>node;
+                visit(funcExpr.body);
+                break;
+            }
+            case Syntax.MemberExpression: {
+                const staticMemberExpr = <StaticMemberExpression>node;
+                visit(staticMemberExpr.object);
+                break;
+            }
+            // TODO: Problem?
+            case Syntax.MemberExpression: {
+                const computedMemberExpr = <ComputedMemberExpression>node;
+                visit(computedMemberExpr.object);
+                break;
+            }
+            case Syntax.NewExpression: {
+                const newExpr = <NewExpression>node;
+                visit(newExpr.callee);
+                newExpr.arguments.forEach(function (argument, index) { visit(argument); });
+                break;
+            }
+            case Syntax.ObjectExpression: {
+                const objExpr = <ObjectExpression>node;
+                objExpr.properties.forEach(function (prop, index) { visit(prop); });
+                break;
+            }
+            case Syntax.ReturnStatement: {
+                const returnStmt = <ReturnStatement>node;
+                visit(returnStmt.argument);
+                break;
+            }
+            case Syntax.SequenceExpression: {
+                const seqExpr = <SequenceExpression>node;
+                seqExpr.expressions.forEach(function (expr, index) { visit(expr); });
+                break;
+            }
+            case Syntax.SwitchCase: {
+                const switchCase = <SwitchCase>node;
+                visit(switchCase.test);
+                switchCase.consequent.forEach(function (expr, index) { visit(expr); });
+                break;
+            }
+            case Syntax.SwitchStatement: {
+                const switchStmt = <SwitchStatement>node;
+                visit(switchStmt.discriminant);
+                switchStmt.cases.forEach(function (kase, index) { visit(kase); });
+                break;
+            }
+            case Syntax.ThrowStatement: {
+                const throwStmt = <ThrowStatement>node;
+                visit(throwStmt.argument);
+                break;
+            }
+            case Syntax.TryStatement: {
+                const tryStmt = <TryStatement>node;
+                visit(tryStmt.block);
+                visit(tryStmt.handler);
+                visit(tryStmt.finalizer);
+                break;
+            }
+            case Syntax.UnaryExpression: {
+                const unaryExpr = <UnaryExpression>node;
+                const callExpr = <CallExpression>node;
+                if (unaryExpr.operator && unaryOp[unaryExpr.operator]) {
+                    callExpr.type = Syntax.CallExpression;
+                    callExpr.callee = {
+                        type: Syntax.MemberExpression,
+                        computed: false,
+                        object: {
+                            type: Syntax.Identifier,
+                            name: MATHSCRIPT_NAMESPACE
+                        },
+                        property: {
+                            type: Syntax.Identifier,
+                            name: unaryOp[unaryExpr.operator]
+                        }
+                    };
+                    visit(unaryExpr.argument);
+                    callExpr.arguments = [unaryExpr.argument];
+                }
+                else {
+                    visit(unaryExpr.argument);
+                }
+                break;
+            }
+            case Syntax.UpdateExpression: {
+                const updateExpr = <UpdateExpression>node;
+                const callExpr = <CallExpression>node;
+                if (updateExpr.operator && unaryOp[updateExpr.operator]) {
+                    callExpr.type = Syntax.CallExpression;
+                    callExpr.callee = {
+                        type: Syntax.MemberExpression,
+                        computed: false,
+                        object:
+                        {
+                            type: Syntax.Identifier,
+                            name: MATHSCRIPT_NAMESPACE
+                        },
+                        property:
+                        {
+                            type: Syntax.Identifier,
+                            name: unaryOp[updateExpr.operator]
+                        }
+                    };
+                    visit(updateExpr.argument);
+                    callExpr.arguments = [updateExpr.argument];
+                }
+                else {
+                    visit(updateExpr.argument);
+                }
+                break;
+            }
+            case Syntax.Property: {
+                const prop = <Property>node;
+                visit(prop.key);
+                visit(prop.value);
+                break;
+            }
+            case Syntax.WhileStatement: {
+                const whileStmt = <WhileStatement>node;
+                visit(whileStmt.test);
+                visit(whileStmt.body);
+                break;
+            }
+            case Syntax.BreakStatement:
+            case Syntax.EmptyStatement:
+            case Syntax.Literal:
+            case Syntax.Identifier:
+            case Syntax.ThisExpression:
+            case Syntax.DebuggerStatement: {
+                break;
+            }
             default: {
                 console.log(JSON.stringify(node, null, 2));
             }
@@ -314,24 +380,24 @@ function binEval(lhs, rhs, lprop: string, rprop: string, fallback) {
     return fallback(lhs, rhs);
 }
 
-function add(p, q) { return binEval(p, q, '__add__', '__radd__', function(a, b) { return a + b }); }
-function sub(p, q) { return binEval(p, q, '__sub__', '__rsub__', function(a, b) { return a - b }); }
-function mul(p, q) { return binEval(p, q, '__mul__', '__rmul__', function(a, b) { return a * b }); }
-function div(p, q) { return binEval(p, q, '__div__', '__rdiv__', function(a, b) { return a / b }); }
+function add(p, q) { return binEval(p, q, '__add__', '__radd__', function (a, b) { return a + b; }); }
+function sub(p, q) { return binEval(p, q, '__sub__', '__rsub__', function (a, b) { return a - b; }); }
+function mul(p, q) { return binEval(p, q, '__mul__', '__rmul__', function (a, b) { return a * b; }); }
+function div(p, q) { return binEval(p, q, '__div__', '__rdiv__', function (a, b) { return a / b; }); }
 
-function mod(p, q) { return binEval(p, q, '__mod__', '__rmod__', function(a, b) { return a % b }); }
-function bitwiseIOR(p, q) { return binEval(p, q, '__vbar__', '__rvbar__', function(a, b) { return a | b }); }
-function bitwiseXOR(p, q) { return binEval(p, q, '__wedge__', '__rwedge__', function(a, b) { return a ^ b }); }
+function mod(p, q) { return binEval(p, q, '__mod__', '__rmod__', function (a, b) { return a % b; }); }
+function bitwiseIOR(p, q) { return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) { return a | b; }); }
+function bitwiseXOR(p, q) { return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) { return a ^ b; }); }
 
-function lshift(p, q) { return binEval(p, q, '__lshift__', '__rlshift__', function(a, b) { return a << b }); }
-function rshift(p, q) { return binEval(p, q, '__rshift__', '__rrshift__', function(a, b) { return a >> b }); }
+function lshift(p, q) { return binEval(p, q, '__lshift__', '__rlshift__', function (a, b) { return a << b; }); }
+function rshift(p, q) { return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) { return a >> b; }); }
 
-function eq(p, q) { return binEval(p, q, '__eq__', '__req__', function(a, b) { return a === b }); }
-function ne(p, q) { return binEval(p, q, '__ne__', '__rne__', function(a, b) { return a !== b }); }
-function ge(p, q) { return binEval(p, q, '__ge__', '__rge__', function(a, b) { return a >= b }); }
-function gt(p, q) { return binEval(p, q, '__gt__', '__rgt__', function(a, b) { return a > b }); }
-function le(p, q) { return binEval(p, q, '__le__', '__rle__', function(a, b) { return a <= b }); }
-function lt(p, q) { return binEval(p, q, '__lt__', '__rlt__', function(a, b) { return a < b }); }
+function eq(p, q) { return binEval(p, q, '__eq__', '__req__', function (a, b) { return a === b; }); }
+function ne(p, q) { return binEval(p, q, '__ne__', '__rne__', function (a, b) { return a !== b; }); }
+function ge(p, q) { return binEval(p, q, '__ge__', '__rge__', function (a, b) { return a >= b; }); }
+function gt(p, q) { return binEval(p, q, '__gt__', '__rgt__', function (a, b) { return a > b; }); }
+function le(p, q) { return binEval(p, q, '__le__', '__rle__', function (a, b) { return a <= b; }); }
+function lt(p, q) { return binEval(p, q, '__lt__', '__rlt__', function (a, b) { return a < b; }); }
 
 function exp<T>(x: T): T {
     if (specialMethod(x, '__exp__')) {
@@ -371,17 +437,18 @@ function bang(x) {
     }
 }
 
-function tilde(x) {
+function tilde<T>(x: T): T {
     if (specialMethod(x, '__tilde__')) {
         return x['__tilde__']();
     }
     else {
-        return ~x;
+        return <any>~x;
     }
 }
-const Ms = {
+
+export const Ms = {
     'VERSION': VERSION,
-    parse: parse,
+    parse: esprimaParse,
     transpile: transpile,
 
     add: add,
@@ -408,4 +475,23 @@ const Ms = {
 
     exp: exp
 };
-export = Ms;
+
+// For compatibility with esprima tests.
+export function parse(code, options, delegate) {
+    return esprimaParse(code, options, delegate);
+}
+
+export function parseScript(code, options, delegate) {
+    return esprimaParseScript(code, options, delegate);
+}
+
+export function parseModule(code, options, delegate) {
+    return esprimaParseModule(code, options, delegate);
+}
+
+export function tokenize(code, options, delegate) {
+    return esprimaTokenize(code, options, delegate);
+}
+export { Syntax } from './syntax';
+
+export default Ms;

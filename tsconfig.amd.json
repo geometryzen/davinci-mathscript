@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "amd",
+        "target": "ES5",
+        "outDir": "amd",
+        "noImplicitAny": false,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noLib": false,
+        "removeComments": true,
+        "moduleResolution": "classic",
+        "sourceMap": false,
+        "strictNullChecks": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "inlineSourceMap": false,
+        "inlineSources": false
+    },
+    "files": [
+        "src/davinci-mathscript.ts"
+    ]
+}

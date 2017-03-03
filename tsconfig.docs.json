@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "target": "ES5",
+        "outDir": "test/system",
+        "noImplicitAny": false,
+        "noImplicitReturns": false,
+        "noImplicitThis": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noLib": false,
+        "removeComments": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "moduleResolution": "classic",
+        "sourceMap": false,
+        "strictNullChecks": false,
+        "inlineSourceMap": false,
+        "inlineSources": false
+    },
+    "files": [
+        "src/davinci-mathscript.ts"
+    ]
+}

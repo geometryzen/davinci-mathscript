@@ -1,0 +1,12 @@
+Usage: java -jar jscover.jar [OPTION]...
+To see sub-command options run: java -jar JSCover-all.jar [-ws|-fs|-io] -h
+
+Options:
+  -ws                      instrument via the web-server
+  -fs                      instrument via the file-system
+  -io                      instrument single file to stdout
+  -gf [SRC] DEST           generate JSCover report files
+  -regex-test REGEX STRING test a regular expression
+  -h, --help               display this help and exit
+  -h encoding              list available encodings
+  -V, --version            display version information and exit

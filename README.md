@@ -56,6 +56,6 @@ Make your changes to the TypeScript files in the _src_ directory. Do not edit th
 * 1.0.10: Bower update
 
 ## License
-Copyright (c) 2014-2015 David Holmes  
+Copyright (c) 2014-2017 David Holmes  
 Licensed under the MIT license.
 

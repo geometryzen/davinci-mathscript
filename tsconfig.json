@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "target": "ES5",
+        "outDir": "test/system",
+        "noImplicitAny": false,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noLib": false,
+        "removeComments": true,
+        "suppressImplicitAnyIndexErrors": false,
+        "moduleResolution": "classic",
+        "strictNullChecks": true,
+        "sourceMap": false,
+        "inlineSourceMap": false,
+        "inlineSources": false
+    },
+    "files": [
+        "src/davinci-mathscript/core/CSV.spec.ts",
+        "typings/jasmine/jasmine.d.ts"
+    ]
+}

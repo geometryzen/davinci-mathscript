@@ -11,7 +11,7 @@ import { WhileStatement } from './nodes';
  */
 export default function getLoopProtectorBlocks(varName: string, millis: number): { before: VariableDeclaration; inside: IfStatement } {
     const ast1: Script = parse(`var ${varName} = Date.now()`);
-    const ast2: Script = parse(`if (Date.now() - ${varName} > ${millis}) {break}`);
+    const ast2: Script = parse(`if (Date.now() - ${varName} > ${millis}) {throw new Error("Infinite loop")}`);
 
     return {
         before: <VariableDeclaration>ast1.body[0],

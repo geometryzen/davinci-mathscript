@@ -9593,7 +9593,7 @@ define('getLoopProtectorBlocks',["require", "exports", "./esprima"], function (r
     Object.defineProperty(exports, "__esModule", { value: true });
     function getLoopProtectorBlocks(varName, millis) {
         var ast1 = esprima_1.parse("var " + varName + " = Date.now()");
-        var ast2 = esprima_1.parse("if (Date.now() - " + varName + " > " + millis + ") {break}");
+        var ast2 = esprima_1.parse("if (Date.now() - " + varName + " > " + millis + ") {throw new Error(\"Infinite loop\")}");
         return {
             before: ast1.body[0],
             inside: ast2.body[0]

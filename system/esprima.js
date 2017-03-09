@@ -49,15 +49,15 @@ System.register(["./comment-handler", "./jsx-parser", "./parser", "./tokenizer",
     }
     exports_1("parse", parse);
     function parseModule(code, options, delegate) {
-        var parsingOptions = options || {};
-        parsingOptions.sourceType = 'module';
-        return parse(code, parsingOptions, delegate);
+        if (options === void 0) { options = {}; }
+        options.sourceType = 'module';
+        return parse(code, options, delegate);
     }
     exports_1("parseModule", parseModule);
     function parseScript(code, options, delegate) {
-        var parsingOptions = options || {};
-        parsingOptions.sourceType = 'script';
-        return parse(code, parsingOptions, delegate);
+        if (options === void 0) { options = {}; }
+        options.sourceType = 'script';
+        return parse(code, options, delegate);
     }
     exports_1("parseScript", parseScript);
     function tokenize(code, options, delegate) {
@@ -80,7 +80,7 @@ System.register(["./comment-handler", "./jsx-parser", "./parser", "./tokenizer",
             tokenizer.errorHandler.tolerate(e);
         }
         if (tokenizer.errorHandler.tolerant) {
-            tokens.errors = tokenizer.errors();
+            tokens['errors'] = tokenizer.errors();
         }
         return tokens;
     }

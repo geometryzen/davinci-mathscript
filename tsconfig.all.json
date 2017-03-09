@@ -18,7 +18,6 @@
         "inlineSources": false
     },
     "files": [
-        "src/davinci-mathscript/core/CSV.spec.ts",
         "typings/jasmine/jasmine.d.ts"
     ]
 }

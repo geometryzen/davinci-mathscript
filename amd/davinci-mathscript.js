@@ -1,7 +1,8 @@
-define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen", "./syntax", "./syntax"], function (require, exports, core_1, esprima_1, esprima_2, escodegen_1, syntax_1, syntax_2) {
+define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax", "./syntax"], function (require, exports, core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, syntax_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var MATHSCRIPT_NAMESPACE = "Ms";
+    var INFINITE_LOOP_TIMEOUT = 2000;
     var binOp = {
         '+': 'add',
         '-': 'sub',
@@ -27,19 +28,42 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
     };
     function transpileTree(code, options) {
         var tree = esprima_1.parse(code, options, void 0);
+        console.log(JSON.stringify(tree, null, 2));
         visit(tree);
         return tree;
     }
     function transpile(code, options) {
         var tree = transpileTree(code, options);
-        return escodegen_1.generate(tree, null);
+        var codeOut = escodegen_1.generate(tree, null);
+        console.log(codeOut);
+        return codeOut;
+    }
+    function addInfiniteLoopProtection(statements, millis) {
+        for (var i = statements.length; i--;) {
+            var el = statements[i];
+            if (el && el.type === syntax_1.Syntax.ForStatement || el.type === syntax_1.Syntax.WhileStatement || el.type === syntax_1.Syntax.DoWhileStatement) {
+                var loop = el;
+                var randomVariableName = '_' + generateRandomId_1.default(3);
+                var insertionBlocks = getLoopProtectorBlocks_1.default(randomVariableName, millis);
+                statements.splice(i, 0, insertionBlocks.before);
+                if (!Array.isArray(loop.body)) {
+                    loop.body = {
+                        body: [loop.body],
+                        type: 'BlockStatement'
+                    };
+                }
+                var block = loop.body;
+                block.body.unshift(insertionBlocks.inside);
+            }
+        }
+        return statements;
     }
     function visit(node) {
         if (node && node.type) {
             switch (node.type) {
                 case syntax_1.Syntax.BlockStatement: {
                     var block = node;
-                    block.body.forEach(function (part, index) { visit(part); });
+                    addInfiniteLoopProtection(block.body, INFINITE_LOOP_TIMEOUT).forEach(function (part, index) { visit(part); });
                     break;
                 }
                 case syntax_1.Syntax.FunctionDeclaration: {
@@ -50,7 +74,7 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
                 }
                 case syntax_1.Syntax.Program: {
                     var script = node;
-                    script.body.forEach(function (node, index) {
+                    addInfiniteLoopProtection(script.body, INFINITE_LOOP_TIMEOUT).forEach(function (node, index) {
                         visit(node);
                     });
                     break;

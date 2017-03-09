@@ -1347,7 +1347,7 @@ export class Parser {
         assert(this.context.allowIn, 'callee of new expression always allow in keyword.');
 
         const node = this.startNode(this.lookahead);
-        let expr = (this.matchKeyword('super') && this.context.inFunctionBody) ? this.parseSuper() :
+        let expr: Node.Expression = (this.matchKeyword('super') && this.context.inFunctionBody) ? this.parseSuper() :
             this.inheritCoverGrammar(this.matchKeyword('new') ? this.parseNewExpression : this.parsePrimaryExpression);
 
         while (true) {

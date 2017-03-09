@@ -4,7 +4,7 @@ import { Token, TokenName } from './token';
 
 type ReaderEntry = string | null;
 
-interface BufferEntry {
+export interface IToken {
     type: string;
     value: string;
     regex?: {
@@ -105,7 +105,7 @@ export class Tokenizer {
     scanner: Scanner;
     readonly trackRange: boolean;
     readonly trackLoc: boolean;
-    readonly buffer: BufferEntry[];
+    readonly buffer: IToken[];
     readonly reader: Reader;
 
     constructor(code: string, config: Config) {
@@ -125,7 +125,7 @@ export class Tokenizer {
         return this.errorHandler.errors;
     }
 
-    getNextToken() {
+    getNextToken(): IToken {
         if (this.buffer.length === 0) {
 
             const comments: Comment[] = this.scanner.scanComments();
@@ -133,7 +133,7 @@ export class Tokenizer {
                 for (let i = 0; i < comments.length; ++i) {
                     const e: Comment = comments[i];
                     let value = this.scanner.source.slice(e.slice[0], e.slice[1]);
-                    let comment: BufferEntry = {
+                    let comment: IToken = {
                         type: e.multiLine ? 'BlockComment' : 'LineComment',
                         value: value
                     };
@@ -164,7 +164,7 @@ export class Tokenizer {
                 const token = startRegex ? this.scanner.scanRegExp() : this.scanner.lex();
                 this.reader.push(token);
 
-                let entry: BufferEntry = {
+                let entry: IToken = {
                     type: TokenName[token.type],
                     value: this.scanner.source.slice(token.start, token.end)
                 };

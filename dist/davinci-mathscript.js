@@ -6809,15 +6809,15 @@ define('esprima',["require", "exports", "./comment-handler", "./jsx-parser", "./
     }
     exports.parse = parse;
     function parseModule(code, options, delegate) {
-        var parsingOptions = options || {};
-        parsingOptions.sourceType = 'module';
-        return parse(code, parsingOptions, delegate);
+        if (options === void 0) { options = {}; }
+        options.sourceType = 'module';
+        return parse(code, options, delegate);
     }
     exports.parseModule = parseModule;
     function parseScript(code, options, delegate) {
-        var parsingOptions = options || {};
-        parsingOptions.sourceType = 'script';
-        return parse(code, parsingOptions, delegate);
+        if (options === void 0) { options = {}; }
+        options.sourceType = 'script';
+        return parse(code, options, delegate);
     }
     exports.parseScript = parseScript;
     function tokenize(code, options, delegate) {
@@ -6840,7 +6840,7 @@ define('esprima',["require", "exports", "./comment-handler", "./jsx-parser", "./
             tokenizer.errorHandler.tolerate(e);
         }
         if (tokenizer.errorHandler.tolerant) {
-            tokens.errors = tokenizer.errors();
+            tokens['errors'] = tokenizer.errors();
         }
         return tokens;
     }
@@ -7622,8 +7622,6 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
     var S_TFFF = F_ALLOW_IN, S_TFFT = F_ALLOW_IN | F_SEMICOLON_OPT, S_FFFF = 0x00, S_TFTF = F_ALLOW_IN | F_DIRECTIVE_CTX, S_TTFF = F_ALLOW_IN | F_FUNC_BODY;
     function getDefaultOptions() {
         return {
-            indent: null,
-            base: null,
             parse: null,
             comment: false,
             format: {
@@ -9494,8 +9492,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
     };
     merge(CodeGenerator.prototype, CodeGenerator.Expression);
     function generateInternal(node) {
-        var codegen;
-        codegen = new CodeGenerator();
+        var codegen = new CodeGenerator();
         if (isStatement(node)) {
             return codegen.generateStatement(node, S_TFFF);
         }
@@ -9505,22 +9502,11 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
         throw new Error('Unknown node type: ' + node.type);
     }
     function generate(node, options) {
-        var defaultOptions = getDefaultOptions(), result, pair;
+        var defaultOptions = getDefaultOptions();
         if (options != null) {
-            if (typeof options.indent === 'string') {
-                defaultOptions.format.indent.style = options.indent;
-            }
-            if (typeof options.base === 'number') {
-                defaultOptions.format.indent.base = options.base;
-            }
             options = updateDeeply(defaultOptions, options);
             indent = options.format.indent.style;
-            if (typeof options.base === 'string') {
-                base = options.base;
-            }
-            else {
-                base = stringRepeat(indent, options.format.indent.base);
-            }
+            base = stringRepeat(indent, options.format.indent.base);
         }
         else {
             options = defaultOptions;
@@ -9546,7 +9532,8 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
         sourceCode = options.sourceCode;
         preserveBlankLines = options.format.preserveBlankLines && sourceCode !== null;
         extra = options;
-        result = generateInternal(node);
+        var result = generateInternal(node);
+        var pair;
         if (!sourceMap) {
             pair = { code: result.toString(), map: null };
             return options.sourceMapWithCode ? pair : pair.code;
@@ -9586,10 +9573,40 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
     };
 });
 
-define('davinci-mathscript',["require", "exports", "./core", "./esprima", "./esprima", "./escodegen", "./syntax", "./syntax"], function (require, exports, core_1, esprima_1, esprima_2, escodegen_1, syntax_1, syntax_2) {
+define('generateRandomId',["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    function generateRandomId(length) {
+        if (length === void 0) { length = 10; }
+        var id = '';
+        for (var i = length; i--;) {
+            id += alphaNum[~~(Math.random() * alphaNum.length)];
+        }
+        return id;
+    }
+    exports.default = generateRandomId;
+});
+
+define('getLoopProtectorBlocks',["require", "exports", "./esprima"], function (require, exports, esprima_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function getLoopProtectorBlocks(varName, millis) {
+        var ast1 = esprima_1.parse("var " + varName + " = Date.now()");
+        var ast2 = esprima_1.parse("if (Date.now() - " + varName + " > " + millis + ") {break}");
+        return {
+            before: ast1.body[0],
+            inside: ast2.body[0]
+        };
+    }
+    exports.default = getLoopProtectorBlocks;
+});
+
+define('davinci-mathscript',["require", "exports", "./core", "./esprima", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax", "./syntax"], function (require, exports, core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, syntax_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var MATHSCRIPT_NAMESPACE = "Ms";
+    var INFINITE_LOOP_TIMEOUT = 2000;
     var binOp = {
         '+': 'add',
         '-': 'sub',
@@ -9615,19 +9632,42 @@ define('davinci-mathscript',["require", "exports", "./core", "./esprima", "./esp
     };
     function transpileTree(code, options) {
         var tree = esprima_1.parse(code, options, void 0);
+        console.log(JSON.stringify(tree, null, 2));
         visit(tree);
         return tree;
     }
     function transpile(code, options) {
         var tree = transpileTree(code, options);
-        return escodegen_1.generate(tree, null);
+        var codeOut = escodegen_1.generate(tree, null);
+        console.log(codeOut);
+        return codeOut;
+    }
+    function addInfiniteLoopProtection(statements, millis) {
+        for (var i = statements.length; i--;) {
+            var el = statements[i];
+            if (el && el.type === syntax_1.Syntax.ForStatement || el.type === syntax_1.Syntax.WhileStatement || el.type === syntax_1.Syntax.DoWhileStatement) {
+                var loop = el;
+                var randomVariableName = '_' + generateRandomId_1.default(3);
+                var insertionBlocks = getLoopProtectorBlocks_1.default(randomVariableName, millis);
+                statements.splice(i, 0, insertionBlocks.before);
+                if (!Array.isArray(loop.body)) {
+                    loop.body = {
+                        body: [loop.body],
+                        type: 'BlockStatement'
+                    };
+                }
+                var block = loop.body;
+                block.body.unshift(insertionBlocks.inside);
+            }
+        }
+        return statements;
     }
     function visit(node) {
         if (node && node.type) {
             switch (node.type) {
                 case syntax_1.Syntax.BlockStatement: {
                     var block = node;
-                    block.body.forEach(function (part, index) { visit(part); });
+                    addInfiniteLoopProtection(block.body, INFINITE_LOOP_TIMEOUT).forEach(function (part, index) { visit(part); });
                     break;
                 }
                 case syntax_1.Syntax.FunctionDeclaration: {
@@ -9638,7 +9678,7 @@ define('davinci-mathscript',["require", "exports", "./core", "./esprima", "./esp
                 }
                 case syntax_1.Syntax.Program: {
                     var script = node;
-                    script.body.forEach(function (node, index) {
+                    addInfiniteLoopProtection(script.body, INFINITE_LOOP_TIMEOUT).forEach(function (node, index) {
                         visit(node);
                     });
                     break;

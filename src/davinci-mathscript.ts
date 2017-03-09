@@ -1,8 +1,11 @@
 import { VERSION } from './core';
-import { parse as esprimaParse, parseScript as esprimaParseScript, parseModule as esprimaParseModule } from './esprima';
+import { parse as esprimaParse, ParseOptions, parseScript as esprimaParseScript, parseModule as esprimaParseModule } from './esprima';
 import { tokenize as esprimaTokenize } from './esprima';
 import { generate } from './escodegen';
+import generateRandomId from './generateRandomId';
+import getLoopProtectorBlocks from './getLoopProtectorBlocks';
 import { Statement } from './nodes';
+import { StatementListItem } from './nodes';
 import { BlockStatement } from './nodes';
 import { FunctionDeclaration } from './nodes';
 import { VariableDeclaration } from './nodes';
@@ -10,9 +13,11 @@ import { VariableDeclarator } from './nodes';
 import { ConditionalExpression } from './nodes';
 import { BinaryExpression } from './nodes';
 import { CallExpression } from './nodes';
+import { DoWhileStatement } from './nodes';
 import { ExpressionStatement } from './nodes';
 import { ForStatement } from './nodes';
 import { ForInStatement } from './nodes';
+import { Identifier } from './nodes';
 import { IfStatement } from './nodes';
 import { ArrayExpression } from './nodes';
 import { AssignmentExpression } from './nodes';
@@ -40,13 +45,15 @@ import { Syntax } from './syntax';
  */
 
 // This should match the global namespace (in build.js).
-var MATHSCRIPT_NAMESPACE = "Ms";
+const MATHSCRIPT_NAMESPACE = "Ms";
+
+const INFINITE_LOOP_TIMEOUT = 2000;
 
 // We're not really interested in those operators to do with ordering because many
 // interesting mathematical structures don't have an ordering relation.
 // In the following table, the first string is the operator symbol and the second
 // string is the name of the function in the MATHSCRIPT_NAMESPACE.
-var binOp = {
+const binOp = {
     '+': 'add',
     '-': 'sub',
     '*': 'mul',
@@ -72,24 +79,60 @@ var unaryOp = {
     '~': 'tilde'/*,'++':'increment','--':'decrement'*/
 };
 
-function transpileTree(code, options) {
-    var tree = esprimaParse(code, options, void 0);
-    // console.log(JSON.stringify(tree), null, '\t');
+interface TranspileOptions extends ParseOptions {
+
+}
+
+function transpileTree(code: string, options?: TranspileOptions) {
+    const tree = esprimaParse(code, options, void 0);
+    console.log(JSON.stringify(tree, null, 2));
     visit(tree);
     return tree;
 }
 
-function transpile(code, options) {
-    var tree = transpileTree(code, options);
-    return generate(tree, null);
+/**
+ * This is the function that we export.
+ */
+function transpile(code: string, options?: TranspileOptions) {
+    const tree = transpileTree(code, options);
+    const codeOut = generate(tree, null);
+    console.log(codeOut);
+    return codeOut;
 }
 
+function addInfiniteLoopProtection(statements: StatementListItem[], millis: number): StatementListItem[] {
+    for (let i = statements.length; i--;) {
+        const el = statements[i];
+        if (el && el.type === Syntax.ForStatement || el.type === Syntax.WhileStatement || el.type === Syntax.DoWhileStatement) {
+            const loop = <ForStatement | WhileStatement | DoWhileStatement>el;
+            const randomVariableName = '_' + generateRandomId(3);
+            const insertionBlocks = getLoopProtectorBlocks(randomVariableName, millis);
+            // Insert time variable assignment
+            statements.splice(i, 0, insertionBlocks.before);
+            // If the loop's body is a single statement, then convert it into a block statement
+            // so that we can insert our conditional break inside it.
+            if (!Array.isArray(loop.body)) {
+                loop.body = {
+                    body: [loop.body],
+                    type: 'BlockStatement'
+                };
+            }
+            const block = <BlockStatement>loop.body;
+            // Insert IfStatement
+            block.body.unshift(insertionBlocks.inside);
+        }
+    }
+    return statements;
+}
+/**
+ * This code performs the re-writing of the AST for operator overloading.
+ */
 function visit(node: { type: string } | null) {
     if (node && node.type) {
         switch (node.type) {
             case Syntax.BlockStatement: {
                 const block = <BlockStatement>node;
-                block.body.forEach(function (part, index) { visit(part); });
+                addInfiniteLoopProtection(block.body, INFINITE_LOOP_TIMEOUT).forEach(function (part, index) { visit(part); });
                 break;
             }
             case Syntax.FunctionDeclaration: {
@@ -100,7 +143,7 @@ function visit(node: { type: string } | null) {
             }
             case Syntax.Program: {
                 const script = <Script>node;
-                script.body.forEach(function (node, index) {
+                addInfiniteLoopProtection(script.body, INFINITE_LOOP_TIMEOUT).forEach(function (node, index) {
                     visit(node);
                 });
                 break;

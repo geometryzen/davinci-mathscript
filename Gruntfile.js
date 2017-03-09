@@ -231,7 +231,7 @@ module.exports = function (grunt) {
                     target: 'ES5',
                     out: 'documentation/',
                     mode: 'file',
-                    name: 'CSV <%= pkg.version %>',
+                    name: 'davinci-mathscript <%= pkg.version %>',
                     exclude: '**/*.spec.ts',
                     excludeExternals: false,
                     excludeNotExported: true,

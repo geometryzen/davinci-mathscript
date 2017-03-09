@@ -9,8 +9,6 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
     }
     function getDefaultOptions() {
         return {
-            indent: null,
-            base: null,
             parse: null,
             comment: false,
             format: {
@@ -572,8 +570,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
         }
     }
     function generateInternal(node) {
-        var codegen;
-        codegen = new CodeGenerator();
+        var codegen = new CodeGenerator();
         if (isStatement(node)) {
             return codegen.generateStatement(node, S_TFFF);
         }
@@ -583,22 +580,11 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
         throw new Error('Unknown node type: ' + node.type);
     }
     function generate(node, options) {
-        var defaultOptions = getDefaultOptions(), result, pair;
+        var defaultOptions = getDefaultOptions();
         if (options != null) {
-            if (typeof options.indent === 'string') {
-                defaultOptions.format.indent.style = options.indent;
-            }
-            if (typeof options.base === 'number') {
-                defaultOptions.format.indent.base = options.base;
-            }
             options = updateDeeply(defaultOptions, options);
             indent = options.format.indent.style;
-            if (typeof options.base === 'string') {
-                base = options.base;
-            }
-            else {
-                base = stringRepeat(indent, options.format.indent.base);
-            }
+            base = stringRepeat(indent, options.format.indent.base);
         }
         else {
             options = defaultOptions;
@@ -624,7 +610,8 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
         sourceCode = options.sourceCode;
         preserveBlankLines = options.format.preserveBlankLines && sourceCode !== null;
         extra = options;
-        result = generateInternal(node);
+        var result = generateInternal(node);
+        var pair;
         if (!sourceMap) {
             pair = { code: result.toString(), map: null };
             return options.sourceMapWithCode ? pair : pair.code;

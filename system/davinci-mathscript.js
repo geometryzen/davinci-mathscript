@@ -1,21 +1,44 @@
-System.register(["./core", "./esprima", "./escodegen", "./syntax"], function (exports_1, context_1) {
+System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function transpileTree(code, options) {
         var tree = esprima_1.parse(code, options, void 0);
+        console.log(JSON.stringify(tree, null, 2));
         visit(tree);
         return tree;
     }
     function transpile(code, options) {
         var tree = transpileTree(code, options);
-        return escodegen_1.generate(tree, null);
+        var codeOut = escodegen_1.generate(tree, null);
+        console.log(codeOut);
+        return codeOut;
+    }
+    function addInfiniteLoopProtection(statements, millis) {
+        for (var i = statements.length; i--;) {
+            var el = statements[i];
+            if (el && el.type === syntax_1.Syntax.ForStatement || el.type === syntax_1.Syntax.WhileStatement || el.type === syntax_1.Syntax.DoWhileStatement) {
+                var loop = el;
+                var randomVariableName = '_' + generateRandomId_1.default(3);
+                var insertionBlocks = getLoopProtectorBlocks_1.default(randomVariableName, millis);
+                statements.splice(i, 0, insertionBlocks.before);
+                if (!Array.isArray(loop.body)) {
+                    loop.body = {
+                        body: [loop.body],
+                        type: 'BlockStatement'
+                    };
+                }
+                var block = loop.body;
+                block.body.unshift(insertionBlocks.inside);
+            }
+        }
+        return statements;
     }
     function visit(node) {
         if (node && node.type) {
             switch (node.type) {
                 case syntax_1.Syntax.BlockStatement: {
                     var block = node;
-                    block.body.forEach(function (part, index) { visit(part); });
+                    addInfiniteLoopProtection(block.body, INFINITE_LOOP_TIMEOUT).forEach(function (part, index) { visit(part); });
                     break;
                 }
                 case syntax_1.Syntax.FunctionDeclaration: {
@@ -26,7 +49,7 @@ System.register(["./core", "./esprima", "./escodegen", "./syntax"], function (ex
                 }
                 case syntax_1.Syntax.Program: {
                     var script = node;
-                    script.body.forEach(function (node, index) {
+                    addInfiniteLoopProtection(script.body, INFINITE_LOOP_TIMEOUT).forEach(function (node, index) {
                         visit(node);
                     });
                     break;
@@ -369,7 +392,7 @@ System.register(["./core", "./esprima", "./escodegen", "./syntax"], function (ex
         return esprima_2.tokenize(code, options, delegate);
     }
     exports_1("tokenize", tokenize);
-    var core_1, esprima_1, esprima_2, escodegen_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
+    var core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, INFINITE_LOOP_TIMEOUT, binOp, unaryOp, Ms;
     return {
         setters: [
             function (core_1_1) {
@@ -382,6 +405,12 @@ System.register(["./core", "./esprima", "./escodegen", "./syntax"], function (ex
             function (escodegen_1_1) {
                 escodegen_1 = escodegen_1_1;
             },
+            function (generateRandomId_1_1) {
+                generateRandomId_1 = generateRandomId_1_1;
+            },
+            function (getLoopProtectorBlocks_1_1) {
+                getLoopProtectorBlocks_1 = getLoopProtectorBlocks_1_1;
+            },
             function (syntax_1_1) {
                 syntax_1 = syntax_1_1;
                 exports_1({
@@ -391,6 +420,7 @@ System.register(["./core", "./esprima", "./escodegen", "./syntax"], function (ex
         ],
         execute: function () {
             MATHSCRIPT_NAMESPACE = "Ms";
+            INFINITE_LOOP_TIMEOUT = 2000;
             binOp = {
                 '+': 'add',
                 '-': 'sub',

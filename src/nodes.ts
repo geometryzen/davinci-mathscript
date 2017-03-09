@@ -299,7 +299,7 @@ export class Directive {
 
 export class DoWhileStatement {
     readonly type: string;
-    readonly body: Statement;
+    body: Statement;
     readonly test: Expression;
     constructor(body: Statement, test: Expression) {
         this.type = Syntax.DoWhileStatement;
@@ -449,7 +449,7 @@ export class FunctionExpression {
 
 export class Identifier {
     readonly type: string;
-    readonly name: string;
+    name: string;
     constructor(name) {
         this.type = Syntax.Identifier;
         this.name = name;
@@ -863,7 +863,7 @@ export class VariableDeclarator {
 export class WhileStatement {
     readonly type: string;
     readonly test: Expression;
-    readonly body: Statement;
+    body: Statement;
     constructor(test: Expression, body: Statement) {
         this.type = Syntax.WhileStatement;
         this.test = test;

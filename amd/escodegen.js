@@ -13,8 +13,6 @@ define(["require", "exports", "./estraverse", "./code", "./code", "./code", "./c
     var S_TFFF = F_ALLOW_IN, S_TFFT = F_ALLOW_IN | F_SEMICOLON_OPT, S_FFFF = 0x00, S_TFTF = F_ALLOW_IN | F_DIRECTIVE_CTX, S_TTFF = F_ALLOW_IN | F_FUNC_BODY;
     function getDefaultOptions() {
         return {
-            indent: null,
-            base: null,
             parse: null,
             comment: false,
             format: {
@@ -1885,8 +1883,7 @@ define(["require", "exports", "./estraverse", "./code", "./code", "./code", "./c
     };
     merge(CodeGenerator.prototype, CodeGenerator.Expression);
     function generateInternal(node) {
-        var codegen;
-        codegen = new CodeGenerator();
+        var codegen = new CodeGenerator();
         if (isStatement(node)) {
             return codegen.generateStatement(node, S_TFFF);
         }
@@ -1896,22 +1893,11 @@ define(["require", "exports", "./estraverse", "./code", "./code", "./code", "./c
         throw new Error('Unknown node type: ' + node.type);
     }
     function generate(node, options) {
-        var defaultOptions = getDefaultOptions(), result, pair;
+        var defaultOptions = getDefaultOptions();
         if (options != null) {
-            if (typeof options.indent === 'string') {
-                defaultOptions.format.indent.style = options.indent;
-            }
-            if (typeof options.base === 'number') {
-                defaultOptions.format.indent.base = options.base;
-            }
             options = updateDeeply(defaultOptions, options);
             indent = options.format.indent.style;
-            if (typeof options.base === 'string') {
-                base = options.base;
-            }
-            else {
-                base = stringRepeat(indent, options.format.indent.base);
-            }
+            base = stringRepeat(indent, options.format.indent.base);
         }
         else {
             options = defaultOptions;
@@ -1937,7 +1923,8 @@ define(["require", "exports", "./estraverse", "./code", "./code", "./code", "./c
         sourceCode = options.sourceCode;
         preserveBlankLines = options.format.preserveBlankLines && sourceCode !== null;
         extra = options;
-        result = generateInternal(node);
+        var result = generateInternal(node);
+        var pair;
         if (!sourceMap) {
             pair = { code: result.toString(), map: null };
             return options.sourceMapWithCode ? pair : pair.code;

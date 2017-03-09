@@ -25,9 +25,16 @@
 import { CommentHandler } from './comment-handler';
 import { JSXParser } from './jsx-parser';
 import { Parser } from './parser';
-import { Tokenizer } from './tokenizer';
+import { IToken, Tokenizer } from './tokenizer';
 
-export function parse(code: string, options?, delegate?) {
+export interface ParseOptions {
+    comment?: boolean;
+    attachComment?: boolean;
+    sourceType?: 'module' | 'script';
+    jsx?: boolean;
+}
+
+export function parse(code: string, options?: ParseOptions, delegate?) {
     let commentHandler: CommentHandler | null = null;
     const proxyDelegate = (node, metadata) => {
         if (delegate) {
@@ -59,7 +66,8 @@ export function parse(code: string, options?, delegate?) {
     let parser: Parser;
     if (options && typeof options.jsx === 'boolean' && options.jsx) {
         parser = new JSXParser(code, options, parserDelegate);
-    } else {
+    }
+    else {
         parser = new Parser(code, options, parserDelegate);
     }
 
@@ -79,22 +87,20 @@ export function parse(code: string, options?, delegate?) {
     return ast;
 }
 
-export function parseModule(code: string, options, delegate) {
-    let parsingOptions = options || {};
-    parsingOptions.sourceType = 'module';
-    return parse(code, parsingOptions, delegate);
+export function parseModule(code: string, options: ParseOptions = {}, delegate?) {
+    options.sourceType = 'module';
+    return parse(code, options, delegate);
 }
 
-export function parseScript(code: string, options, delegate) {
-    let parsingOptions = options || {};
-    parsingOptions.sourceType = 'script';
-    return parse(code, parsingOptions, delegate);
+export function parseScript(code: string, options: ParseOptions = {}, delegate) {
+    options.sourceType = 'script';
+    return parse(code, options, delegate);
 }
 
-export function tokenize(code: string, options, delegate) {
+export function tokenize(code: string, options, delegate): IToken[] {
     const tokenizer = new Tokenizer(code, options);
 
-    let tokens;
+    let tokens: IToken[];
     tokens = [];
 
     try {
@@ -113,7 +119,7 @@ export function tokenize(code: string, options, delegate) {
     }
 
     if (tokenizer.errorHandler.tolerant) {
-        tokens.errors = tokenizer.errors();
+        tokens['errors'] = tokenizer.errors();
     }
 
     return tokens;

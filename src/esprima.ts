@@ -24,8 +24,9 @@
 
 import { CommentHandler } from './comment-handler';
 import { JSXParser } from './jsx-parser';
-import { Parser } from './parser';
+import { Parser, MetaData } from './parser';
 import { IToken, Tokenizer } from './tokenizer';
+import { Module, Script } from './nodes';
 
 export interface ParseOptions {
     comment?: boolean;
@@ -34,7 +35,7 @@ export interface ParseOptions {
     jsx?: boolean;
 }
 
-export function parse(code: string, options?: ParseOptions, delegate?) {
+export function parse(code: string, options?: ParseOptions, delegate?: (node, metadata: MetaData) => void): Module | Script {
     let commentHandler: CommentHandler | null = null;
     const proxyDelegate = (node, metadata) => {
         if (delegate) {
@@ -72,27 +73,27 @@ export function parse(code: string, options?: ParseOptions, delegate?) {
     }
 
     const program = isModule ? parser.parseModule() : parser.parseScript();
-    const ast = program as any;
+    // const ast = program as any;
 
     if (collectComment && commentHandler) {
-        ast.comments = commentHandler.comments;
+        program.comments = commentHandler.comments;
     }
     if (parser.config.tokens) {
-        ast.tokens = parser.tokens;
+        program.tokens = parser.tokens;
     }
     if (parser.config.tolerant) {
-        ast.errors = parser.errorHandler.errors;
+        program.errors = parser.errorHandler.errors;
     }
 
-    return ast;
+    return program;
 }
 
-export function parseModule(code: string, options: ParseOptions = {}, delegate?) {
+export function parseModule(code: string, options: ParseOptions = {}, delegate?): Module {
     options.sourceType = 'module';
     return parse(code, options, delegate);
 }
 
-export function parseScript(code: string, options: ParseOptions = {}, delegate) {
+export function parseScript(code: string, options: ParseOptions = {}, delegate): Script {
     options.sourceType = 'script';
     return parse(code, options, delegate);
 }

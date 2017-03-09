@@ -61,9 +61,22 @@ interface TokenEntry {
     loc?: SourceLocation;
 }
 
+export interface MetaData {
+    start: {
+        line: number;
+        column: number;
+        offset: number;
+    };
+    end: {
+        line: number;
+        column: number;
+        offset: number;
+    };
+}
+
 export class Parser {
     readonly config: Config;
-    readonly delegate: any;
+    readonly delegate: (node, metadata: MetaData) => void;
     readonly errorHandler: ErrorHandler;
     readonly scanner: Scanner;
     readonly operatorPrecedence: { [ch: string]: number };
@@ -76,7 +89,7 @@ export class Parser {
     startMarker: Marker;
     lastMarker: Marker;
 
-    constructor(code: string, options: any = {}, delegate) {
+    constructor(code: string, options: any = {}, delegate: (node, metadata: MetaData) => void) {
         this.config = {
             range: (typeof options.range === 'boolean') && options.range,
             loc: (typeof options.loc === 'boolean') && options.loc,

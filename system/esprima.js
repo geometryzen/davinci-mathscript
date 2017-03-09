@@ -35,17 +35,16 @@ System.register(["./comment-handler", "./jsx-parser", "./parser", "./tokenizer",
             parser = new parser_1.Parser(code, options, parserDelegate);
         }
         var program = isModule ? parser.parseModule() : parser.parseScript();
-        var ast = program;
         if (collectComment && commentHandler) {
-            ast.comments = commentHandler.comments;
+            program.comments = commentHandler.comments;
         }
         if (parser.config.tokens) {
-            ast.tokens = parser.tokens;
+            program.tokens = parser.tokens;
         }
         if (parser.config.tolerant) {
-            ast.errors = parser.errorHandler.errors;
+            program.errors = parser.errorHandler.errors;
         }
-        return ast;
+        return program;
     }
     exports_1("parse", parse);
     function parseModule(code, options, delegate) {

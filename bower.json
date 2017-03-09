@@ -1,6 +1,6 @@
 {
     "name": "davinci-mathscript",
-    "version": "1.1.4",
+    "version": "1.2.0",
     "description": "MathScript transcompiler to JavaScript.",
     "author": {
         "name": "David Holmes",
@@ -23,8 +23,8 @@
     "devDependencies": {
         "jasmine": "^2.5.2",
         "almond": "^0.3.3",
-        "r.js": "~2.3.2",
-        "requirejs": "~2.3.2",
+        "r.js": "~2.3.3",
+        "requirejs": "~2.3.3",
         "jscover": "http://github.com/tntim96/JSCover.git"
     },
     "ignore": [

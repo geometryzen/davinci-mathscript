@@ -47,7 +47,7 @@ import { Syntax } from './syntax';
 // This should match the global namespace (in build.js).
 const MATHSCRIPT_NAMESPACE = "Ms";
 
-const INFINITE_LOOP_TIMEOUT = 2000;
+// const INFINITE_LOOP_TIMEOUT = 1000;
 
 // We're not really interested in those operators to do with ordering because many
 // interesting mathematical structures don't have an ordering relation.
@@ -72,7 +72,7 @@ const binOp = {
 };
 
 // The increment and decrement operators are problematic from a timing perspective.
-var unaryOp = {
+const unaryOp = {
     '+': 'pos',
     '-': 'neg',
     '!': 'bang',
@@ -85,8 +85,8 @@ interface TranspileOptions extends ParseOptions {
 
 function transpileTree(code: string, options?: TranspileOptions) {
     const tree = esprimaParse(code, options, void 0);
-    console.log(JSON.stringify(tree, null, 2));
-    visit(tree);
+    // console.log(JSON.stringify(tree, null, 2));
+    visit(tree, { timeout: 1000 });
     return tree;
 }
 
@@ -96,7 +96,7 @@ function transpileTree(code: string, options?: TranspileOptions) {
 function transpile(code: string, options?: TranspileOptions) {
     const tree = transpileTree(code, options);
     const codeOut = generate(tree, null);
-    console.log(codeOut);
+    // console.log(codeOut);
     return codeOut;
 }
 
@@ -105,7 +105,7 @@ function addInfiniteLoopProtection(statements: StatementListItem[], millis: numb
         const el = statements[i];
         if (el && el.type === Syntax.ForStatement || el.type === Syntax.WhileStatement || el.type === Syntax.DoWhileStatement) {
             const loop = <ForStatement | WhileStatement | DoWhileStatement>el;
-            const randomVariableName = '_' + generateRandomId(3);
+            const randomVariableName = '_' + generateRandomId(5);
             const insertionBlocks = getLoopProtectorBlocks(randomVariableName, millis);
             // Insert time variable assignment
             statements.splice(i, 0, insertionBlocks.before);
@@ -114,7 +114,7 @@ function addInfiniteLoopProtection(statements: StatementListItem[], millis: numb
             if (!Array.isArray(loop.body)) {
                 loop.body = {
                     body: [loop.body],
-                    type: 'BlockStatement'
+                    type: Syntax.BlockStatement
                 };
             }
             const block = <BlockStatement>loop.body;
@@ -124,47 +124,52 @@ function addInfiniteLoopProtection(statements: StatementListItem[], millis: numb
     }
     return statements;
 }
+
+interface VisitOptions {
+    timeout: number;
+}
+
 /**
  * This code performs the re-writing of the AST for operator overloading.
  */
-function visit(node: { type: string } | null) {
+function visit(node: { type: string } | null, options: VisitOptions) {
     if (node && node.type) {
         switch (node.type) {
             case Syntax.BlockStatement: {
                 const block = <BlockStatement>node;
-                addInfiniteLoopProtection(block.body, INFINITE_LOOP_TIMEOUT).forEach(function (part, index) { visit(part); });
+                addInfiniteLoopProtection(block.body, options.timeout).forEach(function (part, index) { visit(part, options); });
                 break;
             }
             case Syntax.FunctionDeclaration: {
                 const funcDecl = <FunctionDeclaration>node;
-                funcDecl.params.forEach(function (param, index) { visit(param); });
-                visit(funcDecl.body);
+                funcDecl.params.forEach(function (param, index) { visit(param, options); });
+                visit(funcDecl.body, options);
                 break;
             }
             case Syntax.Program: {
                 const script = <Script>node;
-                addInfiniteLoopProtection(script.body, INFINITE_LOOP_TIMEOUT).forEach(function (node, index) {
-                    visit(node);
+                addInfiniteLoopProtection(script.body, options.timeout).forEach(function (node, index) {
+                    visit(node, options);
                 });
                 break;
             }
             case Syntax.VariableDeclaration: {
                 const varDeclaration = <VariableDeclaration>node;
-                varDeclaration.declarations.forEach(function (declaration, index) { visit(declaration); });
+                varDeclaration.declarations.forEach(function (declaration, index) { visit(declaration, options); });
                 break;
             }
             case Syntax.VariableDeclarator: {
                 const varDeclarator = <VariableDeclarator>node;
                 if (varDeclarator.init) {
-                    visit(varDeclarator.init);
+                    visit(varDeclarator.init, options);
                 }
                 break;
             }
             case Syntax.ConditionalExpression: {
                 const condExpr = <ConditionalExpression>node;
-                visit(condExpr.test);
-                visit(condExpr.consequent);
-                visit(condExpr.alternate);
+                visit(condExpr.test, options);
+                visit(condExpr.consequent, options);
+                visit(condExpr.alternate, options);
                 break;
             }
             case Syntax.BinaryExpression:
@@ -181,131 +186,131 @@ function visit(node: { type: string } | null) {
                             type: Syntax.Identifier, name: binOp[binExpr.operator]
                         }
                     };
-                    visit(binExpr.left);
-                    visit(binExpr.right);
+                    visit(binExpr.left, options);
+                    visit(binExpr.right, options);
                     callExpr.arguments = [binExpr.left, binExpr.right];
                 }
                 else {
-                    visit(binExpr.left);
-                    visit(binExpr.right);
+                    visit(binExpr.left, options);
+                    visit(binExpr.right, options);
                 }
                 break;
             }
             case Syntax.ExpressionStatement: {
                 const exprStmt = <ExpressionStatement>node;
-                visit(exprStmt.expression);
+                visit(exprStmt.expression, options);
                 break;
             }
             case Syntax.ForStatement: {
                 const forStmt = <ForStatement>node;
-                visit(forStmt.init);
-                visit(forStmt.test);
-                visit(forStmt.update);
-                visit(forStmt.body);
+                visit(forStmt.init, options);
+                visit(forStmt.test, options);
+                visit(forStmt.update, options);
+                visit(forStmt.body, options);
                 break;
             }
             case Syntax.ForInStatement: {
                 const forIn = <ForInStatement>node;
-                visit(forIn.left);
-                visit(forIn.right);
-                visit(forIn.body);
+                visit(forIn.left, options);
+                visit(forIn.right, options);
+                visit(forIn.body, options);
                 break;
             }
             case Syntax.IfStatement: {
                 const ifStmt = <IfStatement>node;
-                visit(ifStmt.test);
-                visit(ifStmt.consequent);
-                visit(ifStmt.alternate);
+                visit(ifStmt.test, options);
+                visit(ifStmt.consequent, options);
+                visit(ifStmt.alternate, options);
                 break;
             }
             case Syntax.ArrayExpression: {
                 const arrayExpr = <ArrayExpression>node;
-                arrayExpr.elements.forEach(function (elem, index) { visit(elem); });
+                arrayExpr.elements.forEach(function (elem, index) { visit(elem, options); });
                 break;
             }
             case Syntax.AssignmentExpression: {
                 const assignExpr = <AssignmentExpression>node;
                 if (assignExpr.operator && binOp[assignExpr.operator]) {
-                    visit(assignExpr.left);
-                    visit(assignExpr.right);
+                    visit(assignExpr.left, options);
+                    visit(assignExpr.right, options);
                 }
                 else {
-                    visit(assignExpr.left);
-                    visit(assignExpr.right);
+                    visit(assignExpr.left, options);
+                    visit(assignExpr.right, options);
                 }
                 break;
             }
             case Syntax.CallExpression: {
                 const callExpr = <CallExpression>node;
-                visit(callExpr.callee);
-                callExpr.arguments.forEach(function (argument, index) { visit(argument); });
+                visit(callExpr.callee, options);
+                callExpr.arguments.forEach(function (argument, index) { visit(argument, options); });
                 break;
             }
             case Syntax.CatchClause: {
                 const catchClause = <CatchClause>node;
-                visit(catchClause.param);
-                visit(catchClause.body);
+                visit(catchClause.param, options);
+                visit(catchClause.body, options);
                 break;
             }
             case Syntax.FunctionExpression: {
                 const funcExpr = <FunctionExpression>node;
-                visit(funcExpr.body);
+                visit(funcExpr.body, options);
                 break;
             }
             case Syntax.MemberExpression: {
                 const staticMemberExpr = <StaticMemberExpression>node;
-                visit(staticMemberExpr.object);
+                visit(staticMemberExpr.object, options);
                 break;
             }
             // TODO: Problem?
             case Syntax.MemberExpression: {
                 const computedMemberExpr = <ComputedMemberExpression>node;
-                visit(computedMemberExpr.object);
+                visit(computedMemberExpr.object, options);
                 break;
             }
             case Syntax.NewExpression: {
                 const newExpr = <NewExpression>node;
-                visit(newExpr.callee);
-                newExpr.arguments.forEach(function (argument, index) { visit(argument); });
+                visit(newExpr.callee, options);
+                newExpr.arguments.forEach(function (argument, index) { visit(argument, options); });
                 break;
             }
             case Syntax.ObjectExpression: {
                 const objExpr = <ObjectExpression>node;
-                objExpr.properties.forEach(function (prop, index) { visit(prop); });
+                objExpr.properties.forEach(function (prop, index) { visit(prop, options); });
                 break;
             }
             case Syntax.ReturnStatement: {
                 const returnStmt = <ReturnStatement>node;
-                visit(returnStmt.argument);
+                visit(returnStmt.argument, options);
                 break;
             }
             case Syntax.SequenceExpression: {
                 const seqExpr = <SequenceExpression>node;
-                seqExpr.expressions.forEach(function (expr, index) { visit(expr); });
+                seqExpr.expressions.forEach(function (expr, index) { visit(expr, options); });
                 break;
             }
             case Syntax.SwitchCase: {
                 const switchCase = <SwitchCase>node;
-                visit(switchCase.test);
-                switchCase.consequent.forEach(function (expr, index) { visit(expr); });
+                visit(switchCase.test, options);
+                switchCase.consequent.forEach(function (expr, index) { visit(expr, options); });
                 break;
             }
             case Syntax.SwitchStatement: {
                 const switchStmt = <SwitchStatement>node;
-                visit(switchStmt.discriminant);
-                switchStmt.cases.forEach(function (kase, index) { visit(kase); });
+                visit(switchStmt.discriminant, options);
+                switchStmt.cases.forEach(function (kase, index) { visit(kase, options); });
                 break;
             }
             case Syntax.ThrowStatement: {
                 const throwStmt = <ThrowStatement>node;
-                visit(throwStmt.argument);
+                visit(throwStmt.argument, options);
                 break;
             }
             case Syntax.TryStatement: {
                 const tryStmt = <TryStatement>node;
-                visit(tryStmt.block);
-                visit(tryStmt.handler);
-                visit(tryStmt.finalizer);
+                visit(tryStmt.block, options);
+                visit(tryStmt.handler, options);
+                visit(tryStmt.finalizer, options);
                 break;
             }
             case Syntax.UnaryExpression: {
@@ -325,11 +330,11 @@ function visit(node: { type: string } | null) {
                             name: unaryOp[unaryExpr.operator]
                         }
                     };
-                    visit(unaryExpr.argument);
+                    visit(unaryExpr.argument, options);
                     callExpr.arguments = [unaryExpr.argument];
                 }
                 else {
-                    visit(unaryExpr.argument);
+                    visit(unaryExpr.argument, options);
                 }
                 break;
             }
@@ -352,24 +357,24 @@ function visit(node: { type: string } | null) {
                             name: unaryOp[updateExpr.operator]
                         }
                     };
-                    visit(updateExpr.argument);
+                    visit(updateExpr.argument, options);
                     callExpr.arguments = [updateExpr.argument];
                 }
                 else {
-                    visit(updateExpr.argument);
+                    visit(updateExpr.argument, options);
                 }
                 break;
             }
             case Syntax.Property: {
                 const prop = <Property>node;
-                visit(prop.key);
-                visit(prop.value);
+                visit(prop.key, options);
+                visit(prop.value, options);
                 break;
             }
             case Syntax.WhileStatement: {
                 const whileStmt = <WhileStatement>node;
-                visit(whileStmt.test);
-                visit(whileStmt.body);
+                visit(whileStmt.test, options);
+                visit(whileStmt.body, options);
                 break;
             }
             case Syntax.BreakStatement:

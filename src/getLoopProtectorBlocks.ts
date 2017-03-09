@@ -9,9 +9,9 @@ import { WhileStatement } from './nodes';
 /**
  * Generate 2 ASTs for the code to be inserted in loops for infinite run protection.
  */
-export default function getLoopProtectorBlocks(varName: string, millis: number): { before: VariableDeclaration; inside: IfStatement } {
+export default function getLoopProtectorBlocks(varName: string, timeout: number): { before: VariableDeclaration; inside: IfStatement } {
     const ast1: Script = parse(`var ${varName} = Date.now()`);
-    const ast2: Script = parse(`if (Date.now() - ${varName} > ${millis}) {throw new Error("Infinite loop")}`);
+    const ast2: Script = parse(`if (Date.now() - ${varName} > ${timeout}) {throw new Error("Infinite loop suspected after ${timeout} milliseconds.")}`);
 
     return {
         before: <VariableDeclaration>ast1.body[0],

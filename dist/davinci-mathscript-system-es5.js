@@ -8776,17 +8776,16 @@ System.register("esprima.js", ["./comment-handler", "./jsx-parser", "./parser", 
             parser = new parser_1.Parser(code, options, parserDelegate);
         }
         var program = isModule ? parser.parseModule() : parser.parseScript();
-        var ast = program;
         if (collectComment && commentHandler) {
-            ast.comments = commentHandler.comments;
+            program.comments = commentHandler.comments;
         }
         if (parser.config.tokens) {
-            ast.tokens = parser.tokens;
+            program.tokens = parser.tokens;
         }
         if (parser.config.tolerant) {
-            ast.errors = parser.errorHandler.errors;
+            program.errors = parser.errorHandler.errors;
         }
-        return ast;
+        return program;
     }
     exports_1("parse", parse);
     function parseModule(code, options, delegate) {
@@ -8853,9 +8852,9 @@ System.register("getLoopProtectorBlocks.js", ["./esprima"], function (exports_1,
     "use strict";
 
     var __moduleName = context_1 && context_1.id;
-    function getLoopProtectorBlocks(varName, millis) {
+    function getLoopProtectorBlocks(varName, timeout) {
         var ast1 = esprima_1.parse("var " + varName + " = Date.now()");
-        var ast2 = esprima_1.parse("if (Date.now() - " + varName + " > " + millis + ") {throw new Error(\"Infinite loop\")}");
+        var ast2 = esprima_1.parse("if (Date.now() - " + varName + " > " + timeout + ") {throw new Error(\"Infinite loop suspected after " + timeout + " milliseconds.\")}");
         return {
             before: ast1.body[0],
             inside: ast2.body[0]
@@ -8958,14 +8957,12 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
     var __moduleName = context_1 && context_1.id;
     function transpileTree(code, options) {
         var tree = esprima_1.parse(code, options, void 0);
-        console.log(JSON.stringify(tree, null, 2));
-        visit(tree);
+        visit(tree, { timeout: 1000 });
         return tree;
     }
     function transpile(code, options) {
         var tree = transpileTree(code, options);
         var codeOut = escodegen_1.generate(tree, null);
-        console.log(codeOut);
         return codeOut;
     }
     function addInfiniteLoopProtection(statements, millis) {
@@ -8973,13 +8970,13 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
             var el = statements[i];
             if (el && el.type === syntax_1.Syntax.ForStatement || el.type === syntax_1.Syntax.WhileStatement || el.type === syntax_1.Syntax.DoWhileStatement) {
                 var loop = el;
-                var randomVariableName = '_' + generateRandomId_1.default(3);
+                var randomVariableName = '_' + generateRandomId_1.default(5);
                 var insertionBlocks = getLoopProtectorBlocks_1.default(randomVariableName, millis);
                 statements.splice(i, 0, insertionBlocks.before);
                 if (!Array.isArray(loop.body)) {
                     loop.body = {
                         body: [loop.body],
-                        type: 'BlockStatement'
+                        type: syntax_1.Syntax.BlockStatement
                     };
                 }
                 var block = loop.body;
@@ -8988,14 +8985,14 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
         }
         return statements;
     }
-    function visit(node) {
+    function visit(node, options) {
         if (node && node.type) {
             switch (node.type) {
                 case syntax_1.Syntax.BlockStatement:
                     {
                         var block = node;
-                        addInfiniteLoopProtection(block.body, INFINITE_LOOP_TIMEOUT).forEach(function (part, index) {
-                            visit(part);
+                        addInfiniteLoopProtection(block.body, options.timeout).forEach(function (part, index) {
+                            visit(part, options);
                         });
                         break;
                     }
@@ -9003,16 +9000,16 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var funcDecl = node;
                         funcDecl.params.forEach(function (param, index) {
-                            visit(param);
+                            visit(param, options);
                         });
-                        visit(funcDecl.body);
+                        visit(funcDecl.body, options);
                         break;
                     }
                 case syntax_1.Syntax.Program:
                     {
                         var script = node;
-                        addInfiniteLoopProtection(script.body, INFINITE_LOOP_TIMEOUT).forEach(function (node, index) {
-                            visit(node);
+                        addInfiniteLoopProtection(script.body, options.timeout).forEach(function (node, index) {
+                            visit(node, options);
                         });
                         break;
                     }
@@ -9020,7 +9017,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var varDeclaration = node;
                         varDeclaration.declarations.forEach(function (declaration, index) {
-                            visit(declaration);
+                            visit(declaration, options);
                         });
                         break;
                     }
@@ -9028,16 +9025,16 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var varDeclarator = node;
                         if (varDeclarator.init) {
-                            visit(varDeclarator.init);
+                            visit(varDeclarator.init, options);
                         }
                         break;
                     }
                 case syntax_1.Syntax.ConditionalExpression:
                     {
                         var condExpr = node;
-                        visit(condExpr.test);
-                        visit(condExpr.consequent);
-                        visit(condExpr.alternate);
+                        visit(condExpr.test, options);
+                        visit(condExpr.consequent, options);
+                        visit(condExpr.alternate, options);
                         break;
                     }
                 case syntax_1.Syntax.BinaryExpression:
@@ -9055,51 +9052,51 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                                     type: syntax_1.Syntax.Identifier, name: binOp[binExpr.operator]
                                 }
                             };
-                            visit(binExpr.left);
-                            visit(binExpr.right);
+                            visit(binExpr.left, options);
+                            visit(binExpr.right, options);
                             callExpr.arguments = [binExpr.left, binExpr.right];
                         } else {
-                            visit(binExpr.left);
-                            visit(binExpr.right);
+                            visit(binExpr.left, options);
+                            visit(binExpr.right, options);
                         }
                         break;
                     }
                 case syntax_1.Syntax.ExpressionStatement:
                     {
                         var exprStmt = node;
-                        visit(exprStmt.expression);
+                        visit(exprStmt.expression, options);
                         break;
                     }
                 case syntax_1.Syntax.ForStatement:
                     {
                         var forStmt = node;
-                        visit(forStmt.init);
-                        visit(forStmt.test);
-                        visit(forStmt.update);
-                        visit(forStmt.body);
+                        visit(forStmt.init, options);
+                        visit(forStmt.test, options);
+                        visit(forStmt.update, options);
+                        visit(forStmt.body, options);
                         break;
                     }
                 case syntax_1.Syntax.ForInStatement:
                     {
                         var forIn = node;
-                        visit(forIn.left);
-                        visit(forIn.right);
-                        visit(forIn.body);
+                        visit(forIn.left, options);
+                        visit(forIn.right, options);
+                        visit(forIn.body, options);
                         break;
                     }
                 case syntax_1.Syntax.IfStatement:
                     {
                         var ifStmt = node;
-                        visit(ifStmt.test);
-                        visit(ifStmt.consequent);
-                        visit(ifStmt.alternate);
+                        visit(ifStmt.test, options);
+                        visit(ifStmt.consequent, options);
+                        visit(ifStmt.alternate, options);
                         break;
                     }
                 case syntax_1.Syntax.ArrayExpression:
                     {
                         var arrayExpr = node;
                         arrayExpr.elements.forEach(function (elem, index) {
-                            visit(elem);
+                            visit(elem, options);
                         });
                         break;
                     }
@@ -9107,54 +9104,54 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var assignExpr = node;
                         if (assignExpr.operator && binOp[assignExpr.operator]) {
-                            visit(assignExpr.left);
-                            visit(assignExpr.right);
+                            visit(assignExpr.left, options);
+                            visit(assignExpr.right, options);
                         } else {
-                            visit(assignExpr.left);
-                            visit(assignExpr.right);
+                            visit(assignExpr.left, options);
+                            visit(assignExpr.right, options);
                         }
                         break;
                     }
                 case syntax_1.Syntax.CallExpression:
                     {
                         var callExpr = node;
-                        visit(callExpr.callee);
+                        visit(callExpr.callee, options);
                         callExpr.arguments.forEach(function (argument, index) {
-                            visit(argument);
+                            visit(argument, options);
                         });
                         break;
                     }
                 case syntax_1.Syntax.CatchClause:
                     {
                         var catchClause = node;
-                        visit(catchClause.param);
-                        visit(catchClause.body);
+                        visit(catchClause.param, options);
+                        visit(catchClause.body, options);
                         break;
                     }
                 case syntax_1.Syntax.FunctionExpression:
                     {
                         var funcExpr = node;
-                        visit(funcExpr.body);
+                        visit(funcExpr.body, options);
                         break;
                     }
                 case syntax_1.Syntax.MemberExpression:
                     {
                         var staticMemberExpr = node;
-                        visit(staticMemberExpr.object);
+                        visit(staticMemberExpr.object, options);
                         break;
                     }
                 case syntax_1.Syntax.MemberExpression:
                     {
                         var computedMemberExpr = node;
-                        visit(computedMemberExpr.object);
+                        visit(computedMemberExpr.object, options);
                         break;
                     }
                 case syntax_1.Syntax.NewExpression:
                     {
                         var newExpr = node;
-                        visit(newExpr.callee);
+                        visit(newExpr.callee, options);
                         newExpr.arguments.forEach(function (argument, index) {
-                            visit(argument);
+                            visit(argument, options);
                         });
                         break;
                     }
@@ -9162,54 +9159,54 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var objExpr = node;
                         objExpr.properties.forEach(function (prop, index) {
-                            visit(prop);
+                            visit(prop, options);
                         });
                         break;
                     }
                 case syntax_1.Syntax.ReturnStatement:
                     {
                         var returnStmt = node;
-                        visit(returnStmt.argument);
+                        visit(returnStmt.argument, options);
                         break;
                     }
                 case syntax_1.Syntax.SequenceExpression:
                     {
                         var seqExpr = node;
                         seqExpr.expressions.forEach(function (expr, index) {
-                            visit(expr);
+                            visit(expr, options);
                         });
                         break;
                     }
                 case syntax_1.Syntax.SwitchCase:
                     {
                         var switchCase = node;
-                        visit(switchCase.test);
+                        visit(switchCase.test, options);
                         switchCase.consequent.forEach(function (expr, index) {
-                            visit(expr);
+                            visit(expr, options);
                         });
                         break;
                     }
                 case syntax_1.Syntax.SwitchStatement:
                     {
                         var switchStmt = node;
-                        visit(switchStmt.discriminant);
+                        visit(switchStmt.discriminant, options);
                         switchStmt.cases.forEach(function (kase, index) {
-                            visit(kase);
+                            visit(kase, options);
                         });
                         break;
                     }
                 case syntax_1.Syntax.ThrowStatement:
                     {
                         var throwStmt = node;
-                        visit(throwStmt.argument);
+                        visit(throwStmt.argument, options);
                         break;
                     }
                 case syntax_1.Syntax.TryStatement:
                     {
                         var tryStmt = node;
-                        visit(tryStmt.block);
-                        visit(tryStmt.handler);
-                        visit(tryStmt.finalizer);
+                        visit(tryStmt.block, options);
+                        visit(tryStmt.handler, options);
+                        visit(tryStmt.finalizer, options);
                         break;
                     }
                 case syntax_1.Syntax.UnaryExpression:
@@ -9230,10 +9227,10 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                                     name: unaryOp[unaryExpr.operator]
                                 }
                             };
-                            visit(unaryExpr.argument);
+                            visit(unaryExpr.argument, options);
                             callExpr.arguments = [unaryExpr.argument];
                         } else {
-                            visit(unaryExpr.argument);
+                            visit(unaryExpr.argument, options);
                         }
                         break;
                     }
@@ -9255,25 +9252,25 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                                     name: unaryOp[updateExpr.operator]
                                 }
                             };
-                            visit(updateExpr.argument);
+                            visit(updateExpr.argument, options);
                             callExpr.arguments = [updateExpr.argument];
                         } else {
-                            visit(updateExpr.argument);
+                            visit(updateExpr.argument, options);
                         }
                         break;
                     }
                 case syntax_1.Syntax.Property:
                     {
                         var prop = node;
-                        visit(prop.key);
-                        visit(prop.value);
+                        visit(prop.key, options);
+                        visit(prop.value, options);
                         break;
                     }
                 case syntax_1.Syntax.WhileStatement:
                     {
                         var whileStmt = node;
-                        visit(whileStmt.test);
-                        visit(whileStmt.body);
+                        visit(whileStmt.test, options);
+                        visit(whileStmt.body, options);
                         break;
                     }
                 case syntax_1.Syntax.BreakStatement:
@@ -9447,7 +9444,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
         return esprima_2.tokenize(code, options, delegate);
     }
     exports_1("tokenize", tokenize);
-    var core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, INFINITE_LOOP_TIMEOUT, binOp, unaryOp, Ms;
+    var core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
     return {
         setters: [function (core_1_1) {
             core_1 = core_1_1;
@@ -9468,7 +9465,6 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
         }],
         execute: function () {
             MATHSCRIPT_NAMESPACE = "Ms";
-            INFINITE_LOOP_TIMEOUT = 2000;
             binOp = {
                 '+': 'add',
                 '-': 'sub',

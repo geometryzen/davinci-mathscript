@@ -18,6 +18,8 @@ declare module Ms {
     attachComment?: boolean;
     sourceType?: 'module' | 'script';
     jsx?: boolean;
+    timeout?: number;
+    noLoopCheck?: boolean;
   }
 
   export function transpile(code: string, options?: TranspileOptions): string;

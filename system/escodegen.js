@@ -57,7 +57,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
     }
     function endsWithLineTerminator(str) {
         var len = str.length;
-        return len && code_1.isLineTerminator(str.charCodeAt(len - 1));
+        return (len > 0) && code_1.isLineTerminator(str.charCodeAt(len - 1));
     }
     function merge(target, override) {
         var key;
@@ -581,7 +581,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
     }
     function generate(node, options) {
         var defaultOptions = getDefaultOptions();
-        if (options != null) {
+        if (options) {
             options = updateDeeply(defaultOptions, options);
             indent = options.format.indent.style;
             base = stringRepeat(indent, options.format.indent.base);

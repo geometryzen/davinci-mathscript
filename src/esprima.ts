@@ -101,8 +101,7 @@ export function parseScript(code: string, options: ParseOptions = {}, delegate):
 export function tokenize(code: string, options, delegate): IToken[] {
     const tokenizer = new Tokenizer(code, options);
 
-    let tokens: IToken[];
-    tokens = [];
+    const tokens: IToken[] = [];
 
     try {
         while (true) {

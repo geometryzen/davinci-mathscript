@@ -53,7 +53,7 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         // These files are loaded using <script> tags so it's a good place to put polyfill files.
         files: [
-            'src/davinci-mathscript/**/*.spec.ts'
+            'src/davinci-mathscript.spec.ts'
         ],
 
         // This allows us to avoid the Karma base virtual directory issue without dropping

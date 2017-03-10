@@ -1,5 +1,5 @@
 import { Syntax } from './syntax';
-import INode from './INode';
+import IToken from './IToken';
 
 export type ArgumentListElement = Expression | SpreadElement;
 export type ArrayExpressionElement = Expression | SpreadElement | null;
@@ -572,7 +572,7 @@ export class Module {
     readonly body: StatementListItem[];
     readonly sourceType: string;
     comments?: any;
-    tokens?: any;
+    tokens?: IToken[];
     errors?: any;
     constructor(body: StatementListItem[]) {
         this.type = Syntax.Program;
@@ -674,7 +674,7 @@ export class Script {
     readonly body: StatementListItem[];
     readonly sourceType: string;
     comments?: any;
-    tokens?: any;
+    tokens?: IToken[];
     errors?: any;
     constructor(body: StatementListItem[]) {
         this.type = Syntax.Program;

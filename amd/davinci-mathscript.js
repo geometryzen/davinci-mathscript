@@ -26,15 +26,20 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
         '~': 'tilde'
     };
     function transpileTree(code, options) {
+        if (options === void 0) { options = {}; }
         var tree = esprima_1.parse(code, options, void 0);
-        visit(tree, { timeout: 1000 });
+        if (typeof options.timeout === undefined) {
+            options.timeout = 1000;
+        }
+        visit(tree, options);
         return tree;
     }
     function transpile(code, options) {
         var tree = transpileTree(code, options);
-        var codeOut = escodegen_1.generate(tree, null);
+        var codeOut = escodegen_1.generate(tree);
         return codeOut;
     }
+    exports.transpile = transpile;
     function addInfiniteLoopProtection(statements, millis) {
         for (var i = statements.length; i--;) {
             var el = statements[i];
@@ -60,25 +65,35 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
             switch (node.type) {
                 case syntax_1.Syntax.BlockStatement: {
                     var block = node;
-                    addInfiniteLoopProtection(block.body, options.timeout).forEach(function (part, index) { visit(part, options); });
+                    if (options.noLoopCheck) {
+                        block.body.forEach(function (part) { visit(part, options); });
+                    }
+                    else {
+                        var timeout = options.timeout;
+                        addInfiniteLoopProtection(block.body, timeout).forEach(function (part) { visit(part, options); });
+                    }
                     break;
                 }
                 case syntax_1.Syntax.FunctionDeclaration: {
                     var funcDecl = node;
-                    funcDecl.params.forEach(function (param, index) { visit(param, options); });
+                    funcDecl.params.forEach(function (param) { visit(param, options); });
                     visit(funcDecl.body, options);
                     break;
                 }
                 case syntax_1.Syntax.Program: {
                     var script = node;
-                    addInfiniteLoopProtection(script.body, options.timeout).forEach(function (node, index) {
-                        visit(node, options);
-                    });
+                    if (options.noLoopCheck) {
+                        script.body.forEach(function (node) { visit(node, options); });
+                    }
+                    else {
+                        var timeout = options.timeout;
+                        addInfiniteLoopProtection(script.body, timeout).forEach(function (node) { visit(node, options); });
+                    }
                     break;
                 }
                 case syntax_1.Syntax.VariableDeclaration: {
                     var varDeclaration = node;
-                    varDeclaration.declarations.forEach(function (declaration, index) { visit(declaration, options); });
+                    varDeclaration.declarations.forEach(function (declaration) { visit(declaration, options); });
                     break;
                 }
                 case syntax_1.Syntax.VariableDeclarator: {
@@ -148,7 +163,7 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
                 }
                 case syntax_1.Syntax.ArrayExpression: {
                     var arrayExpr = node;
-                    arrayExpr.elements.forEach(function (elem, index) { visit(elem, options); });
+                    arrayExpr.elements.forEach(function (elem) { visit(elem, options); });
                     break;
                 }
                 case syntax_1.Syntax.AssignmentExpression: {
@@ -166,13 +181,19 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
                 case syntax_1.Syntax.CallExpression: {
                     var callExpr = node;
                     visit(callExpr.callee, options);
-                    callExpr.arguments.forEach(function (argument, index) { visit(argument, options); });
+                    callExpr.arguments.forEach(function (argument) { visit(argument, options); });
                     break;
                 }
                 case syntax_1.Syntax.CatchClause: {
                     var catchClause = node;
                     visit(catchClause.param, options);
                     visit(catchClause.body, options);
+                    break;
+                }
+                case syntax_1.Syntax.DoWhileStatement: {
+                    var doWhileStmt = node;
+                    visit(doWhileStmt.test, options);
+                    visit(doWhileStmt.body, options);
                     break;
                 }
                 case syntax_1.Syntax.FunctionExpression: {
@@ -193,12 +214,12 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
                 case syntax_1.Syntax.NewExpression: {
                     var newExpr = node;
                     visit(newExpr.callee, options);
-                    newExpr.arguments.forEach(function (argument, index) { visit(argument, options); });
+                    newExpr.arguments.forEach(function (argument) { visit(argument, options); });
                     break;
                 }
                 case syntax_1.Syntax.ObjectExpression: {
                     var objExpr = node;
-                    objExpr.properties.forEach(function (prop, index) { visit(prop, options); });
+                    objExpr.properties.forEach(function (prop) { visit(prop, options); });
                     break;
                 }
                 case syntax_1.Syntax.ReturnStatement: {
@@ -208,19 +229,19 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
                 }
                 case syntax_1.Syntax.SequenceExpression: {
                     var seqExpr = node;
-                    seqExpr.expressions.forEach(function (expr, index) { visit(expr, options); });
+                    seqExpr.expressions.forEach(function (expr) { visit(expr, options); });
                     break;
                 }
                 case syntax_1.Syntax.SwitchCase: {
                     var switchCase = node;
                     visit(switchCase.test, options);
-                    switchCase.consequent.forEach(function (expr, index) { visit(expr, options); });
+                    switchCase.consequent.forEach(function (expr) { visit(expr, options); });
                     break;
                 }
                 case syntax_1.Syntax.SwitchStatement: {
                     var switchStmt = node;
                     visit(switchStmt.discriminant, options);
-                    switchStmt.cases.forEach(function (kase, index) { visit(kase, options); });
+                    switchStmt.cases.forEach(function (kase) { visit(kase, options); });
                     break;
                 }
                 case syntax_1.Syntax.ThrowStatement: {
@@ -342,20 +363,30 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
         return fallback(lhs, rhs);
     }
     function add(p, q) { return binEval(p, q, '__add__', '__radd__', function (a, b) { return a + b; }); }
+    exports.add = add;
     function sub(p, q) { return binEval(p, q, '__sub__', '__rsub__', function (a, b) { return a - b; }); }
+    exports.sub = sub;
     function mul(p, q) { return binEval(p, q, '__mul__', '__rmul__', function (a, b) { return a * b; }); }
+    exports.mul = mul;
     function div(p, q) { return binEval(p, q, '__div__', '__rdiv__', function (a, b) { return a / b; }); }
+    exports.div = div;
     function mod(p, q) { return binEval(p, q, '__mod__', '__rmod__', function (a, b) { return a % b; }); }
     function bitwiseIOR(p, q) { return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) { return a | b; }); }
     function bitwiseXOR(p, q) { return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) { return a ^ b; }); }
     function lshift(p, q) { return binEval(p, q, '__lshift__', '__rlshift__', function (a, b) { return a << b; }); }
     function rshift(p, q) { return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) { return a >> b; }); }
     function eq(p, q) { return binEval(p, q, '__eq__', '__req__', function (a, b) { return a === b; }); }
+    exports.eq = eq;
     function ne(p, q) { return binEval(p, q, '__ne__', '__rne__', function (a, b) { return a !== b; }); }
+    exports.ne = ne;
     function ge(p, q) { return binEval(p, q, '__ge__', '__rge__', function (a, b) { return a >= b; }); }
+    exports.ge = ge;
     function gt(p, q) { return binEval(p, q, '__gt__', '__rgt__', function (a, b) { return a > b; }); }
+    exports.gt = gt;
     function le(p, q) { return binEval(p, q, '__le__', '__rle__', function (a, b) { return a <= b; }); }
+    exports.le = le;
     function lt(p, q) { return binEval(p, q, '__lt__', '__rlt__', function (a, b) { return a < b; }); }
+    exports.lt = lt;
     function exp(x) {
         if (specialMethod(x, '__exp__')) {
             return x['__exp__']();
@@ -374,6 +405,7 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
             return -x;
         }
     }
+    exports.neg = neg;
     function pos(x) {
         if (specialMethod(x, '__pos__')) {
             return x['__pos__']();
@@ -382,6 +414,7 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
             return +x;
         }
     }
+    exports.pos = pos;
     function bang(x) {
         if (specialMethod(x, '__bang__')) {
             return x['__bang__']();
@@ -390,6 +423,7 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
             return !x;
         }
     }
+    exports.bang = bang;
     function tilde(x) {
         if (specialMethod(x, '__tilde__')) {
             return x['__tilde__']();
@@ -398,6 +432,7 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
             return ~x;
         }
     }
+    exports.tilde = tilde;
     exports.Ms = {
         'VERSION': core_1.VERSION,
         parse: esprima_1.parse,

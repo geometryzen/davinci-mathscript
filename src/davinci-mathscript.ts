@@ -1,10 +1,10 @@
 import { VERSION } from './core';
 import { parse as esprimaParse, ParseOptions, parseScript as esprimaParseScript, parseModule as esprimaParseModule } from './esprima';
 import { tokenize as esprimaTokenize } from './esprima';
+import { MetaData } from './parser';
 import { generate } from './escodegen';
 import generateRandomId from './generateRandomId';
 import getLoopProtectorBlocks from './getLoopProtectorBlocks';
-import { Statement } from './nodes';
 import { StatementListItem } from './nodes';
 import { BlockStatement } from './nodes';
 import { FunctionDeclaration } from './nodes';
@@ -17,7 +17,6 @@ import { DoWhileStatement } from './nodes';
 import { ExpressionStatement } from './nodes';
 import { ForStatement } from './nodes';
 import { ForInStatement } from './nodes';
-import { Identifier } from './nodes';
 import { IfStatement } from './nodes';
 import { ArrayExpression } from './nodes';
 import { AssignmentExpression } from './nodes';
@@ -80,22 +79,26 @@ const unaryOp = {
 };
 
 interface TranspileOptions extends ParseOptions {
-
+    timeout?: number;
+    noLoopCheck?: boolean;
 }
 
-function transpileTree(code: string, options?: TranspileOptions) {
+function transpileTree(code: string, options: TranspileOptions = {}) {
     const tree = esprimaParse(code, options, void 0);
     // console.log(JSON.stringify(tree, null, 2));
-    visit(tree, { timeout: 1000 });
+    if (typeof options.timeout === undefined) {
+        options.timeout = 1000;
+    }
+    visit(tree, options);
     return tree;
 }
 
 /**
  * This is the function that we export.
  */
-function transpile(code: string, options?: TranspileOptions) {
+export function transpile(code: string, options?: TranspileOptions) {
     const tree = transpileTree(code, options);
-    const codeOut = generate(tree, null);
+    const codeOut = generate(tree);
     // console.log(codeOut);
     return codeOut;
 }
@@ -125,37 +128,43 @@ function addInfiniteLoopProtection(statements: StatementListItem[], millis: numb
     return statements;
 }
 
-interface VisitOptions {
-    timeout: number;
-}
-
 /**
  * This code performs the re-writing of the AST for operator overloading.
  */
-function visit(node: { type: string } | null, options: VisitOptions) {
+function visit(node: { type: string } | null, options: TranspileOptions) {
     if (node && node.type) {
         switch (node.type) {
             case Syntax.BlockStatement: {
                 const block = <BlockStatement>node;
-                addInfiniteLoopProtection(block.body, options.timeout).forEach(function (part, index) { visit(part, options); });
+                if (options.noLoopCheck) {
+                    block.body.forEach(function (part) { visit(part, options); });
+                }
+                else {
+                    const timeout = <number>options.timeout;
+                    addInfiniteLoopProtection(block.body, timeout).forEach(function (part) { visit(part, options); });
+                }
                 break;
             }
             case Syntax.FunctionDeclaration: {
                 const funcDecl = <FunctionDeclaration>node;
-                funcDecl.params.forEach(function (param, index) { visit(param, options); });
+                funcDecl.params.forEach(function (param) { visit(param, options); });
                 visit(funcDecl.body, options);
                 break;
             }
             case Syntax.Program: {
                 const script = <Script>node;
-                addInfiniteLoopProtection(script.body, options.timeout).forEach(function (node, index) {
-                    visit(node, options);
-                });
+                if (options.noLoopCheck) {
+                    script.body.forEach(function (node) { visit(node, options); });
+                }
+                else {
+                    const timeout = <number>options.timeout;
+                    addInfiniteLoopProtection(script.body, timeout).forEach(function (node) { visit(node, options); });
+                }
                 break;
             }
             case Syntax.VariableDeclaration: {
                 const varDeclaration = <VariableDeclaration>node;
-                varDeclaration.declarations.forEach(function (declaration, index) { visit(declaration, options); });
+                varDeclaration.declarations.forEach(function (declaration) { visit(declaration, options); });
                 break;
             }
             case Syntax.VariableDeclarator: {
@@ -225,7 +234,7 @@ function visit(node: { type: string } | null, options: VisitOptions) {
             }
             case Syntax.ArrayExpression: {
                 const arrayExpr = <ArrayExpression>node;
-                arrayExpr.elements.forEach(function (elem, index) { visit(elem, options); });
+                arrayExpr.elements.forEach(function (elem) { visit(elem, options); });
                 break;
             }
             case Syntax.AssignmentExpression: {
@@ -243,13 +252,19 @@ function visit(node: { type: string } | null, options: VisitOptions) {
             case Syntax.CallExpression: {
                 const callExpr = <CallExpression>node;
                 visit(callExpr.callee, options);
-                callExpr.arguments.forEach(function (argument, index) { visit(argument, options); });
+                callExpr.arguments.forEach(function (argument) { visit(argument, options); });
                 break;
             }
             case Syntax.CatchClause: {
                 const catchClause = <CatchClause>node;
                 visit(catchClause.param, options);
                 visit(catchClause.body, options);
+                break;
+            }
+            case Syntax.DoWhileStatement: {
+                const doWhileStmt = <DoWhileStatement>node;
+                visit(doWhileStmt.test, options);
+                visit(doWhileStmt.body, options);
                 break;
             }
             case Syntax.FunctionExpression: {
@@ -271,12 +286,12 @@ function visit(node: { type: string } | null, options: VisitOptions) {
             case Syntax.NewExpression: {
                 const newExpr = <NewExpression>node;
                 visit(newExpr.callee, options);
-                newExpr.arguments.forEach(function (argument, index) { visit(argument, options); });
+                newExpr.arguments.forEach(function (argument) { visit(argument, options); });
                 break;
             }
             case Syntax.ObjectExpression: {
                 const objExpr = <ObjectExpression>node;
-                objExpr.properties.forEach(function (prop, index) { visit(prop, options); });
+                objExpr.properties.forEach(function (prop) { visit(prop, options); });
                 break;
             }
             case Syntax.ReturnStatement: {
@@ -286,19 +301,19 @@ function visit(node: { type: string } | null, options: VisitOptions) {
             }
             case Syntax.SequenceExpression: {
                 const seqExpr = <SequenceExpression>node;
-                seqExpr.expressions.forEach(function (expr, index) { visit(expr, options); });
+                seqExpr.expressions.forEach(function (expr) { visit(expr, options); });
                 break;
             }
             case Syntax.SwitchCase: {
                 const switchCase = <SwitchCase>node;
                 visit(switchCase.test, options);
-                switchCase.consequent.forEach(function (expr, index) { visit(expr, options); });
+                switchCase.consequent.forEach(function (expr) { visit(expr, options); });
                 break;
             }
             case Syntax.SwitchStatement: {
                 const switchStmt = <SwitchStatement>node;
                 visit(switchStmt.discriminant, options);
-                switchStmt.cases.forEach(function (kase, index) { visit(kase, options); });
+                switchStmt.cases.forEach(function (kase) { visit(kase, options); });
                 break;
             }
             case Syntax.ThrowStatement: {
@@ -428,10 +443,10 @@ function binEval(lhs, rhs, lprop: string, rprop: string, fallback) {
     return fallback(lhs, rhs);
 }
 
-function add(p, q) { return binEval(p, q, '__add__', '__radd__', function (a, b) { return a + b; }); }
-function sub(p, q) { return binEval(p, q, '__sub__', '__rsub__', function (a, b) { return a - b; }); }
-function mul(p, q) { return binEval(p, q, '__mul__', '__rmul__', function (a, b) { return a * b; }); }
-function div(p, q) { return binEval(p, q, '__div__', '__rdiv__', function (a, b) { return a / b; }); }
+export function add(p, q) { return binEval(p, q, '__add__', '__radd__', function (a, b) { return a + b; }); }
+export function sub(p, q) { return binEval(p, q, '__sub__', '__rsub__', function (a, b) { return a - b; }); }
+export function mul(p, q) { return binEval(p, q, '__mul__', '__rmul__', function (a, b) { return a * b; }); }
+export function div(p, q) { return binEval(p, q, '__div__', '__rdiv__', function (a, b) { return a / b; }); }
 
 function mod(p, q) { return binEval(p, q, '__mod__', '__rmod__', function (a, b) { return a % b; }); }
 function bitwiseIOR(p, q) { return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) { return a | b; }); }
@@ -440,12 +455,12 @@ function bitwiseXOR(p, q) { return binEval(p, q, '__wedge__', '__rwedge__', func
 function lshift(p, q) { return binEval(p, q, '__lshift__', '__rlshift__', function (a, b) { return a << b; }); }
 function rshift(p, q) { return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) { return a >> b; }); }
 
-function eq(p, q) { return binEval(p, q, '__eq__', '__req__', function (a, b) { return a === b; }); }
-function ne(p, q) { return binEval(p, q, '__ne__', '__rne__', function (a, b) { return a !== b; }); }
-function ge(p, q) { return binEval(p, q, '__ge__', '__rge__', function (a, b) { return a >= b; }); }
-function gt(p, q) { return binEval(p, q, '__gt__', '__rgt__', function (a, b) { return a > b; }); }
-function le(p, q) { return binEval(p, q, '__le__', '__rle__', function (a, b) { return a <= b; }); }
-function lt(p, q) { return binEval(p, q, '__lt__', '__rlt__', function (a, b) { return a < b; }); }
+export function eq(p, q) { return binEval(p, q, '__eq__', '__req__', function (a, b) { return a === b; }); }
+export function ne(p, q) { return binEval(p, q, '__ne__', '__rne__', function (a, b) { return a !== b; }); }
+export function ge(p, q) { return binEval(p, q, '__ge__', '__rge__', function (a, b) { return a >= b; }); }
+export function gt(p, q) { return binEval(p, q, '__gt__', '__rgt__', function (a, b) { return a > b; }); }
+export function le(p, q) { return binEval(p, q, '__le__', '__rle__', function (a, b) { return a <= b; }); }
+export function lt(p, q) { return binEval(p, q, '__lt__', '__rlt__', function (a, b) { return a < b; }); }
 
 function exp<T>(x: T): T {
     if (specialMethod(x, '__exp__')) {
@@ -458,7 +473,7 @@ function exp<T>(x: T): T {
     }
 }
 
-function neg(x) {
+export function neg(x) {
     if (specialMethod(x, '__neg__')) {
         return x['__neg__']();
     }
@@ -467,7 +482,7 @@ function neg(x) {
     }
 }
 
-function pos(x) {
+export function pos(x) {
     if (specialMethod(x, '__pos__')) {
         return x['__pos__']();
     }
@@ -476,7 +491,7 @@ function pos(x) {
     }
 }
 
-function bang(x) {
+export function bang(x) {
     if (specialMethod(x, '__bang__')) {
         return x['__bang__']();
     }
@@ -485,7 +500,7 @@ function bang(x) {
     }
 }
 
-function tilde<T>(x: T): T {
+export function tilde<T>(x: T): T {
     if (specialMethod(x, '__tilde__')) {
         return x['__tilde__']();
     }
@@ -525,7 +540,7 @@ export const Ms = {
 };
 
 // For compatibility with esprima tests.
-export function parse(code, options, delegate) {
+export function parse(code, options?: ParseOptions, delegate?: (node, metadata: MetaData) => undefined) {
     return esprimaParse(code, options, delegate);
 }
 

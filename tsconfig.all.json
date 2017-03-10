@@ -18,6 +18,7 @@
         "inlineSources": false
     },
     "files": [
+        "src/davinci-mathscript.spec.ts",
         "typings/jasmine/jasmine.d.ts"
     ]
 }

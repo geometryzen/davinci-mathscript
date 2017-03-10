@@ -52,7 +52,7 @@ var SourceNode,
     quotes,
     escapeless,
     newline,
-    space,
+    space: string,
     parentheses,
     semicolons,
     safeConcatenation,
@@ -169,8 +169,8 @@ function hasLineTerminator(str: string): boolean {
 }
 
 function endsWithLineTerminator(str: string): boolean {
-    var len = str.length;
-    return len && isLineTerminator(str.charCodeAt(len - 1));
+    const len = str.length;
+    return (len > 0) && isLineTerminator(str.charCodeAt(len - 1));
 }
 
 function merge(target, override) {
@@ -183,7 +183,7 @@ function merge(target, override) {
     return target;
 }
 
-function updateDeeply(target, override) {
+function updateDeeply(target, override): GenerateOptions {
     var key, val;
 
     function isHashObject(target) {
@@ -459,14 +459,16 @@ function toSourceNodeWhenNeeded(generated, node?) {
         // if a string, just return it
         if (isArray(generated)) {
             return flattenToString(generated);
-        } else {
+        }
+        else {
             return generated;
         }
     }
     if (node == null) {
         if (generated instanceof SourceNode) {
             return generated;
-        } else {
+        }
+        else {
             node = {};
         }
     }
@@ -836,7 +838,7 @@ class CodeGenerator {
         return toSourceNodeWhenNeeded(result, stmt);
     }
 
-    generateExpression(expr, precedence, flags) {
+    generateExpression(expr, precedence, flags): string {
         var result, type;
 
         type = expr.type || Syntax.Property;
@@ -934,8 +936,8 @@ class CodeGenerator {
         return result;
     }
 
-    generatePropertyKey(expr, computed) {
-        var result = [];
+    generatePropertyKey(expr, computed): string[] {
+        const result: string[] = [];
 
         if (computed) {
             result.push('[');
@@ -2397,7 +2399,7 @@ export interface GenerateOptions {
     parse?: any;
     comment?: boolean;
     file?: string;
-    format?: {
+    format: {
         indent: {
             style: string;
             base: number;
@@ -2430,10 +2432,10 @@ export interface GenerateOptions {
     sourceCode: null;
 }
 
-export function generate(node, options: GenerateOptions) {
+export function generate(node, options?: GenerateOptions) {
     const defaultOptions = getDefaultOptions();
 
-    if (options != null) {
+    if (options) {
         options = updateDeeply(defaultOptions, options);
         indent = options.format.indent.style;
         base = stringRepeat(indent, options.format.indent.base);

@@ -824,7 +824,7 @@ System.register("escodegen.js", ["./estraverse", "./code", "./Precedence", "./Bi
     }
     function endsWithLineTerminator(str) {
         var len = str.length;
-        return len && code_1.isLineTerminator(str.charCodeAt(len - 1));
+        return len > 0 && code_1.isLineTerminator(str.charCodeAt(len - 1));
     }
     function merge(target, override) {
         var key;
@@ -1326,7 +1326,7 @@ System.register("escodegen.js", ["./estraverse", "./code", "./Precedence", "./Bi
     }
     function generate(node, options) {
         var defaultOptions = getDefaultOptions();
-        if (options != null) {
+        if (options) {
             options = updateDeeply(defaultOptions, options);
             indent = options.format.indent.style;
             base = stringRepeat(indent, options.format.indent.base);
@@ -8806,8 +8806,7 @@ System.register("esprima.js", ["./comment-handler", "./jsx-parser", "./parser", 
     exports_1("parseScript", parseScript);
     function tokenize(code, options, delegate) {
         var tokenizer = new tokenizer_1.Tokenizer(code, options);
-        var tokens;
-        tokens = [];
+        var tokens = [];
         try {
             while (true) {
                 var token = tokenizer.getNextToken();
@@ -8956,15 +8955,22 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
 
     var __moduleName = context_1 && context_1.id;
     function transpileTree(code, options) {
+        if (options === void 0) {
+            options = {};
+        }
         var tree = esprima_1.parse(code, options, void 0);
-        visit(tree, { timeout: 1000 });
+        if (typeof options.timeout === undefined) {
+            options.timeout = 1000;
+        }
+        visit(tree, options);
         return tree;
     }
     function transpile(code, options) {
         var tree = transpileTree(code, options);
-        var codeOut = escodegen_1.generate(tree, null);
+        var codeOut = escodegen_1.generate(tree);
         return codeOut;
     }
+    exports_1("transpile", transpile);
     function addInfiniteLoopProtection(statements, millis) {
         for (var i = statements.length; i--;) {
             var el = statements[i];
@@ -8991,15 +8997,22 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                 case syntax_1.Syntax.BlockStatement:
                     {
                         var block = node;
-                        addInfiniteLoopProtection(block.body, options.timeout).forEach(function (part, index) {
-                            visit(part, options);
-                        });
+                        if (options.noLoopCheck) {
+                            block.body.forEach(function (part) {
+                                visit(part, options);
+                            });
+                        } else {
+                            var timeout = options.timeout;
+                            addInfiniteLoopProtection(block.body, timeout).forEach(function (part) {
+                                visit(part, options);
+                            });
+                        }
                         break;
                     }
                 case syntax_1.Syntax.FunctionDeclaration:
                     {
                         var funcDecl = node;
-                        funcDecl.params.forEach(function (param, index) {
+                        funcDecl.params.forEach(function (param) {
                             visit(param, options);
                         });
                         visit(funcDecl.body, options);
@@ -9008,15 +9021,22 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                 case syntax_1.Syntax.Program:
                     {
                         var script = node;
-                        addInfiniteLoopProtection(script.body, options.timeout).forEach(function (node, index) {
-                            visit(node, options);
-                        });
+                        if (options.noLoopCheck) {
+                            script.body.forEach(function (node) {
+                                visit(node, options);
+                            });
+                        } else {
+                            var timeout = options.timeout;
+                            addInfiniteLoopProtection(script.body, timeout).forEach(function (node) {
+                                visit(node, options);
+                            });
+                        }
                         break;
                     }
                 case syntax_1.Syntax.VariableDeclaration:
                     {
                         var varDeclaration = node;
-                        varDeclaration.declarations.forEach(function (declaration, index) {
+                        varDeclaration.declarations.forEach(function (declaration) {
                             visit(declaration, options);
                         });
                         break;
@@ -9095,7 +9115,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                 case syntax_1.Syntax.ArrayExpression:
                     {
                         var arrayExpr = node;
-                        arrayExpr.elements.forEach(function (elem, index) {
+                        arrayExpr.elements.forEach(function (elem) {
                             visit(elem, options);
                         });
                         break;
@@ -9116,7 +9136,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var callExpr = node;
                         visit(callExpr.callee, options);
-                        callExpr.arguments.forEach(function (argument, index) {
+                        callExpr.arguments.forEach(function (argument) {
                             visit(argument, options);
                         });
                         break;
@@ -9126,6 +9146,13 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                         var catchClause = node;
                         visit(catchClause.param, options);
                         visit(catchClause.body, options);
+                        break;
+                    }
+                case syntax_1.Syntax.DoWhileStatement:
+                    {
+                        var doWhileStmt = node;
+                        visit(doWhileStmt.test, options);
+                        visit(doWhileStmt.body, options);
                         break;
                     }
                 case syntax_1.Syntax.FunctionExpression:
@@ -9150,7 +9177,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var newExpr = node;
                         visit(newExpr.callee, options);
-                        newExpr.arguments.forEach(function (argument, index) {
+                        newExpr.arguments.forEach(function (argument) {
                             visit(argument, options);
                         });
                         break;
@@ -9158,7 +9185,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                 case syntax_1.Syntax.ObjectExpression:
                     {
                         var objExpr = node;
-                        objExpr.properties.forEach(function (prop, index) {
+                        objExpr.properties.forEach(function (prop) {
                             visit(prop, options);
                         });
                         break;
@@ -9172,7 +9199,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                 case syntax_1.Syntax.SequenceExpression:
                     {
                         var seqExpr = node;
-                        seqExpr.expressions.forEach(function (expr, index) {
+                        seqExpr.expressions.forEach(function (expr) {
                             visit(expr, options);
                         });
                         break;
@@ -9181,7 +9208,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var switchCase = node;
                         visit(switchCase.test, options);
-                        switchCase.consequent.forEach(function (expr, index) {
+                        switchCase.consequent.forEach(function (expr) {
                             visit(expr, options);
                         });
                         break;
@@ -9190,7 +9217,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var switchStmt = node;
                         visit(switchStmt.discriminant, options);
-                        switchStmt.cases.forEach(function (kase, index) {
+                        switchStmt.cases.forEach(function (kase) {
                             visit(kase, options);
                         });
                         break;
@@ -9321,21 +9348,25 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
             return a + b;
         });
     }
+    exports_1("add", add);
     function sub(p, q) {
         return binEval(p, q, '__sub__', '__rsub__', function (a, b) {
             return a - b;
         });
     }
+    exports_1("sub", sub);
     function mul(p, q) {
         return binEval(p, q, '__mul__', '__rmul__', function (a, b) {
             return a * b;
         });
     }
+    exports_1("mul", mul);
     function div(p, q) {
         return binEval(p, q, '__div__', '__rdiv__', function (a, b) {
             return a / b;
         });
     }
+    exports_1("div", div);
     function mod(p, q) {
         return binEval(p, q, '__mod__', '__rmod__', function (a, b) {
             return a % b;
@@ -9366,31 +9397,37 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
             return a === b;
         });
     }
+    exports_1("eq", eq);
     function ne(p, q) {
         return binEval(p, q, '__ne__', '__rne__', function (a, b) {
             return a !== b;
         });
     }
+    exports_1("ne", ne);
     function ge(p, q) {
         return binEval(p, q, '__ge__', '__rge__', function (a, b) {
             return a >= b;
         });
     }
+    exports_1("ge", ge);
     function gt(p, q) {
         return binEval(p, q, '__gt__', '__rgt__', function (a, b) {
             return a > b;
         });
     }
+    exports_1("gt", gt);
     function le(p, q) {
         return binEval(p, q, '__le__', '__rle__', function (a, b) {
             return a <= b;
         });
     }
+    exports_1("le", le);
     function lt(p, q) {
         return binEval(p, q, '__lt__', '__rlt__', function (a, b) {
             return a < b;
         });
     }
+    exports_1("lt", lt);
     function exp(x) {
         if (specialMethod(x, '__exp__')) {
             return x['__exp__']();
@@ -9407,6 +9444,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
             return -x;
         }
     }
+    exports_1("neg", neg);
     function pos(x) {
         if (specialMethod(x, '__pos__')) {
             return x['__pos__']();
@@ -9414,6 +9452,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
             return +x;
         }
     }
+    exports_1("pos", pos);
     function bang(x) {
         if (specialMethod(x, '__bang__')) {
             return x['__bang__']();
@@ -9421,6 +9460,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
             return !x;
         }
     }
+    exports_1("bang", bang);
     function tilde(x) {
         if (specialMethod(x, '__tilde__')) {
             return x['__tilde__']();
@@ -9428,6 +9468,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
             return ~x;
         }
     }
+    exports_1("tilde", tilde);
     function parse(code, options, delegate) {
         return esprima_1.parse(code, options, delegate);
     }

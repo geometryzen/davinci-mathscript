@@ -61,8 +61,7 @@ define(["require", "exports", "./comment-handler", "./jsx-parser", "./parser", "
     exports.parseScript = parseScript;
     function tokenize(code, options, delegate) {
         var tokenizer = new tokenizer_1.Tokenizer(code, options);
-        var tokens;
-        tokens = [];
+        var tokens = [];
         try {
             while (true) {
                 var token = tokenizer.getNextToken();

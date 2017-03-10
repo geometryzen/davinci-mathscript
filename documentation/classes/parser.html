@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Parser | davinci-mathscript 1.2.1</title>
+	<title>Parser | davinci-mathscript 1.2.2</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">davinci-mathscript 1.2.1</a>
+					<a href="../index.html" class="title">davinci-mathscript 1.2.2</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -246,13 +246,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Parser<span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span>, delegate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="parser.html" class="tsd-signature-type">Parser</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Parser<span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span>, delegate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="parser.html" class="tsd-signature-type">Parser</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L90">parser.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L91">parser.ts:91</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -264,28 +264,7 @@
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 								</li>
 								<li>
-									<h5>delegate: <span class="tsd-signature-type">function</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-siganture">
-											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, metadata<span class="tsd-signature-symbol">: </span><a href="../interfaces/metadata.html" class="tsd-signature-type">MetaData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>node: <span class="tsd-signature-type">any</span></h5>
-														</li>
-														<li>
-															<h5>metadata: <a href="../interfaces/metadata.html" class="tsd-signature-type">MetaData</a></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
+									<h5>delegate: <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="parser.html" class="tsd-signature-type">Parser</a></h4>
@@ -301,7 +280,7 @@
 					<div class="tsd-signature tsd-kind-icon">config<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Config</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L78">parser.ts:78</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L79">parser.ts:79</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -311,43 +290,19 @@
 					<div class="tsd-signature tsd-kind-icon">context<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Context</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L87">parser.ts:87</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L88">parser.ts:88</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
 					<a name="delegate" class="tsd-anchor"></a>
 					<h3>delegate</h3>
-					<div class="tsd-signature tsd-kind-icon">delegate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<div class="tsd-signature tsd-kind-icon">delegate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L79">parser.ts:79</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L80">parser.ts:80</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-siganture">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, metadata<span class="tsd-signature-symbol">: </span><a href="../interfaces/metadata.html" class="tsd-signature-type">MetaData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-parameters-title">Parameters</h4>
-										<ul class="tsd-parameters">
-											<li>
-												<h5>node: <span class="tsd-signature-type">any</span></h5>
-											</li>
-											<li>
-												<h5>metadata: <a href="../interfaces/metadata.html" class="tsd-signature-type">MetaData</a></h5>
-											</li>
-										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
 					<a name="errorhandler" class="tsd-anchor"></a>
@@ -355,7 +310,7 @@
 					<div class="tsd-signature tsd-kind-icon">error<wbr>Handler<span class="tsd-signature-symbol">:</span> <a href="errorhandler.html" class="tsd-signature-type">ErrorHandler</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L80">parser.ts:80</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L81">parser.ts:81</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -365,7 +320,7 @@
 					<div class="tsd-signature tsd-kind-icon">has<wbr>Line<wbr>Terminator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L85">parser.ts:85</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L86">parser.ts:86</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -375,7 +330,7 @@
 					<div class="tsd-signature tsd-kind-icon">last<wbr>Marker<span class="tsd-signature-symbol">:</span> <a href="../interfaces/marker.html" class="tsd-signature-type">Marker</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L90">parser.ts:90</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L91">parser.ts:91</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -385,7 +340,7 @@
 					<div class="tsd-signature tsd-kind-icon">lookahead<span class="tsd-signature-symbol">:</span> <a href="../interfaces/rawtoken.html" class="tsd-signature-type">RawToken</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L84">parser.ts:84</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L85">parser.ts:85</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -395,7 +350,7 @@
 					<div class="tsd-signature tsd-kind-icon">operator<wbr>Precedence<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L82">parser.ts:82</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L83">parser.ts:83</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -413,7 +368,7 @@
 					<div class="tsd-signature tsd-kind-icon">scanner<span class="tsd-signature-symbol">:</span> <a href="scanner.html" class="tsd-signature-type">Scanner</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L81">parser.ts:81</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L82">parser.ts:82</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -423,7 +378,7 @@
 					<div class="tsd-signature tsd-kind-icon">start<wbr>Marker<span class="tsd-signature-symbol">:</span> <a href="../interfaces/marker.html" class="tsd-signature-type">Marker</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L89">parser.ts:89</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L90">parser.ts:90</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -433,7 +388,7 @@
 					<div class="tsd-signature tsd-kind-icon">tokens<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L88">parser.ts:88</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L89">parser.ts:89</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -450,7 +405,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1493">parser.ts:1493</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1504">parser.ts:1504</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -473,7 +428,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1591">parser.ts:1591</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1602">parser.ts:1602</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -499,7 +454,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L266">parser.ts:266</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L268">parser.ts:268</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -516,7 +471,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L595">parser.ts:595</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L597">parser.ts:597</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -533,7 +488,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L309">parser.ts:309</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L311">parser.ts:311</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -556,7 +511,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L389">parser.ts:389</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L391">parser.ts:391</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/marker.html" class="tsd-signature-type">Marker</a></h4>
@@ -573,7 +528,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L448">parser.ts:448</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L450">parser.ts:450</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -596,7 +551,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L457">parser.ts:457</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L459">parser.ts:459</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -613,7 +568,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L476">parser.ts:476</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L478">parser.ts:478</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -636,7 +591,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L405">parser.ts:405</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L407">parser.ts:407</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -662,7 +617,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L305">parser.ts:305</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L307">parser.ts:307</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -685,7 +640,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L577">parser.ts:577</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L579">parser.ts:579</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -708,7 +663,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1190">parser.ts:1190</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1201">parser.ts:1201</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -731,7 +686,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1914">parser.ts:1914</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1925">parser.ts:1925</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -748,7 +703,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L838">parser.ts:838</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L840">parser.ts:840</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -774,7 +729,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3165">parser.ts:3165</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3185">parser.ts:3185</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -791,7 +746,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L556">parser.ts:556</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L558">parser.ts:558</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -808,19 +763,19 @@
 					<a name="match" class="tsd-anchor"></a>
 					<h3>match</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">match<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">match<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L485">parser.ts:485</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L487">parser.ts:487</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>value: <span class="tsd-signature-type">any</span></h5>
+									<h5>value: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -837,7 +792,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L504">parser.ts:504</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L506">parser.ts:506</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -854,7 +809,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2894">parser.ts:2894</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2914">parser.ts:2914</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -871,7 +826,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L498">parser.ts:498</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L500">parser.ts:500</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -894,7 +849,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1262">parser.ts:1262</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1273">parser.ts:1273</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -911,7 +866,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L491">parser.ts:491</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L493">parser.ts:493</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -934,7 +889,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L370">parser.ts:370</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L372">parser.ts:372</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/rawtoken.html" class="tsd-signature-type">RawToken</a></h4>
@@ -951,7 +906,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L338">parser.ts:338</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L340">parser.ts:340</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/rawtoken.html" class="tsd-signature-type">RawToken</a></h4>
@@ -968,7 +923,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1168">parser.ts:1168</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1179">parser.ts:1179</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.ArgumentListElement</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -985,7 +940,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L721">parser.ts:721</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L723">parser.ts:723</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="arrayexpression.html" class="tsd-signature-type">ArrayExpression</a></h4>
@@ -996,13 +951,13 @@
 					<a name="parsearraypattern" class="tsd-anchor"></a>
 					<h3>parse<wbr>Array<wbr>Pattern</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Array<wbr>Pattern<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="arraypattern.html" class="tsd-signature-type">ArrayPattern</a></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Array<wbr>Pattern<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="arraypattern.html" class="tsd-signature-type">ArrayPattern</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1949">parser.ts:1949</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1960">parser.ts:1960</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1011,7 +966,7 @@
 									<h5>params: <span class="tsd-signature-type">any</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="arraypattern.html" class="tsd-signature-type">ArrayPattern</a></h4>
@@ -1028,7 +983,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1685">parser.ts:1685</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1696">parser.ts:1696</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span></h4>
@@ -1045,7 +1000,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1234">parser.ts:1234</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1245">parser.ts:1245</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="arrayexpression.html" class="tsd-signature-type">ArrayExpression</a>
@@ -1109,7 +1064,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1240">parser.ts:1240</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1251">parser.ts:1251</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.ArgumentListElement</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -1126,7 +1081,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1438">parser.ts:1438</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1449">parser.ts:1449</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="awaitexpression.html" class="tsd-signature-type">AwaitExpression</a></h4>
@@ -1143,7 +1098,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1506">parser.ts:1506</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1517">parser.ts:1517</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span></h4>
@@ -1154,19 +1109,19 @@
 					<a name="parsebindinglist" class="tsd-anchor"></a>
 					<h3>parse<wbr>Binding<wbr>List</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Binding<wbr>List<span class="tsd-signature-symbol">(</span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="variabledeclarator.html" class="tsd-signature-type">VariableDeclarator</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Binding<wbr>List<span class="tsd-signature-symbol">(</span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="variabledeclarator.html" class="tsd-signature-type">VariableDeclarator</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1903">parser.ts:1903</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1914">parser.ts:1914</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>kind: <span class="tsd-signature-type">string</span></h5>
+									<h5>kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span></h5>
 								</li>
 								<li>
 									<h5>options: <span class="tsd-signature-type">any</span></h5>
@@ -1180,13 +1135,13 @@
 					<a name="parsebindingrestelement" class="tsd-anchor"></a>
 					<h3>parse<wbr>Binding<wbr>Rest<wbr>Element</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Binding<wbr>Rest<wbr>Element<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="restelement.html" class="tsd-signature-type">RestElement</a></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Binding<wbr>Rest<wbr>Element<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="restelement.html" class="tsd-signature-type">RestElement</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1940">parser.ts:1940</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1951">parser.ts:1951</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1195,7 +1150,7 @@
 									<h5>params: <span class="tsd-signature-type">any</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="restelement.html" class="tsd-signature-type">RestElement</a></h4>
@@ -1212,7 +1167,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1856">parser.ts:1856</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1867">parser.ts:1867</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="blockstatement.html" class="tsd-signature-type">BlockStatement</a></h4>
@@ -1229,7 +1184,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2430">parser.ts:2430</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2450">parser.ts:2450</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="breakstatement.html" class="tsd-signature-type">BreakStatement</a></h4>
@@ -1246,7 +1201,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2618">parser.ts:2618</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2638">parser.ts:2638</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="catchclause.html" class="tsd-signature-type">CatchClause</a></h4>
@@ -1263,7 +1218,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3334">parser.ts:3334</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3354">parser.ts:3354</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="classbody.html" class="tsd-signature-type">ClassBody</a></h4>
@@ -1280,7 +1235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3341">parser.ts:3341</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3361">parser.ts:3361</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1303,7 +1258,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3216">parser.ts:3216</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3236">parser.ts:3236</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1326,7 +1281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3317">parser.ts:3317</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3337">parser.ts:3337</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="property.html" class="tsd-signature-type">Property</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -1343,7 +1298,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3360">parser.ts:3360</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3380">parser.ts:3380</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="classexpression.html" class="tsd-signature-type">ClassExpression</a></h4>
@@ -1360,7 +1315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1566">parser.ts:1566</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1577">parser.ts:1577</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span></h4>
@@ -1377,7 +1332,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2405">parser.ts:2405</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2425">parser.ts:2425</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="continuestatement.html" class="tsd-signature-type">ContinueStatement</a></h4>
@@ -1394,7 +1349,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2673">parser.ts:2673</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2693">parser.ts:2693</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="debuggerstatement.html" class="tsd-signature-type">DebuggerStatement</a></h4>
@@ -1411,7 +1366,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3049">parser.ts:3049</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3069">parser.ts:3069</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="directive.html" class="tsd-signature-type">Directive</a>
@@ -1431,7 +1386,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3060">parser.ts:3060</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3080">parser.ts:3080</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Statement</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -1448,7 +1403,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2201">parser.ts:2201</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2217">parser.ts:2217</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="dowhilestatement.html" class="tsd-signature-type">DoWhileStatement</a></h4>
@@ -1465,7 +1420,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2151">parser.ts:2151</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2167">parser.ts:2167</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="emptystatement.html" class="tsd-signature-type">EmptyStatement</a></h4>
@@ -1482,7 +1437,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1468">parser.ts:1468</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1479">parser.ts:1479</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span></h4>
@@ -1499,7 +1454,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3544">parser.ts:3544</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3564">parser.ts:3564</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.ExportDeclaration</span></h4>
@@ -1516,7 +1471,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3531">parser.ts:3531</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3551">parser.ts:3551</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="exportspecifier.html" class="tsd-signature-type">ExportSpecifier</a></h4>
@@ -1533,7 +1488,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1788">parser.ts:1788</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1799">parser.ts:1799</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span>
@@ -1553,7 +1508,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2159">parser.ts:2159</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2175">parser.ts:2175</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="expressionstatement.html" class="tsd-signature-type">ExpressionStatement</a></h4>
@@ -1570,7 +1525,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2651">parser.ts:2651</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2671">parser.ts:2671</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="blockstatement.html" class="tsd-signature-type">BlockStatement</a></h4>
@@ -1587,7 +1542,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2254">parser.ts:2254</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2270">parser.ts:2270</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="forstatement.html" class="tsd-signature-type">ForStatement</a>
@@ -1609,7 +1564,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2850">parser.ts:2850</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2870">parser.ts:2870</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1632,7 +1587,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2860">parser.ts:2860</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2880">parser.ts:2880</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1657,7 +1612,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2908">parser.ts:2908</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2928">parser.ts:2928</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1683,7 +1638,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2978">parser.ts:2978</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2998">parser.ts:2998</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="asyncfunctionexpression.html" class="tsd-signature-type">AsyncFunctionExpression</a>
@@ -1703,7 +1658,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2770">parser.ts:2770</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2790">parser.ts:2790</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="blockstatement.html" class="tsd-signature-type">BlockStatement</a></h4>
@@ -1720,7 +1675,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3148">parser.ts:3148</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3168">parser.ts:3168</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="functionexpression.html" class="tsd-signature-type">FunctionExpression</a></h4>
@@ -1737,7 +1692,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3114">parser.ts:3114</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3134">parser.ts:3134</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="functionexpression.html" class="tsd-signature-type">FunctionExpression</a></h4>
@@ -1754,7 +1709,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1041">parser.ts:1041</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1052">parser.ts:1052</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ArrowParameterPlaceHolderNode</span>
@@ -1774,7 +1729,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1197">parser.ts:1197</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1208">parser.ts:1208</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="identifier.html" class="tsd-signature-type">Identifier</a></h4>
@@ -1791,7 +1746,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2168">parser.ts:2168</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2184">parser.ts:2184</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Statement</span></h4>
@@ -1808,7 +1763,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2175">parser.ts:2175</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2191">parser.ts:2191</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="ifstatement.html" class="tsd-signature-type">IfStatement</a></h4>
@@ -1825,7 +1780,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1275">parser.ts:1275</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1286">parser.ts:1286</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="import.html" class="tsd-signature-type">Import</a></h4>
@@ -1842,7 +1797,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3478">parser.ts:3478</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3498">parser.ts:3498</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="importdeclaration.html" class="tsd-signature-type">ImportDeclaration</a></h4>
@@ -1859,7 +1814,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3458">parser.ts:3458</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3478">parser.ts:3478</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="importdefaultspecifier.html" class="tsd-signature-type">ImportDefaultSpecifier</a></h4>
@@ -1876,7 +1831,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3465">parser.ts:3465</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3485">parser.ts:3485</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="importnamespacespecifier.html" class="tsd-signature-type">ImportNamespaceSpecifier</a></h4>
@@ -1893,7 +1848,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3416">parser.ts:3416</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3436">parser.ts:3436</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="importspecifier.html" class="tsd-signature-type">ImportSpecifier</a></h4>
@@ -1910,7 +1865,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2558">parser.ts:2558</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2578">parser.ts:2578</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="labeledstatement.html" class="tsd-signature-type">LabeledStatement</a>
@@ -1930,7 +1885,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1359">parser.ts:1359</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1370">parser.ts:1370</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span></h4>
@@ -1947,7 +1902,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1281">parser.ts:1281</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1292">parser.ts:1292</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span></h4>
@@ -1958,19 +1913,19 @@
 					<a name="parselexicalbinding" class="tsd-anchor"></a>
 					<h3>parse<wbr>Lexical<wbr>Binding</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Lexical<wbr>Binding<span class="tsd-signature-symbol">(</span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="variabledeclarator.html" class="tsd-signature-type">VariableDeclarator</a></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Lexical<wbr>Binding<span class="tsd-signature-symbol">(</span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="variabledeclarator.html" class="tsd-signature-type">VariableDeclarator</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1874">parser.ts:1874</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1885">parser.ts:1885</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>kind: <span class="tsd-signature-type">string</span></h5>
+									<h5>kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span></h5>
 								</li>
 								<li>
 									<h5>options: <span class="tsd-signature-type">any</span></h5>
@@ -1990,7 +1945,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1927">parser.ts:1927</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1938">parser.ts:1938</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2013,7 +1968,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3381">parser.ts:3381</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3401">parser.ts:3401</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="module.html" class="tsd-signature-type">Module</a></h4>
@@ -2030,7 +1985,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3403">parser.ts:3403</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3423">parser.ts:3423</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="literal.html" class="tsd-signature-type">Literal</a></h4>
@@ -2047,7 +2002,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3443">parser.ts:3443</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3463">parser.ts:3463</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="importspecifier.html" class="tsd-signature-type">ImportSpecifier</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -2064,7 +2019,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1206">parser.ts:1206</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1217">parser.ts:1217</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="metaproperty.html" class="tsd-signature-type">MetaProperty</a>
@@ -2084,7 +2039,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L938">parser.ts:938</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L949">parser.ts:949</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="objectexpression.html" class="tsd-signature-type">ObjectExpression</a></h4>
@@ -2095,13 +2050,13 @@
 					<a name="parseobjectpattern" class="tsd-anchor"></a>
 					<h3>parse<wbr>Object<wbr>Pattern</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Object<wbr>Pattern<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="objectpattern.html" class="tsd-signature-type">ObjectPattern</a></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Object<wbr>Pattern<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="objectpattern.html" class="tsd-signature-type">ObjectPattern</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2027">parser.ts:2027</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2039">parser.ts:2039</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2110,7 +2065,7 @@
 									<h5>params: <span class="tsd-signature-type">any</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="objectpattern.html" class="tsd-signature-type">ObjectPattern</a></h4>
@@ -2127,7 +2082,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L843">parser.ts:843</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L845">parser.ts:845</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2150,7 +2105,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L800">parser.ts:800</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L802">parser.ts:802</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.PropertyKey</span></h4>
@@ -2161,13 +2116,13 @@
 					<a name="parsepattern" class="tsd-anchor"></a>
 					<h3>parse<wbr>Pattern</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Pattern<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node.BindingIdentifier</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Node.BindingPattern</span></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Pattern<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node.BindingIdentifier</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Node.BindingPattern</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2043">parser.ts:2043</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2055">parser.ts:2055</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2176,7 +2131,7 @@
 									<h5>params: <span class="tsd-signature-type">any</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.BindingIdentifier</span>
@@ -2190,13 +2145,13 @@
 					<a name="parsepatternwithdefault" class="tsd-anchor"></a>
 					<h3>parse<wbr>Pattern<wbr>With<wbr>Default</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Pattern<wbr>With<wbr>Default<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="assignmentpattern.html" class="tsd-signature-type">AssignmentPattern</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Node.BindingIdentifier</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Node.BindingPattern</span></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Pattern<wbr>With<wbr>Default<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="assignmentpattern.html" class="tsd-signature-type">AssignmentPattern</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Node.BindingIdentifier</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Node.BindingPattern</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2061">parser.ts:2061</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2073">parser.ts:2073</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2205,7 +2160,7 @@
 									<h5>params: <span class="tsd-signature-type">any</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="assignmentpattern.html" class="tsd-signature-type">AssignmentPattern</a>
@@ -2227,7 +2182,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L610">parser.ts:610</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L612">parser.ts:612</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span></h4>
@@ -2244,7 +2199,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L752">parser.ts:752</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L754">parser.ts:754</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2267,7 +2222,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L785">parser.ts:785</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L787">parser.ts:787</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="functionexpression.html" class="tsd-signature-type">FunctionExpression</a></h4>
@@ -2284,7 +2239,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L772">parser.ts:772</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L774">parser.ts:774</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="functionexpression.html" class="tsd-signature-type">FunctionExpression</a></h4>
@@ -2295,13 +2250,13 @@
 					<a name="parsepropertypattern" class="tsd-anchor"></a>
 					<h3>parse<wbr>Property<wbr>Pattern</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Property<wbr>Pattern<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="property.html" class="tsd-signature-type">Property</a></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Property<wbr>Pattern<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="property.html" class="tsd-signature-type">Property</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1976">parser.ts:1976</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1987">parser.ts:1987</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2310,7 +2265,7 @@
 									<h5>params: <span class="tsd-signature-type">any</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="property.html" class="tsd-signature-type">Property</a></h4>
@@ -2327,7 +2282,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2835">parser.ts:2835</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2855">parser.ts:2855</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2344,13 +2299,13 @@
 					<a name="parserestproperty" class="tsd-anchor"></a>
 					<h3>parse<wbr>Rest<wbr>Property</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Rest<wbr>Property<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="restproperty.html" class="tsd-signature-type">RestProperty</a></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Rest<wbr>Property<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="restproperty.html" class="tsd-signature-type">RestProperty</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2014">parser.ts:2014</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2026">parser.ts:2026</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2359,7 +2314,7 @@
 									<h5>params: <span class="tsd-signature-type">any</span></h5>
 								</li>
 								<li>
-									<h5>kind: <span class="tsd-signature-type">any</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="restproperty.html" class="tsd-signature-type">RestProperty</a></h4>
@@ -2376,7 +2331,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2455">parser.ts:2455</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2475">parser.ts:2475</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="returnstatement.html" class="tsd-signature-type">ReturnStatement</a></h4>
@@ -2393,7 +2348,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3392">parser.ts:3392</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3412">parser.ts:3412</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="script.html" class="tsd-signature-type">Script</a></h4>
@@ -2410,7 +2365,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3130">parser.ts:3130</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3150">parser.ts:3150</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="functionexpression.html" class="tsd-signature-type">FunctionExpression</a></h4>
@@ -2427,7 +2382,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L714">parser.ts:714</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L716">parser.ts:716</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="spreadelement.html" class="tsd-signature-type">SpreadElement</a></h4>
@@ -2444,7 +2399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L931">parser.ts:931</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L942">parser.ts:942</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="spreadproperty.html" class="tsd-signature-type">SpreadProperty</a></h4>
@@ -2461,7 +2416,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2682">parser.ts:2682</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2702">parser.ts:2702</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Statement</span></h4>
@@ -2478,7 +2433,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1811">parser.ts:1811</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1822">parser.ts:1822</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.StatementListItem</span></h4>
@@ -2495,7 +2450,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1348">parser.ts:1348</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1359">parser.ts:1359</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="super.html" class="tsd-signature-type">Super</a></h4>
@@ -2512,7 +2467,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2498">parser.ts:2498</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2518">parser.ts:2518</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="switchcase.html" class="tsd-signature-type">SwitchCase</a></h4>
@@ -2529,7 +2484,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2522">parser.ts:2522</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2542">parser.ts:2542</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="switchstatement.html" class="tsd-signature-type">SwitchStatement</a></h4>
@@ -2546,7 +2501,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L968">parser.ts:968</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L979">parser.ts:979</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="templateelement.html" class="tsd-signature-type">TemplateElement</a></h4>
@@ -2563,7 +2518,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L957">parser.ts:957</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L968">parser.ts:968</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="templateelement.html" class="tsd-signature-type">TemplateElement</a></h4>
@@ -2580,7 +2535,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L981">parser.ts:981</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L992">parser.ts:992</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="templateliteral.html" class="tsd-signature-type">TemplateLiteral</a></h4>
@@ -2597,7 +2552,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2602">parser.ts:2602</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2622">parser.ts:2622</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="throwstatement.html" class="tsd-signature-type">ThrowStatement</a></h4>
@@ -2614,7 +2569,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2656">parser.ts:2656</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2676">parser.ts:2676</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="trystatement.html" class="tsd-signature-type">TryStatement</a></h4>
@@ -2631,7 +2586,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1445">parser.ts:1445</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1456">parser.ts:1456</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span></h4>
@@ -2648,7 +2603,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1396">parser.ts:1396</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1407">parser.ts:1407</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node.Expression</span></h4>
@@ -2665,7 +2620,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2104">parser.ts:2104</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2120">parser.ts:2120</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2688,7 +2643,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2127">parser.ts:2127</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2143">parser.ts:2143</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2705,19 +2660,19 @@
 					<a name="parsevariableidentifier" class="tsd-anchor"></a>
 					<h3>parse<wbr>Variable<wbr>Identifier</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Variable<wbr>Identifier<span class="tsd-signature-symbol">(</span>kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="identifier.html" class="tsd-signature-type">Identifier</a></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Variable<wbr>Identifier<span class="tsd-signature-symbol">(</span>kind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="identifier.html" class="tsd-signature-type">Identifier</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2079">parser.ts:2079</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2091">parser.ts:2091</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> kind: <span class="tsd-signature-type">"const"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"let"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"var"</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="identifier.html" class="tsd-signature-type">Identifier</a></h4>
@@ -2734,7 +2689,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2140">parser.ts:2140</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2156">parser.ts:2156</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="variabledeclaration.html" class="tsd-signature-type">VariableDeclaration</a></h4>
@@ -2751,7 +2706,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2228">parser.ts:2228</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2244">parser.ts:2244</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="whilestatement.html" class="tsd-signature-type">WhileStatement</a></h4>
@@ -2768,7 +2723,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2473">parser.ts:2473</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2493">parser.ts:2493</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="withstatement.html" class="tsd-signature-type">WithStatement</a></h4>
@@ -2785,7 +2740,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3192">parser.ts:3192</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3212">parser.ts:3212</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="yieldexpression.html" class="tsd-signature-type">YieldExpression</a></h4>
@@ -2802,7 +2757,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L3097">parser.ts:3097</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L3117">parser.ts:3117</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2825,7 +2780,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1622">parser.ts:1622</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1633">parser.ts:1633</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2850,7 +2805,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L1000">parser.ts:1000</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L1011">parser.ts:1011</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2873,7 +2828,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L397">parser.ts:397</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L399">parser.ts:399</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2896,7 +2851,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L186">parser.ts:186</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L187">parser.ts:187</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2922,7 +2877,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L258">parser.ts:258</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L260">parser.ts:260</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2948,7 +2903,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L200">parser.ts:200</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L201">parser.ts:201</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2974,7 +2929,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L262">parser.ts:262</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L264">parser.ts:264</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2994,19 +2949,19 @@
 					<a name="unexpectedtokenerror" class="tsd-anchor"></a>
 					<h3>unexpected<wbr>Token<wbr>Error</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">unexpected<wbr>Token<wbr>Error<span class="tsd-signature-symbol">(</span>token<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span>, message<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Error</span></li>
+						<li class="tsd-signature tsd-kind-icon">unexpected<wbr>Token<wbr>Error<span class="tsd-signature-symbol">(</span>token<span class="tsd-signature-symbol">?: </span><a href="../interfaces/itoken.html" class="tsd-signature-type">IToken</a>, message<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Error</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L215">parser.ts:215</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L216">parser.ts:216</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> token: <span class="tsd-signature-type">any</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> token: <a href="../interfaces/itoken.html" class="tsd-signature-type">IToken</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> message: <span class="tsd-signature-type">string</span></h5>
@@ -3026,7 +2981,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/b9174c4/src/parser.ts#L2803">parser.ts:2803</a></li>
+									<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/0ec69dd/src/parser.ts#L2823">parser.ts:2823</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>

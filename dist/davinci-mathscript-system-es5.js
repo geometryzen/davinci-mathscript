@@ -9062,7 +9062,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var binExpr = node;
                         var callExpr = node;
-                        if (binExpr.operator && binOp[binExpr.operator]) {
+                        if (options.operatorOverloading && binExpr.operator && binOp[binExpr.operator]) {
                             callExpr.type = syntax_1.Syntax.CallExpression;
                             callExpr.callee = {
                                 type: syntax_1.Syntax.MemberExpression,
@@ -9123,7 +9123,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                 case syntax_1.Syntax.AssignmentExpression:
                     {
                         var assignExpr = node;
-                        if (assignExpr.operator && binOp[assignExpr.operator]) {
+                        if (options.operatorOverloading && assignExpr.operator && binOp[assignExpr.operator]) {
                             visit(assignExpr.left, options);
                             visit(assignExpr.right, options);
                         } else {
@@ -9240,7 +9240,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var unaryExpr = node;
                         var callExpr = node;
-                        if (unaryExpr.operator && unaryOp[unaryExpr.operator]) {
+                        if (options.operatorOverloading && unaryExpr.operator && unaryOp[unaryExpr.operator]) {
                             callExpr.type = syntax_1.Syntax.CallExpression;
                             callExpr.callee = {
                                 type: syntax_1.Syntax.MemberExpression,
@@ -9265,7 +9265,7 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
                     {
                         var updateExpr = node;
                         var callExpr = node;
-                        if (updateExpr.operator && unaryOp[updateExpr.operator]) {
+                        if (options.operatorOverloading && updateExpr.operator && unaryOp[updateExpr.operator]) {
                             callExpr.type = syntax_1.Syntax.CallExpression;
                             callExpr.callee = {
                                 type: syntax_1.Syntax.MemberExpression,

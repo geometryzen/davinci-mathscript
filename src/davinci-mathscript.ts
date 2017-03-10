@@ -81,6 +81,7 @@ const unaryOp = {
 interface TranspileOptions extends ParseOptions {
     timeout?: number;
     noLoopCheck?: boolean;
+    operatorOverloading?: boolean;
 }
 
 function transpileTree(code: string, options: TranspileOptions = {}) {
@@ -185,7 +186,7 @@ function visit(node: { type: string } | null, options: TranspileOptions) {
             case Syntax.LogicalExpression: {
                 const binExpr = <BinaryExpression>node;
                 const callExpr = <CallExpression>node;
-                if (binExpr.operator && binOp[binExpr.operator]) {
+                if (options.operatorOverloading && binExpr.operator && binOp[binExpr.operator]) {
                     callExpr.type = Syntax.CallExpression;
                     callExpr.callee = {
                         type: Syntax.MemberExpression,
@@ -239,7 +240,7 @@ function visit(node: { type: string } | null, options: TranspileOptions) {
             }
             case Syntax.AssignmentExpression: {
                 const assignExpr = <AssignmentExpression>node;
-                if (assignExpr.operator && binOp[assignExpr.operator]) {
+                if (options.operatorOverloading && assignExpr.operator && binOp[assignExpr.operator]) {
                     visit(assignExpr.left, options);
                     visit(assignExpr.right, options);
                 }
@@ -331,7 +332,7 @@ function visit(node: { type: string } | null, options: TranspileOptions) {
             case Syntax.UnaryExpression: {
                 const unaryExpr = <UnaryExpression>node;
                 const callExpr = <CallExpression>node;
-                if (unaryExpr.operator && unaryOp[unaryExpr.operator]) {
+                if (options.operatorOverloading && unaryExpr.operator && unaryOp[unaryExpr.operator]) {
                     callExpr.type = Syntax.CallExpression;
                     callExpr.callee = {
                         type: Syntax.MemberExpression,
@@ -356,7 +357,7 @@ function visit(node: { type: string } | null, options: TranspileOptions) {
             case Syntax.UpdateExpression: {
                 const updateExpr = <UpdateExpression>node;
                 const callExpr = <CallExpression>node;
-                if (updateExpr.operator && unaryOp[updateExpr.operator]) {
+                if (options.operatorOverloading && updateExpr.operator && unaryOp[updateExpr.operator]) {
                     callExpr.type = Syntax.CallExpression;
                     callExpr.callee = {
                         type: Syntax.MemberExpression,

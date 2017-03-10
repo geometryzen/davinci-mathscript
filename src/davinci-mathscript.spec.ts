@@ -224,7 +224,7 @@ describe("MathScript", function () {
                 expect(program.type).toBe(Syntax.Program);
                 expect(program.body[0].type).toBe(Syntax.ExpressionStatement);
                 expect((<ExpressionStatement>program.body[0]).expression.type).toBe(Syntax.Literal);
-                const code = transpile(src);
+                const code = transpile(src, { operatorOverloading: true });
                 expect(code).toBe("42;");
             });
         });
@@ -237,7 +237,7 @@ describe("MathScript", function () {
                     expect(program.type).toBe(Syntax.Program);
                     expect(program.body[0].type).toBe(Syntax.ExpressionStatement);
                     expect((<ExpressionStatement>program.body[0]).expression.type).toBe(Syntax.Literal);
-                    const code = transpile(src);
+                    const code = transpile(src, { operatorOverloading: true });
                     expect(code).toBe("23;");
                 });
                 it("string", function () {
@@ -246,7 +246,7 @@ describe("MathScript", function () {
                     expect(program.type).toBe(Syntax.Program);
                     expect(program.body[0].type).toBe(Syntax.ExpressionStatement);
                     expect((<ExpressionStatement>program.body[0]).expression.type).toBe(Syntax.Literal);
-                    const code = transpile(src);
+                    const code = transpile(src, { operatorOverloading: true });
                     expect(code).toBe("'Hello';");
                 });
                 it("boolean", function () {
@@ -255,7 +255,7 @@ describe("MathScript", function () {
                     expect(program.type).toBe(Syntax.Program);
                     expect(program.body[0].type).toBe(Syntax.ExpressionStatement);
                     expect((<ExpressionStatement>program.body[0]).expression.type).toBe(Syntax.Literal);
-                    const code = transpile(src);
+                    const code = transpile(src, { operatorOverloading: true });
                     expect(code).toBe("true;");
                 });
             });
@@ -263,45 +263,45 @@ describe("MathScript", function () {
 
         describe("BinaryExpression", function () {
             it("+ Addition", function () {
-                const code = transpile("a + b");
+                const code = transpile("a + b", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.add(a, b);");
             });
             it("- Subtraction", function () {
-                const code = transpile("a - b");
+                const code = transpile("a - b", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.sub(a, b);");
             });
             it("* Multiplication", function () {
-                const code = transpile("a * b");
+                const code = transpile("a * b", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.mul(a, b);");
             });
             it("/ Division", function () {
-                const code = transpile("a / b");
+                const code = transpile("a / b", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.div(a, b);");
             });
             it("<< Left Shift", function () {
-                const code = transpile("a << b");
+                const code = transpile("a << b", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.lshift(a, b);");
             });
             it(">> Right Shift", function () {
-                const code = transpile("a >> b");
+                const code = transpile("a >> b", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.rshift(a, b);");
             });
             it("^ Wedge", function () {
-                const code = transpile("a ^ b");
+                const code = transpile("a ^ b", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.wedge(a, b);");
             });
         });
 
         describe("ConditionalExpression", function () {
             it("", function () {
-                const code = transpile("hex.length === 1 ? '0' + hex : '' + hex;");
+                const code = transpile("hex.length === 1 ? '0' + hex : '' + hex;", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.eq(hex.length, 1) ? Ms.add('0', hex) : Ms.add('', hex);");
             });
         });
 
         describe("ForInStatement", function () {
             it("", function () {
-                const code = transpile("for (var x in a + b) {x + y}");
+                const code = transpile("for (var x in a + b) {x + y}", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("for (var x in Ms.add(a, b)) {Ms.add(x, y); }");
             });
         });
@@ -312,7 +312,7 @@ describe("MathScript", function () {
                 const program = parse(src);
                 expect(program.type).toBe("Program");
                 expect(program.body[0].type).toBe("ForStatement");
-                const code = transpile(src, { noLoopCheck: true });
+                const code = transpile(src, { noLoopCheck: true, operatorOverloading: true });
                 expect(stripWS(code)).toBe("for (var x = 0; Ms.lt(x, 10); x++) {z = Ms.add(x, 1); }");
             });
             it("noLoopCheck: false", function () {
@@ -320,85 +320,85 @@ describe("MathScript", function () {
                 const program = parse(src);
                 expect(program.type).toBe("Program");
                 expect(program.body[0].type).toBe("ForStatement");
-                const code = transpile(src, { noLoopCheck: false });
+                const code = transpile(src, { noLoopCheck: false, operatorOverloading: true });
                 expect(stripWS(code)).not.toBe("for (var x = 0; Ms.lt(x, 10); x++) {z = Ms.add(x, 1); }");
             });
         });
 
         describe("LogicalExpression", function () {
             it("eq", function () {
-                const code = transpile("a === b");
+                const code = transpile("a === b", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.eq(a, b);");
             });
             it("ne", function () {
-                const code = transpile("a !== b");
+                const code = transpile("a !== b", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.ne(a, b);");
             });
             it("lt", function () {
-                const code = transpile("a < b;");
+                const code = transpile("a < b;", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.lt(a, b);");
             });
             it("le", function () {
-                const code = transpile("a <= b;");
+                const code = transpile("a <= b;", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.le(a, b);");
             });
             it("gt", function () {
-                const code = transpile("a > b;");
+                const code = transpile("a > b;", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.gt(a, b);");
             });
             it("ge", function () {
-                const code = transpile("a >= b;");
+                const code = transpile("a >= b;", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("Ms.ge(a, b);");
             });
             it("const x = (p/q) < (a|b);", function () {
-                const code = transpile("const x = (p/q) < (a|b);");
+                const code = transpile("const x = (p/q) < (a|b);", { operatorOverloading: true });
                 expect(stripWS(code)).toBe("const x = Ms.lt(Ms.div(p, q), Ms.vbar(a, b));");
             });
         });
 
         describe("Precedence", function () {
             it("a << b ^ c", function () {
-                var code = transpile("a << b ^ c");
+                var code = transpile("a << b ^ c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(Ms.lshift(a, b), c);");
             });
             it("a ^ b << c", function () {
-                var code = transpile("a ^ b << c");
+                var code = transpile("a ^ b << c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(a, Ms.lshift(b, c));");
             });
 
             it("a >> b ^ c", function () {
-                var code = transpile("a >> b ^ c");
+                var code = transpile("a >> b ^ c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(Ms.rshift(a, b), c);");
             });
             it("a ^ b >> c", function () {
-                var code = transpile("a ^ b >> c");
+                var code = transpile("a ^ b >> c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(a, Ms.rshift(b, c));");
             });
 
             it("a | b ^ c", function () {
-                var code = transpile("a | b ^ c");
+                var code = transpile("a | b ^ c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(Ms.vbar(a, b), c);");
             });
             it("a ^ b | c", function () {
-                var code = transpile("a ^ b | c");
+                var code = transpile("a ^ b | c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(a, Ms.vbar(b, c));");
             });
 
             it("a ^ b * c", function () {
-                var code = transpile("a ^ b * c");
+                var code = transpile("a ^ b * c", { operatorOverloading: true });
                 expect(code).toBe("Ms.mul(Ms.wedge(a, b), c);");
             });
             it("a * b ^ c", function () {
-                var code = transpile("a * b ^ c");
+                var code = transpile("a * b ^ c", { operatorOverloading: true });
                 expect(code).toBe("Ms.mul(a, Ms.wedge(b, c));");
             });
 
             it("a * b + c", function () {
-                var code = transpile("a * b + c");
+                var code = transpile("a * b + c", { operatorOverloading: true });
                 expect(code).toBe("Ms.add(Ms.mul(a, b), c);");
             });
             it("a + b * c", function () {
-                var code = transpile("a + b * c");
+                var code = transpile("a + b * c", { operatorOverloading: true });
                 expect(code).toBe("Ms.add(a, Ms.mul(b, c));");
             });
         });
@@ -406,102 +406,160 @@ describe("MathScript", function () {
         describe("BreakStatement", function () {
             it("should be preserved", function () {
                 var sourceCode = "switch (x) { case 1: {}break; }";
-                var code = transpile(sourceCode);
+                var code = transpile(sourceCode, { operatorOverloading: true });
                 expect(stripWS(code)).toBe(sourceCode);
             });
         });
 
         describe("CallExpression", function () {
             it("should transpile its arguments", function () {
-                var code = transpile("f(2+3)");
+                var code = transpile("f(2+3)", { operatorOverloading: true });
                 expect(code).toBe("f(Ms.add(2, 3));");
             });
         });
 
         describe("DoWhileStatement", function () {
             it("noLoopCheck: true", function () {
-                const code = transpile("do {z = x * y; } while (a + b)", { noLoopCheck: true });
+                const code = transpile("do {z = x * y; } while (a + b)", { noLoopCheck: true, operatorOverloading: true });
                 expect(stripWS(code)).toBe("do {z = Ms.mul(x, y); } while (Ms.add(a, b));");
             });
             it("noLoopCheck: false", function () {
-                const code = transpile("do {z = x * y; } while (a + b)", { noLoopCheck: false });
+                const code = transpile("do {z = x * y; } while (a + b)", { noLoopCheck: false, operatorOverloading: true });
                 expect(stripWS(code)).not.toBe("do {z = Ms.mul(x, y); } while (Ms.add(a, b));");
             });
         });
 
         it("EmptyStatement ';;'", function () {
-            var code = transpile("; ;");
+            const code = transpile("; ;", { operatorOverloading: true });
             expect(stripWS(code)).toBe("; ;");
         });
 
         it("IfStatement", function () {
-            var code = transpile("if (1+2)\n    2+3\nelse\n    3+4");
+            const code = transpile("if (1+2)\n    2+3\nelse\n    3+4", { operatorOverloading: true });
             expect(stripWS(code)).toBe("if (Ms.add(1, 2))Ms.add(2, 3); elseMs.add(3, 4);");
         });
 
         it("FunctionDeclaration", function () {
-            var code = transpile("function f(x) {return x + 1;}");
+            const code = transpile("function f(x) {return x + 1;}", { operatorOverloading: true });
             expect(stripWS(code)).toBe("function f(x) {return Ms.add(x, 1); }");
         });
         it("Property", function () {
-            var code = transpile("var x = {expr: function(){var c = a + b}};");
+            const code = transpile("var x = {expr: function(){var c = a + b}};", { operatorOverloading: true });
             expect(stripWS(code)).toBe("var x = {expr: function () {var c = Ms.add(a, b);} };");
         });
         it("ThisExpression", function () {
-            var code = transpile("(function() {var x;x=new Foo();z=x+y;}.call(this));");
+            const code = transpile("(function() {var x;x=new Foo();z=x+y;}.call(this));", { operatorOverloading: true });
             expect(stripWS(code)).toBe("(function () {var x;x = new Foo();z = Ms.add(x, y); }.call(this));");
         });
         it("SwitchStatement", function () {
-            var code = transpile("switch (a+b) {case p+q: {r+s} default: {x+y}}");
+            const code = transpile("switch (a+b) {case p+q: {r+s} default: {x+y}}", { operatorOverloading: true });
             expect(stripWS(code)).toBe("switch (Ms.add(a, b)) { case Ms.add(p, q): {Ms.add(r, s);} default: {Ms.add(x, y);} }");
         });
         it("ThrowStatement", function () {
-            var code = transpile("throw new Error(a + b);");
+            const code = transpile("throw new Error(a + b);", { operatorOverloading: true });
             expect(stripWS(code)).toBe("throw new Error(Ms.add(a, b));");
         });
         it("TryStatement (1)", function () {
-            var code = transpile("try {var a=b+c;} catch (e) { }");
+            const code = transpile("try {var a=b+c;} catch (e) { }", { operatorOverloading: true });
             expect(stripWS(code)).toBe("try {var a = Ms.add(b, c); } catch (e) { }");
         });
         it("TryStatement (2)", function () {
-            var code = transpile("try { } catch (e) {var x=y+z;}");
+            const code = transpile("try { } catch (e) {var x=y+z;}", { operatorOverloading: true });
             expect(stripWS(code)).toBe("try { } catch (e) {var x = Ms.add(y, z); }");
         });
         it("TryStatement (3)", function () {
-            var code = transpile("try {} catch (e) { } finally {var a=b+c;}");
+            const code = transpile("try {} catch (e) { } finally {var a=b+c;}", { operatorOverloading: true });
             expect(stripWS(code)).toBe("try { } catch (e) { } finally {var a = Ms.add(b, c); }");
         });
         it("ReturnStatement", function () {
-            var code = stripWS(transpile("function f(x) {return x + 1;}"));
+            const code = stripWS(transpile("function f(x) {return x + 1;}", { operatorOverloading: true }));
             expect(stripWS(code)).toBe("function f(x) {return Ms.add(x, 1); }");
         });
-        it("UnaryExpression '+'", function () {
-            var code = transpile("+1;");
-            expect(stripWS(code)).toBe("Ms.pos(1);");
-        });
-        it("UnaryExpression '-'", function () {
-            var code = transpile("-1;");
-            expect(stripWS(code)).toBe("Ms.neg(1);");
-        });
-        it("UnaryExpression '!'", function () {
-            var code = transpile("!1;");
-            expect(stripWS(code)).toBe("Ms.bang(1);");
-        });
-        it("UnaryExpression '~'", function () {
-            var code = transpile("~1;");
-            expect(stripWS(code)).toBe("Ms.tilde(1);");
+        describe("UnaryExpression", function () {
+            describe("+", function () {
+                it("default", function () {
+                    const code = transpile("+1;");
+                    expect(stripWS(code)).toBe("+1;");
+                });
+                it("undefined", function () {
+                    const code = transpile("+1;", { operatorOverloading: undefined });
+                    expect(stripWS(code)).toBe("+1;");
+                });
+                it("noop", function () {
+                    const code = transpile("+1;", { operatorOverloading: false });
+                    expect(stripWS(code)).toBe("+1;");
+                });
+                it("operatorOverloading", function () {
+                    const code = transpile("+1;", { operatorOverloading: true });
+                    expect(stripWS(code)).toBe("Ms.pos(1);");
+                });
+            });
+            describe("-", function () {
+                it("default", function () {
+                    const code = transpile("-1;");
+                    expect(stripWS(code)).toBe("-1;");
+                });
+                it("undefined", function () {
+                    const code = transpile("-1;", { operatorOverloading: undefined });
+                    expect(stripWS(code)).toBe("-1;");
+                });
+                it("noop", function () {
+                    const code = transpile("-1;", { operatorOverloading: false });
+                    expect(stripWS(code)).toBe("-1;");
+                });
+                it("operatorOverloading", function () {
+                    const code = transpile("-1;", { operatorOverloading: true });
+                    expect(stripWS(code)).toBe("Ms.neg(1);");
+                });
+            });
+            describe("!", function () {
+                it("default", function () {
+                    const code = transpile("!1;");
+                    expect(stripWS(code)).toBe("!1;");
+                });
+                it("undefined", function () {
+                    const code = transpile("!1;", { operatorOverloading: undefined });
+                    expect(stripWS(code)).toBe("!1;");
+                });
+                it("noop", function () {
+                    const code = transpile("!1;", { operatorOverloading: false });
+                    expect(stripWS(code)).toBe("!1;");
+                });
+                it("operatorOverloading", function () {
+                    const code = transpile("!1;", { operatorOverloading: true });
+                    expect(stripWS(code)).toBe("Ms.bang(1);");
+                });
+            });
+            describe("~", function () {
+                it("default", function () {
+                    const code = transpile("~1;");
+                    expect(stripWS(code)).toBe("~1;");
+                });
+                it("undefined", function () {
+                    const code = transpile("~1;", { operatorOverloading: undefined });
+                    expect(stripWS(code)).toBe("~1;");
+                });
+                it("noop", function () {
+                    const code = transpile("~1;", { operatorOverloading: false });
+                    expect(stripWS(code)).toBe("~1;");
+                });
+                it("operatorOverloading", function () {
+                    const code = transpile("~1;", { operatorOverloading: true });
+                    expect(stripWS(code)).toBe("Ms.tilde(1);");
+                });
+            });
         });
         it("VariableDeclaration", function () {
-            var code = transpile("var x = eight.vectorE3(1, 0, 0); var y = eight.vectorE3(0, 2, 0); console.log(x+y);");
+            const code = transpile("var x = eight.vectorE3(1, 0, 0); var y = eight.vectorE3(0, 2, 0); console.log(x+y);", { operatorOverloading: true });
             expect(stripWS(code)).toBe("var x = eight.vectorE3(1, 0, 0); var y = eight.vectorE3(0, 2, 0); console.log(Ms.add(x, y));");
         });
         describe("WhileStatement", function () {
             it("noLoopCheck: true", function () {
-                const code = transpile("while (a + b) {z = x * y; }", { noLoopCheck: true });
+                const code = transpile("while (a + b) {z = x * y; }", { noLoopCheck: true, operatorOverloading: true });
                 expect(stripWS(code)).toBe("while (Ms.add(a, b)) {z = Ms.mul(x, y); }");
             });
             it("noLoopCheck: false", function () {
-                const code = transpile("while (a + b) {z = x * y; }", { noLoopCheck: false });
+                const code = transpile("while (a + b) {z = x * y; }", { noLoopCheck: false, operatorOverloading: true });
                 expect(stripWS(code)).not.toBe("while (Ms.add(a, b)) {z = Ms.mul(x, y); }");
             });
         });

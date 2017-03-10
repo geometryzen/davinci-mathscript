@@ -37,7 +37,7 @@ export interface ParseOptions {
 
 export function parse(code: string, options?: ParseOptions, delegate?: (node, metadata: MetaData) => void): Module | Script {
     let commentHandler: CommentHandler | null = null;
-    const proxyDelegate = (node, metadata) => {
+    const proxyDelegate = (node, metadata: MetaData) => {
         if (delegate) {
             delegate(node, metadata);
         }

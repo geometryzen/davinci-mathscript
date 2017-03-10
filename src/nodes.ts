@@ -618,7 +618,7 @@ export class Property {
     readonly kind: string;
     readonly method: boolean;
     readonly shorthand: boolean;
-    constructor(kind: string, key: PropertyKey, computed: boolean, value: PropertyValue | null, method: boolean, shorthand: boolean) {
+    constructor(kind: 'get' | 'set' | 'init', key: PropertyKey, computed: boolean, value: PropertyValue | null, method: boolean, shorthand: boolean) {
         this.type = Syntax.Property;
         this.key = key;
         this.computed = computed;

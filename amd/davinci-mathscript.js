@@ -362,7 +362,21 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
         }
         return fallback(lhs, rhs);
     }
-    function add(p, q) { return binEval(p, q, '__add__', '__radd__', function (a, b) { return a + b; }); }
+    function compose(g, f) {
+        return function (x) {
+            return g(f(x));
+        };
+    }
+    function add(p, q) {
+        return binEval(p, q, '__add__', '__radd__', function (a, b) {
+            if (typeof a === 'function' && typeof b === 'function') {
+                return compose(a, b);
+            }
+            else {
+                return a + b;
+            }
+        });
+    }
     exports.add = add;
     function sub(p, q) { return binEval(p, q, '__sub__', '__rsub__', function (a, b) { return a - b; }); }
     exports.sub = sub;

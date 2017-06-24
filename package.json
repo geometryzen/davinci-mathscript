@@ -1,6 +1,6 @@
 {
   "name": "davinci-mathscript",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "MathScript transcompiler to JavaScript.",
   "author": {
     "name": "David Holmes",
@@ -30,7 +30,7 @@
     "es6-module-loader": "^0.17.11",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jasmine": "^1.1.0",
@@ -42,12 +42,12 @@
     "grunt-jasmine-task": "0.2.3",
     "grunt-karma": "^2.0.0",
     "grunt-template-jasmine-requirejs": "^0.2.3",
-    "grunt-ts": "^6.0.0-beta.15",
+    "grunt-ts": "^6.0.0-beta.16",
     "grunt-tslint": "^4.0.1",
     "grunt-typedoc": "^0.2.4",
     "grunt-typescript": "^0.8.0",
-    "jasmine-core": "^2.5.2",
-    "jspm": "^0.16.52",
+    "jasmine-core": "^2.6.4",
+    "jspm": "^0.16.53",
     "karma": "0.13.22",
     "karma-chrome-launcher": "0.1.12",
     "karma-jasmine": "0.3.8",
@@ -62,8 +62,8 @@
     "systemjs": "0.19.40",
     "systemjs-builder": "0.15.33",
     "tslint": "^4.5.1",
-    "typedoc": "^0.5.7",
-    "typescript": "^2.2.1"
+    "typedoc": "^0.7.1",
+    "typescript": "^2.3.4"
   },
   "keywords": [],
   "jspm": {

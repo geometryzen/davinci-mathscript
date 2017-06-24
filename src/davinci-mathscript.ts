@@ -444,7 +444,30 @@ function binEval(lhs, rhs, lprop: string, rprop: string, fallback) {
     return fallback(lhs, rhs);
 }
 
-export function add(p, q) { return binEval(p, q, '__add__', '__radd__', function (a, b) { return a + b; }); }
+/**
+ * Function composition defined by...
+ *
+ * compose(g, f)(x) = g(f(x))
+ */
+function compose<X, Y, Z>(g: (y: Y) => Z, f: (x: X) => Y) {
+    return function (x: X): Z {
+        return g(f(x));
+    };
+}
+
+/**
+ *
+ */
+export function add(p, q) {
+    return binEval(p, q, '__add__', '__radd__', function (a, b) {
+        if (typeof a === 'function' && typeof b === 'function') {
+            return compose(a, b);
+        }
+        else {
+            return a + b;
+        }
+    });
+}
 export function sub(p, q) { return binEval(p, q, '__sub__', '__rsub__', function (a, b) { return a - b; }); }
 export function mul(p, q) { return binEval(p, q, '__mul__', '__rmul__', function (a, b) { return a * b; }); }
 export function div(p, q) { return binEval(p, q, '__div__', '__rdiv__', function (a, b) { return a / b; }); }

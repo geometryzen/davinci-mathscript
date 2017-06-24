@@ -6,7 +6,7 @@ System.register("core.js", [], function (exports_1, context_1) {
     return {
         setters: [],
         execute: function () {
-            exports_1("VERSION", VERSION = '1.1.1');
+            exports_1("VERSION", VERSION = '1.2.3');
         }
     };
 });
@@ -9343,9 +9343,18 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
         }
         return fallback(lhs, rhs);
     }
+    function compose(g, f) {
+        return function (x) {
+            return g(f(x));
+        };
+    }
     function add(p, q) {
         return binEval(p, q, '__add__', '__radd__', function (a, b) {
-            return a + b;
+            if (typeof a === 'function' && typeof b === 'function') {
+                return compose(a, b);
+            } else {
+                return a + b;
+            }
         });
     }
     exports_1("add", add);

@@ -30,7 +30,6 @@ System.register([], function (exports_1, context_1) {
                 Member: 18,
                 Primary: 19
             });
-            exports_1("default", Precedence);
         }
     };
 });

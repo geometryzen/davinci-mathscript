@@ -9,5 +9,5 @@ define(["require", "exports", "./esprima"], function (require, exports, esprima_
             inside: ast2.body[0]
         };
     }
-    exports.default = getLoopProtectorBlocks;
+    exports.getLoopProtectorBlocks = getLoopProtectorBlocks;
 });

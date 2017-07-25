@@ -1,3 +1,16 @@
+2.0.1 / 2017-07-23
+==================
+  * Convert JSON merger from Mozilla Rhino to Google GSON (https://github.com/tntim96/JSCover/issues/258)
+
+2.0.0 / 2017-07-16
+==================
+  * Replace Rhino AST engine with Closure Compiler (https://github.com/tntim96/JSCover/issues/255)
+  * Internal: Upgrade HtmlUnit 2.24 to 2.27, Mockito 2.7.5 to 2.8.47, Jasmine 2.5.2 to 2.6.4
+
+This is a major upgrade of the AST engine. The only visible changes should be the options for `--js-version` have
+changed, as well as the default language level. See the [manual](http://tntim96.github.io/JSCover/manual/manual.xml)
+for details.
+
 1.1.0 / 2017-02-12
 ==================
   * Remove conditional source from JSON (https://github.com/tntim96/JSCover/issues/244)
@@ -10,9 +23,11 @@
   * Missing instrumentation in a 'if' in 'case' statement (https://github.com/tntim96/JSCover/issues/241)
   * Poor performance when used together with systemjs 0.19.37 (https://github.com/tntim96/JSCover/issues/235)
   * Source Error Message Not Cleared When Displaying New Source (https://github.com/tntim96/JSCover/issues/234)
-  * Remove deprecated Synchronous XMLHttpRequest (https://github.com/tntim96/JSCover/issues/232)
+  * **Remove deprecated Synchronous XMLHttpRequest**<sup>1</sup> (https://github.com/tntim96/JSCover/issues/232)
   * Add asynchronous option to jscoverage_report() (https://github.com/tntim96/JSCover/issues/227)
   * Internal: Upgrade HtmlUnit 2.20 to 2.23, Jasmine 2.4.1 to 2.5.2, Mockito 1.10.19 to 2.3.30
+
+1 - This means calls to `jscoverage_report` will need to pass in a call-back to indicate when the function has completed. See the [documentation](http://tntim96.github.io/JSCover/manual/manual.xml#automatingWebDriver) for more details.
 
 1.0.24 / 2016-04-04
 ==================

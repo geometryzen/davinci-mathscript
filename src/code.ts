@@ -47,13 +47,13 @@ export function isDecimalDigit(ch) {
     return 0x30 <= ch && ch <= 0x39;  // 0..9
 }
 
-function isHexDigit(ch) {
+export function isHexDigit(ch) {
     return 0x30 <= ch && ch <= 0x39 ||  // 0..9
         0x61 <= ch && ch <= 0x66 ||     // a..f
         0x41 <= ch && ch <= 0x46;       // A..F
 }
 
-function isOctalDigit(ch) {
+export function isOctalDigit(ch) {
     return ch >= 0x30 && ch <= 0x37;  // 0..7
 }
 

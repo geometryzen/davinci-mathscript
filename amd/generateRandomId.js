@@ -10,5 +10,5 @@ define(["require", "exports"], function (require, exports) {
         }
         return id;
     }
-    exports.default = generateRandomId;
+    exports.generateRandomId = generateRandomId;
 });

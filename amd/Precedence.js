@@ -26,5 +26,4 @@ define(["require", "exports"], function (require, exports) {
         Member: 18,
         Primary: 19
     };
-    exports.default = exports.Precedence;
 });

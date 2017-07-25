@@ -1,5 +1,5 @@
 import { Syntax } from './syntax';
-import IToken from './IToken';
+import { IToken } from './IToken';
 
 export type ArgumentListElement = Expression | SpreadElement;
 export type ArrayExpressionElement = Expression | SpreadElement | null;

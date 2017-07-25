@@ -1101,7 +1101,7 @@ export class Scanner {
                 // BMP character or a constant ASCII code point in the case of
                 // astral symbols. (See the above note on `astralSubstitute`
                 // for more information.)
-                .replace(/\\u\{([0-9a-fA-F]+)\}|\\u([a-fA-F0-9]{4})/g, ($0, $1, $2) => {
+                .replace(/\\u\{([0-9a-fA-F]+)\}|\\u([a-fA-F0-9]{4})/g, (_$0, $1, $2) => {
                     const codePoint = parseInt($1 || $2, 16);
                     if (codePoint > 0x10FFFF) {
                         self.throwUnexpectedToken(Messages.InvalidRegExp);

@@ -292,6 +292,13 @@ describe("MathScript", function () {
             });
         });
 
+        describe("ContinueStatement", function () {
+            it("", function () {
+                const code = transpile("while(true) {if (true) {continue}}", { noLoopCheck: true, operatorOverloading: true });
+                expect(stripWS(code)).toBe("while (true) {if (true) {continue;} }");
+            });
+        });
+
         describe("ConditionalExpression", function () {
             it("", function () {
                 const code = transpile("hex.length === 1 ? '0' + hex : '' + hex;", { operatorOverloading: true });

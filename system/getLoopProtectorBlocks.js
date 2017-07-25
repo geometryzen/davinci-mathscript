@@ -9,7 +9,7 @@ System.register(["./esprima"], function (exports_1, context_1) {
             inside: ast2.body[0]
         };
     }
-    exports_1("default", getLoopProtectorBlocks);
+    exports_1("getLoopProtectorBlocks", getLoopProtectorBlocks);
     var esprima_1;
     return {
         setters: [

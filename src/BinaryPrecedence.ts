@@ -1,4 +1,4 @@
-import Precedence from './Precedence';
+import { Precedence } from './Precedence';
 
 export const BinaryPrecedence = {
     '||': Precedence.LogicalOR,
@@ -27,5 +27,3 @@ export const BinaryPrecedence = {
     '%': Precedence.Multiplicative,
     '/': Precedence.Multiplicative
 };
-
-export default BinaryPrecedence;

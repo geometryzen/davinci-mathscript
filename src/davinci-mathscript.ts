@@ -3,8 +3,8 @@ import { parse as esprimaParse, ParseOptions, parseScript as esprimaParseScript,
 import { tokenize as esprimaTokenize } from './esprima';
 import { MetaData } from './parser';
 import { generate } from './escodegen';
-import generateRandomId from './generateRandomId';
-import getLoopProtectorBlocks from './getLoopProtectorBlocks';
+import { generateRandomId } from './generateRandomId';
+import { getLoopProtectorBlocks } from './getLoopProtectorBlocks';
 import { StatementListItem } from './nodes';
 import { BlockStatement } from './nodes';
 import { FunctionDeclaration } from './nodes';
@@ -394,6 +394,7 @@ function visit(node: { type: string } | null, options: TranspileOptions) {
                 break;
             }
             case Syntax.BreakStatement:
+            case Syntax.ContinueStatement:
             case Syntax.EmptyStatement:
             case Syntax.Literal:
             case Syntax.Identifier:
@@ -402,7 +403,8 @@ function visit(node: { type: string } | null, options: TranspileOptions) {
                 break;
             }
             default: {
-                console.log(JSON.stringify(node, null, 2));
+                console.warn(`Unhandled ${node.type}`);
+                console.warn(`${JSON.stringify(node, null, 2)}`);
             }
         }
     }

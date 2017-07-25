@@ -9,7 +9,7 @@ System.register([], function (exports_1, context_1) {
         }
         return id;
     }
-    exports_1("default", generateRandomId);
+    exports_1("generateRandomId", generateRandomId);
     var alphaNum;
     return {
         setters: [],

@@ -188,7 +188,7 @@ export class Tokenizer {
             }
         }
 
-        return this.buffer.shift();
+        return this.buffer.shift() as IToken;
     }
 
 }

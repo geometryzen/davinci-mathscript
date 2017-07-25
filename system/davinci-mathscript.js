@@ -21,8 +21,8 @@ System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./
             var el = statements[i];
             if (el && el.type === syntax_1.Syntax.ForStatement || el.type === syntax_1.Syntax.WhileStatement || el.type === syntax_1.Syntax.DoWhileStatement) {
                 var loop = el;
-                var randomVariableName = '_' + generateRandomId_1.default(5);
-                var insertionBlocks = getLoopProtectorBlocks_1.default(randomVariableName, millis);
+                var randomVariableName = '_' + generateRandomId_1.generateRandomId(5);
+                var insertionBlocks = getLoopProtectorBlocks_1.getLoopProtectorBlocks(randomVariableName, millis);
                 statements.splice(i, 0, insertionBlocks.before);
                 if (!Array.isArray(loop.body)) {
                     loop.body = {
@@ -295,6 +295,7 @@ System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./
                     break;
                 }
                 case syntax_1.Syntax.BreakStatement:
+                case syntax_1.Syntax.ContinueStatement:
                 case syntax_1.Syntax.EmptyStatement:
                 case syntax_1.Syntax.Literal:
                 case syntax_1.Syntax.Identifier:
@@ -303,7 +304,8 @@ System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./
                     break;
                 }
                 default: {
-                    console.log(JSON.stringify(node, null, 2));
+                    console.warn("Unhandled " + node.type);
+                    console.warn("" + JSON.stringify(node, null, 2));
                 }
             }
         }

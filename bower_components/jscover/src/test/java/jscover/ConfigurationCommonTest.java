@@ -342,6 +342,7 @@ Public License instead of this License.
 
 package jscover;
 
+import com.google.javascript.jscomp.parsing.Config;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -352,7 +353,7 @@ public class ConfigurationCommonTest {
 
     @Test
     public void shouldHaveDefaults() {
-        assertThat(config.getJSVersion(), is(150));
+        assertThat(config.getECMAVersion(), is(Config.LanguageMode.ECMASCRIPT8));
         assertThat(config.isIncludeUnloadedJS(), is(false));
         assertThat(config.isIncludeBranch(), is(true));
         assertThat(config.isIncludeFunction(), is(true));
@@ -363,7 +364,7 @@ public class ConfigurationCommonTest {
 
     @Test
     public void shouldSetValues() {
-        config.setJSVersion(180);
+        config.setECMAVersion(Config.LanguageMode.ECMASCRIPT3);
         config.setIncludeUnloadedJS(true);
         config.setIncludeBranch(false);
         config.setIncludeFunction(false);
@@ -371,7 +372,7 @@ public class ConfigurationCommonTest {
         config.setIsolateBrowser(true);
         config.setDetectCoalesce(true);
 
-        assertThat(config.getJSVersion(), is(180));
+        assertThat(config.getECMAVersion(), is(Config.LanguageMode.ECMASCRIPT3));
         assertThat(config.isIncludeUnloadedJS(), is(true));
         assertThat(config.isIncludeBranch(), is(false));
         assertThat(config.isIncludeFunction(), is(false));

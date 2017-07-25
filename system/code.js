@@ -10,9 +10,11 @@ System.register([], function (exports_1, context_1) {
             0x61 <= ch && ch <= 0x66 ||
             0x41 <= ch && ch <= 0x46;
     }
+    exports_1("isHexDigit", isHexDigit);
     function isOctalDigit(ch) {
         return ch >= 0x30 && ch <= 0x37;
     }
+    exports_1("isOctalDigit", isOctalDigit);
     function isWhiteSpace(ch) {
         return ch === 0x20 || ch === 0x09 || ch === 0x0B || ch === 0x0C || ch === 0xA0 ||
             ch >= 0x1680 && NON_ASCII_WHITESPACES.indexOf(ch) >= 0;

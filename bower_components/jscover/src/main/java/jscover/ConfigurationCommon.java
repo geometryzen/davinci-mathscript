@@ -342,12 +342,11 @@ Public License instead of this License.
 
 package jscover;
 
+import com.google.javascript.jscomp.parsing.Config;
 import jscover.util.IoUtils;
 import jscover.util.PatternMatcher;
 import jscover.util.PatternMatcherRegEx;
 import jscover.util.PatternMatcherString;
-import org.mozilla.javascript.CompilerEnvirons;
-import org.mozilla.javascript.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -383,15 +382,10 @@ public class ConfigurationCommon extends Configuration {
     protected boolean isolateBrowser;
     protected final List<PatternMatcher> patternMatchers = new ArrayList<PatternMatcher>();
     private boolean includeUnloadedJS;
-    protected int JSVersion = Context.VERSION_1_5;
-    protected CompilerEnvirons compilerEnvirons = new CompilerEnvirons();
+    protected Config.LanguageMode ECMAVersion = Config.LanguageMode.ECMASCRIPT8;
     protected boolean defaultSkip;
     protected IoUtils ioUtils = IoUtils.getInstance();
     protected Level logLevel = SEVERE;
-
-    {
-        compilerEnvirons.setRecordingComments(true);
-    }
 
     public void setIncludeBranch(boolean includeBranch) {
         this.includeBranch = includeBranch;
@@ -417,8 +411,8 @@ public class ConfigurationCommon extends Configuration {
         this.isolateBrowser = isolateBrowser;
     }
 
-    public void setJSVersion(int JSVersion) {
-        this.JSVersion = JSVersion;
+    public void setECMAVersion(Config.LanguageMode ECMAVersion) {
+        this.ECMAVersion = ECMAVersion;
     }
 
     public Boolean showHelp() {
@@ -453,12 +447,8 @@ public class ConfigurationCommon extends Configuration {
         return isolateBrowser;
     }
 
-    public int getJSVersion() {
-        return JSVersion;
-    }
-
-    public CompilerEnvirons getCompilerEnvirons() {
-        return compilerEnvirons;
+    public Config.LanguageMode getECMAVersion() {
+        return ECMAVersion;
     }
 
     public Level getLogLevel() {
@@ -508,7 +498,7 @@ public class ConfigurationCommon extends Configuration {
             patternString = patternString.substring(1);
         try {
             patternMatchers.add(PatternMatcherRegEx.getExcludePatternMatcher(patternString));
-        } catch(PatternSyntaxException e) {
+        } catch (PatternSyntaxException e) {
             e.printStackTrace(System.err);
             setInvalid(format("Invalid pattern '%s'", patternString));
         }
@@ -527,11 +517,11 @@ public class ConfigurationCommon extends Configuration {
             includeUnloadedJS = true;
         } else if (arg.equals(LOCAL_STORAGE_PREFIX)) {
             if (isolateBrowser)
-                throw new IllegalArgumentException("Cannot combine '" + LOCAL_STORAGE_PREFIX + "' and '"  + ISOLATE_BROWSER_PREFIX + "'." );
+                throw new IllegalArgumentException("Cannot combine '" + LOCAL_STORAGE_PREFIX + "' and '" + ISOLATE_BROWSER_PREFIX + "'.");
             localStorage = true;
         } else if (arg.equals(ISOLATE_BROWSER_PREFIX)) {
             if (localStorage)
-                throw new IllegalArgumentException("Cannot combine '" + LOCAL_STORAGE_PREFIX + "' and '"  + ISOLATE_BROWSER_PREFIX + "'." );
+                throw new IllegalArgumentException("Cannot combine '" + LOCAL_STORAGE_PREFIX + "' and '" + ISOLATE_BROWSER_PREFIX + "'.");
             isolateBrowser = true;
         } else if (arg.startsWith(NO_INSTRUMENT_PREFIX)) {
             addNoInstrument(arg);
@@ -540,7 +530,7 @@ public class ConfigurationCommon extends Configuration {
         } else if (arg.startsWith(ONLY_INSTRUMENT_REG_PREFIX)) {
             addOnlyInstrumentReg(arg);
         } else if (arg.startsWith(JS_VERSION_PREFIX)) {
-            JSVersion = (int) (Float.valueOf(arg.substring(JS_VERSION_PREFIX.length())) * 100);
+            ECMAVersion = Config.LanguageMode.valueOf(arg.substring(JS_VERSION_PREFIX.length()));
         } else if (arg.startsWith(LOG_LEVEL)) {
             logLevel = Level.parse(arg.substring(LOG_LEVEL.length()));
         } else {

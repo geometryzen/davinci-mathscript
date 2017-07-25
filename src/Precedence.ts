@@ -26,5 +26,3 @@ export const Precedence = {
     Member: 18,
     Primary: 19
 };
-
-export default Precedence;

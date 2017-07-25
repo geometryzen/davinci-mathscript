@@ -541,11 +541,11 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
         var verbatim, result, prec;
         verbatim = expr[extra.verbatim];
         if (typeof verbatim === 'string') {
-            result = parenthesize(generateVerbatimString(verbatim), Precedence_1.default.Sequence, precedence);
+            result = parenthesize(generateVerbatimString(verbatim), Precedence_1.Precedence.Sequence, precedence);
         }
         else {
             result = generateVerbatimString(verbatim.content);
-            prec = (verbatim.precedence != null) ? verbatim.precedence : Precedence_1.default.Sequence;
+            prec = (verbatim.precedence != null) ? verbatim.precedence : Precedence_1.Precedence.Sequence;
             result = parenthesize(result, prec, precedence);
         }
         return toSourceNodeWhenNeeded(result, expr);
@@ -575,7 +575,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
             return codegen.generateStatement(node, S_TFFF);
         }
         if (isExpression(node)) {
-            return codegen.generateExpression(node, Precedence_1.default.Sequence, E_TTT);
+            return codegen.generateExpression(node, Precedence_1.Precedence.Sequence, E_TTT);
         }
         throw new Error('Unknown node type: ' + node.type);
     }
@@ -677,10 +677,10 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         }
                         for (i = 0, iz = node.params.length; i < iz; ++i) {
                             if (hasDefault && node.defaults[i]) {
-                                result.push(this.generateAssignment(node.params[i], node.defaults[i], '=', Precedence_1.default.Assignment, E_TTT));
+                                result.push(this.generateAssignment(node.params[i], node.defaults[i], '=', Precedence_1.Precedence.Assignment, E_TTT));
                             }
                             else {
-                                result.push(this.generatePattern(node.params[i], Precedence_1.default.Assignment, E_TTT));
+                                result.push(this.generatePattern(node.params[i], Precedence_1.Precedence.Assignment, E_TTT));
                             }
                             if (i + 1 < iz) {
                                 result.push(',' + space);
@@ -763,7 +763,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     }
                     if (node.expression) {
                         result.push(space);
-                        expr = this.generateExpression(node.body, Precedence_1.default.Assignment, E_TTT);
+                        expr = this.generateExpression(node.body, Precedence_1.Precedence.Assignment, E_TTT);
                         if (expr.toString().charAt(0) === '{') {
                             expr = ['(', expr, ')'];
                         }
@@ -784,10 +784,10 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                             });
                         }
                         else {
-                            result.push(that.generateExpression(stmt.left, Precedence_1.default.Call, E_TTT));
+                            result.push(that.generateExpression(stmt.left, Precedence_1.Precedence.Call, E_TTT));
                         }
                         result = join(result, operator);
-                        result = [join(result, that.generateExpression(stmt.right, Precedence_1.default.Sequence, E_TTT)), ')'];
+                        result = [join(result, that.generateExpression(stmt.right, Precedence_1.Precedence.Sequence, E_TTT)), ')'];
                     });
                     result.push(this.maybeBlock(stmt.body, flags));
                     return result;
@@ -797,21 +797,21 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     if (computed) {
                         result.push('[');
                     }
-                    result.push(this.generateExpression(expr, Precedence_1.default.Sequence, E_TTT));
+                    result.push(this.generateExpression(expr, Precedence_1.Precedence.Sequence, E_TTT));
                     if (computed) {
                         result.push(']');
                     }
                     return result;
                 };
                 CodeGenerator.prototype.generateAssignment = function (left, right, operator, precedence, flags) {
-                    if (Precedence_1.default.Assignment < precedence) {
+                    if (Precedence_1.Precedence.Assignment < precedence) {
                         flags |= F_ALLOW_IN;
                     }
                     return parenthesize([
-                        this.generateExpression(left, Precedence_1.default.Call, flags),
+                        this.generateExpression(left, Precedence_1.Precedence.Call, flags),
                         space + operator + space,
-                        this.generateExpression(right, Precedence_1.default.Assignment, flags)
-                    ], Precedence_1.default.Assignment, precedence);
+                        this.generateExpression(right, Precedence_1.Precedence.Assignment, flags)
+                    ], Precedence_1.Precedence.Assignment, precedence);
                 };
                 CodeGenerator.prototype.semicolon = function (flags) {
                     if (!semicolons && flags & F_SEMICOLON_OPT) {
@@ -904,13 +904,13 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     }
                     return 'continue' + this.semicolon(flags);
                 },
-                ClassBody: function (stmt, flags) {
+                ClassBody: function (stmt, _flags) {
                     var result = ['{', newline], that = this;
                     withIndent(function (indent) {
                         var i, iz;
                         for (i = 0, iz = stmt.body.length; i < iz; ++i) {
                             result.push(indent);
-                            result.push(that.generateExpression(stmt.body[i], Precedence_1.default.Sequence, E_TTT));
+                            result.push(that.generateExpression(stmt.body[i], Precedence_1.Precedence.Sequence, E_TTT));
                             if (i + 1 < iz) {
                                 result.push(newline);
                             }
@@ -923,11 +923,11 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     result.push('}');
                     return result;
                 },
-                ClassDeclaration: function (stmt, flags) {
+                ClassDeclaration: function (stmt, _flags) {
                     var result, fragment;
                     result = ['class ' + stmt.id.name];
                     if (stmt.superClass) {
-                        fragment = join('extends', this.generateExpression(stmt.superClass, Precedence_1.default.Assignment, E_TTT));
+                        fragment = join('extends', this.generateExpression(stmt.superClass, Precedence_1.Precedence.Assignment, E_TTT));
                         result = join(result, fragment);
                     }
                     result.push(space);
@@ -945,31 +945,31 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     result = this.maybeBlockSuffix(stmt.body, result);
                     return join(result, [
                         'while' + space + '(',
-                        this.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT),
+                        this.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT),
                         ')' + this.semicolon(flags)
                     ]);
                 },
-                CatchClause: function (stmt, flags) {
+                CatchClause: function (stmt, _flags) {
                     var result, that = this;
                     withIndent(function () {
                         var guard;
                         result = [
                             'catch' + space + '(',
-                            that.generateExpression(stmt.param, Precedence_1.default.Sequence, E_TTT),
+                            that.generateExpression(stmt.param, Precedence_1.Precedence.Sequence, E_TTT),
                             ')'
                         ];
                         if (stmt.guard) {
-                            guard = that.generateExpression(stmt.guard, Precedence_1.default.Sequence, E_TTT);
+                            guard = that.generateExpression(stmt.guard, Precedence_1.Precedence.Sequence, E_TTT);
                             result.splice(2, 0, ' if ', guard);
                         }
                     });
                     result.push(this.maybeBlock(stmt.body, S_TFFF));
                     return result;
                 },
-                DebuggerStatement: function (stmt, flags) {
+                DebuggerStatement: function (_stmt, flags) {
                     return 'debugger' + this.semicolon(flags);
                 },
-                EmptyStatement: function (stmt, flags) {
+                EmptyStatement: function (_stmt, _flags) {
                     return ';';
                 },
                 ExportDeclaration: function (stmt, flags) {
@@ -981,7 +981,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                             result = join(result, this.generateStatement(stmt.declaration, bodyFlags));
                         }
                         else {
-                            result = join(result, this.generateExpression(stmt.declaration, Precedence_1.default.Assignment, E_TTT) + this.semicolon(flags));
+                            result = join(result, this.generateExpression(stmt.declaration, Precedence_1.Precedence.Assignment, E_TTT) + this.semicolon(flags));
                         }
                         return result;
                     }
@@ -999,7 +999,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                                 result.push(newline);
                                 for (i = 0, iz = stmt.specifiers.length; i < iz; ++i) {
                                     result.push(indent);
-                                    result.push(that.generateExpression(stmt.specifiers[i], Precedence_1.default.Sequence, E_TTT));
+                                    result.push(that.generateExpression(stmt.specifiers[i], Precedence_1.Precedence.Sequence, E_TTT));
                                     if (i + 1 < iz) {
                                         result.push(',' + newline);
                                     }
@@ -1013,7 +1013,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         if (stmt.source) {
                             result = join(result, [
                                 'from' + space,
-                                this.generateExpression(stmt.source, Precedence_1.default.Sequence, E_TTT),
+                                this.generateExpression(stmt.source, Precedence_1.Precedence.Sequence, E_TTT),
                                 this.semicolon(flags)
                             ]);
                         }
@@ -1063,7 +1063,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         code = fragment.charCodeAt(i + 8);
                         return code === 0x28 || code_4.isWhiteSpace(code) || code === 0x2A || code_1.isLineTerminator(code);
                     }
-                    result = [this.generateExpression(stmt.expression, Precedence_1.default.Sequence, E_TTT)];
+                    result = [this.generateExpression(stmt.expression, Precedence_1.Precedence.Sequence, E_TTT)];
                     fragment = toSourceNodeWhenNeeded(result).toString();
                     if (fragment.charCodeAt(0) === 0x7B ||
                         isClassPrefixed(fragment) ||
@@ -1083,7 +1083,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         return [
                             'import',
                             space,
-                            this.generateExpression(stmt.source, Precedence_1.default.Sequence, E_TTT),
+                            this.generateExpression(stmt.source, Precedence_1.Precedence.Sequence, E_TTT),
                             this.semicolon(flags)
                         ];
                     }
@@ -1093,7 +1093,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     cursor = 0;
                     if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportDefaultSpecifier) {
                         result = join(result, [
-                            this.generateExpression(stmt.specifiers[cursor], Precedence_1.default.Sequence, E_TTT)
+                            this.generateExpression(stmt.specifiers[cursor], Precedence_1.Precedence.Sequence, E_TTT)
                         ]);
                         ++cursor;
                     }
@@ -1104,14 +1104,14 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportNamespaceSpecifier) {
                             result = join(result, [
                                 space,
-                                this.generateExpression(stmt.specifiers[cursor], Precedence_1.default.Sequence, E_TTT)
+                                this.generateExpression(stmt.specifiers[cursor], Precedence_1.Precedence.Sequence, E_TTT)
                             ]);
                         }
                         else {
                             result.push(space + '{');
                             if ((stmt.specifiers.length - cursor) === 1) {
                                 result.push(space);
-                                result.push(this.generateExpression(stmt.specifiers[cursor], Precedence_1.default.Sequence, E_TTT));
+                                result.push(this.generateExpression(stmt.specifiers[cursor], Precedence_1.Precedence.Sequence, E_TTT));
                                 result.push(space + '}' + space);
                             }
                             else {
@@ -1120,7 +1120,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                                     result.push(newline);
                                     for (i = cursor, iz = stmt.specifiers.length; i < iz; ++i) {
                                         result.push(indent);
-                                        result.push(that.generateExpression(stmt.specifiers[i], Precedence_1.default.Sequence, E_TTT));
+                                        result.push(that.generateExpression(stmt.specifiers[i], Precedence_1.Precedence.Sequence, E_TTT));
                                         if (i + 1 < iz) {
                                             result.push(',' + newline);
                                         }
@@ -1135,7 +1135,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     }
                     result = join(result, [
                         'from' + space,
-                        this.generateExpression(stmt.source, Precedence_1.default.Sequence, E_TTT),
+                        this.generateExpression(stmt.source, Precedence_1.Precedence.Sequence, E_TTT),
                         this.semicolon(flags)
                     ]);
                     return result;
@@ -1144,14 +1144,14 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     var itemFlags = (flags & F_ALLOW_IN) ? E_TTT : E_FTT;
                     if (stmt.init) {
                         return [
-                            this.generateExpression(stmt.id, Precedence_1.default.Assignment, itemFlags),
+                            this.generateExpression(stmt.id, Precedence_1.Precedence.Assignment, itemFlags),
                             space,
                             '=',
                             space,
-                            this.generateExpression(stmt.init, Precedence_1.default.Assignment, itemFlags)
+                            this.generateExpression(stmt.init, Precedence_1.Precedence.Assignment, itemFlags)
                         ];
                     }
-                    return this.generatePattern(stmt.id, Precedence_1.default.Assignment, itemFlags);
+                    return this.generatePattern(stmt.id, Precedence_1.Precedence.Assignment, itemFlags);
                 },
                 VariableDeclaration: function (stmt, flags) {
                     var result, i, iz, node, bodyFlags, that = this;
@@ -1189,9 +1189,9 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     return result;
                 },
                 ThrowStatement: function (stmt, flags) {
-                    return [join('throw', this.generateExpression(stmt.argument, Precedence_1.default.Sequence, E_TTT)), this.semicolon(flags)];
+                    return [join('throw', this.generateExpression(stmt.argument, Precedence_1.Precedence.Sequence, E_TTT)), this.semicolon(flags)];
                 },
-                TryStatement: function (stmt, flags) {
+                TryStatement: function (stmt, _flags) {
                     var result, i, iz, guardedHandlers;
                     result = ['try', this.maybeBlock(stmt.block, S_TFFF)];
                     result = this.maybeBlockSuffix(stmt.block, result);
@@ -1233,12 +1233,12 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     }
                     return result;
                 },
-                SwitchStatement: function (stmt, flags) {
+                SwitchStatement: function (stmt, _flags) {
                     var result, fragment, i, iz, bodyFlags, that = this;
                     withIndent(function () {
                         result = [
                             'switch' + space + '(',
-                            that.generateExpression(stmt.discriminant, Precedence_1.default.Sequence, E_TTT),
+                            that.generateExpression(stmt.discriminant, Precedence_1.Precedence.Sequence, E_TTT),
                             ')' + space + '{' + newline
                         ];
                     });
@@ -1263,7 +1263,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     withIndent(function () {
                         if (stmt.test) {
                             result = [
-                                join('case', that.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT)),
+                                join('case', that.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT)),
                                 ':'
                             ];
                         }
@@ -1299,7 +1299,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     withIndent(function () {
                         result = [
                             'if' + space + '(',
-                            that.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT),
+                            that.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT),
                             ')'
                         ];
                     });
@@ -1332,7 +1332,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                                 result.push(that.generateStatement(stmt.init, S_FFFF));
                             }
                             else {
-                                result.push(that.generateExpression(stmt.init, Precedence_1.default.Sequence, E_FTT));
+                                result.push(that.generateExpression(stmt.init, Precedence_1.Precedence.Sequence, E_FTT));
                                 result.push(';');
                             }
                         }
@@ -1341,7 +1341,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         }
                         if (stmt.test) {
                             result.push(space);
-                            result.push(that.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT));
+                            result.push(that.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT));
                             result.push(';');
                         }
                         else {
@@ -1349,7 +1349,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         }
                         if (stmt.update) {
                             result.push(space);
-                            result.push(that.generateExpression(stmt.update, Precedence_1.default.Sequence, E_TTT));
+                            result.push(that.generateExpression(stmt.update, Precedence_1.Precedence.Sequence, E_TTT));
                             result.push(')');
                         }
                         else {
@@ -1368,7 +1368,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                 LabeledStatement: function (stmt, flags) {
                     return [stmt.label.name + ':', this.maybeBlock(stmt.body, flags & F_SEMICOLON_OPT ? S_TFFT : S_TFFF)];
                 },
-                Program: function (stmt, flags) {
+                Program: function (stmt, _flags) {
                     var result, fragment, i, iz, bodyFlags;
                     iz = stmt.body.length;
                     result = [safeConcatenation && iz > 0 ? '\n' : ''];
@@ -1411,7 +1411,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     }
                     return result;
                 },
-                FunctionDeclaration: function (stmt, flags) {
+                FunctionDeclaration: function (stmt, _flags) {
                     return [
                         generateAsyncPrefix(stmt, true),
                         'function',
@@ -1422,7 +1422,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                 },
                 ReturnStatement: function (stmt, flags) {
                     if (stmt.argument) {
-                        return [join('return', this.generateExpression(stmt.argument, Precedence_1.default.Sequence, E_TTT)), this.semicolon(flags)];
+                        return [join('return', this.generateExpression(stmt.argument, Precedence_1.Precedence.Sequence, E_TTT)), this.semicolon(flags)];
                     }
                     return ['return' + this.semicolon(flags)];
                 },
@@ -1431,7 +1431,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     withIndent(function () {
                         result = [
                             'while' + space + '(',
-                            that.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT),
+                            that.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT),
                             ')'
                         ];
                     });
@@ -1443,7 +1443,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     withIndent(function () {
                         result = [
                             'with' + space + '(',
-                            that.generateExpression(stmt.object, Precedence_1.default.Sequence, E_TTT),
+                            that.generateExpression(stmt.object, Precedence_1.Precedence.Sequence, E_TTT),
                             ')'
                         ];
                     });
@@ -1455,42 +1455,42 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
             CodeGenerator.Expression = {
                 SequenceExpression: function (expr, precedence, flags) {
                     var result, i, iz;
-                    if (Precedence_1.default.Sequence < precedence) {
+                    if (Precedence_1.Precedence.Sequence < precedence) {
                         flags |= F_ALLOW_IN;
                     }
                     result = [];
                     for (i = 0, iz = expr.expressions.length; i < iz; ++i) {
-                        result.push(this.generateExpression(expr.expressions[i], Precedence_1.default.Assignment, flags));
+                        result.push(this.generateExpression(expr.expressions[i], Precedence_1.Precedence.Assignment, flags));
                         if (i + 1 < iz) {
                             result.push(',' + space);
                         }
                     }
-                    return parenthesize(result, Precedence_1.default.Sequence, precedence);
+                    return parenthesize(result, Precedence_1.Precedence.Sequence, precedence);
                 },
                 AssignmentExpression: function (expr, precedence, flags) {
                     return this.generateAssignment(expr.left, expr.right, expr.operator, precedence, flags);
                 },
-                ArrowFunctionExpression: function (expr, precedence, flags) {
-                    return parenthesize(this.generateFunctionBody(expr), Precedence_1.default.ArrowFunction, precedence);
+                ArrowFunctionExpression: function (expr, precedence, _flags) {
+                    return parenthesize(this.generateFunctionBody(expr), Precedence_1.Precedence.ArrowFunction, precedence);
                 },
                 ConditionalExpression: function (expr, precedence, flags) {
-                    if (Precedence_1.default.Conditional < precedence) {
+                    if (Precedence_1.Precedence.Conditional < precedence) {
                         flags |= F_ALLOW_IN;
                     }
                     return parenthesize([
-                        this.generateExpression(expr.test, Precedence_1.default.LogicalOR, flags),
+                        this.generateExpression(expr.test, Precedence_1.Precedence.LogicalOR, flags),
                         space + '?' + space,
-                        this.generateExpression(expr.consequent, Precedence_1.default.Assignment, flags),
+                        this.generateExpression(expr.consequent, Precedence_1.Precedence.Assignment, flags),
                         space + ':' + space,
-                        this.generateExpression(expr.alternate, Precedence_1.default.Assignment, flags)
-                    ], Precedence_1.default.Conditional, precedence);
+                        this.generateExpression(expr.alternate, Precedence_1.Precedence.Assignment, flags)
+                    ], Precedence_1.Precedence.Conditional, precedence);
                 },
                 LogicalExpression: function (expr, precedence, flags) {
                     return this.BinaryExpression(expr, precedence, flags);
                 },
                 BinaryExpression: function (expr, precedence, flags) {
                     var result, currentPrecedence, fragment, leftSource;
-                    currentPrecedence = BinaryPrecedence_1.default[expr.operator];
+                    currentPrecedence = BinaryPrecedence_1.BinaryPrecedence[expr.operator];
                     if (currentPrecedence < precedence) {
                         flags |= F_ALLOW_IN;
                     }
@@ -1518,10 +1518,10 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                 },
                 CallExpression: function (expr, precedence, flags) {
                     var result, i, iz;
-                    result = [this.generateExpression(expr.callee, Precedence_1.default.Call, E_TTF)];
+                    result = [this.generateExpression(expr.callee, Precedence_1.Precedence.Call, E_TTF)];
                     result.push('(');
                     for (i = 0, iz = expr['arguments'].length; i < iz; ++i) {
-                        result.push(this.generateExpression(expr['arguments'][i], Precedence_1.default.Assignment, E_TTT));
+                        result.push(this.generateExpression(expr['arguments'][i], Precedence_1.Precedence.Assignment, E_TTT));
                         if (i + 1 < iz) {
                             result.push(',' + space);
                         }
@@ -1530,31 +1530,31 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     if (!(flags & F_ALLOW_CALL)) {
                         return ['(', result, ')'];
                     }
-                    return parenthesize(result, Precedence_1.default.Call, precedence);
+                    return parenthesize(result, Precedence_1.Precedence.Call, precedence);
                 },
                 NewExpression: function (expr, precedence, flags) {
                     var result, length, i, iz, itemFlags;
                     length = expr['arguments'].length;
                     itemFlags = (flags & F_ALLOW_UNPARATH_NEW && !parentheses && length === 0) ? E_TFT : E_TFF;
-                    result = join('new', this.generateExpression(expr.callee, Precedence_1.default.New, itemFlags));
+                    result = join('new', this.generateExpression(expr.callee, Precedence_1.Precedence.New, itemFlags));
                     if (!(flags & F_ALLOW_UNPARATH_NEW) || parentheses || length > 0) {
                         result.push('(');
                         for (i = 0, iz = length; i < iz; ++i) {
-                            result.push(this.generateExpression(expr['arguments'][i], Precedence_1.default.Assignment, E_TTT));
+                            result.push(this.generateExpression(expr['arguments'][i], Precedence_1.Precedence.Assignment, E_TTT));
                             if (i + 1 < iz) {
                                 result.push(',' + space);
                             }
                         }
                         result.push(')');
                     }
-                    return parenthesize(result, Precedence_1.default.New, precedence);
+                    return parenthesize(result, Precedence_1.Precedence.New, precedence);
                 },
                 MemberExpression: function (expr, precedence, flags) {
                     var result, fragment;
-                    result = [this.generateExpression(expr.object, Precedence_1.default.Call, (flags & F_ALLOW_CALL) ? E_TTF : E_TFF)];
+                    result = [this.generateExpression(expr.object, Precedence_1.Precedence.Call, (flags & F_ALLOW_CALL) ? E_TTF : E_TFF)];
                     if (expr.computed) {
                         result.push('[');
-                        result.push(this.generateExpression(expr.property, Precedence_1.default.Sequence, flags & F_ALLOW_CALL ? E_TTT : E_TFT));
+                        result.push(this.generateExpression(expr.property, Precedence_1.Precedence.Sequence, flags & F_ALLOW_CALL ? E_TTT : E_TFT));
                         result.push(']');
                     }
                     else {
@@ -1570,11 +1570,11 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         result.push('.');
                         result.push(generateIdentifier(expr.property));
                     }
-                    return parenthesize(result, Precedence_1.default.Member, precedence);
+                    return parenthesize(result, Precedence_1.Precedence.Member, precedence);
                 },
-                UnaryExpression: function (expr, precedence, flags) {
+                UnaryExpression: function (expr, precedence, _flags) {
                     var result, fragment, rightCharCode, leftSource, leftCharCode;
-                    fragment = this.generateExpression(expr.argument, Precedence_1.default.Unary, E_TTT);
+                    fragment = this.generateExpression(expr.argument, Precedence_1.Precedence.Unary, E_TTT);
                     if (space === '') {
                         result = join(expr.operator, fragment);
                     }
@@ -1597,9 +1597,9 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                             }
                         }
                     }
-                    return parenthesize(result, Precedence_1.default.Unary, precedence);
+                    return parenthesize(result, Precedence_1.Precedence.Unary, precedence);
                 },
-                YieldExpression: function (expr, precedence, flags) {
+                YieldExpression: function (expr, precedence, _flags) {
                     var result;
                     if (expr.delegate) {
                         result = 'yield*';
@@ -1608,27 +1608,27 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         result = 'yield';
                     }
                     if (expr.argument) {
-                        result = join(result, this.generateExpression(expr.argument, Precedence_1.default.Yield, E_TTT));
+                        result = join(result, this.generateExpression(expr.argument, Precedence_1.Precedence.Yield, E_TTT));
                     }
-                    return parenthesize(result, Precedence_1.default.Yield, precedence);
+                    return parenthesize(result, Precedence_1.Precedence.Yield, precedence);
                 },
-                AwaitExpression: function (expr, precedence, flags) {
-                    var result = join(expr.delegate ? 'await*' : 'await', this.generateExpression(expr.argument, Precedence_1.default.Await, E_TTT));
-                    return parenthesize(result, Precedence_1.default.Await, precedence);
+                AwaitExpression: function (expr, precedence, _flags) {
+                    var result = join(expr.delegate ? 'await*' : 'await', this.generateExpression(expr.argument, Precedence_1.Precedence.Await, E_TTT));
+                    return parenthesize(result, Precedence_1.Precedence.Await, precedence);
                 },
-                UpdateExpression: function (expr, precedence, flags) {
+                UpdateExpression: function (expr, precedence, _flags) {
                     if (expr.prefix) {
                         return parenthesize([
                             expr.operator,
-                            this.generateExpression(expr.argument, Precedence_1.default.Unary, E_TTT)
-                        ], Precedence_1.default.Unary, precedence);
+                            this.generateExpression(expr.argument, Precedence_1.Precedence.Unary, E_TTT)
+                        ], Precedence_1.Precedence.Unary, precedence);
                     }
                     return parenthesize([
-                        this.generateExpression(expr.argument, Precedence_1.default.Postfix, E_TTT),
+                        this.generateExpression(expr.argument, Precedence_1.Precedence.Postfix, E_TTT),
                         expr.operator
-                    ], Precedence_1.default.Postfix, precedence);
+                    ], Precedence_1.Precedence.Postfix, precedence);
                 },
-                FunctionExpression: function (expr, precedence, flags) {
+                FunctionExpression: function (expr, _precedence, _flags) {
                     var result = [
                         generateAsyncPrefix(expr, true),
                         'function'
@@ -1643,13 +1643,13 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     result.push(this.generateFunctionBody(expr));
                     return result;
                 },
-                ExportBatchSpecifier: function (expr, precedence, flags) {
+                ExportBatchSpecifier: function (_expr, _precedence, _flags) {
                     return '*';
                 },
                 ArrayPattern: function (expr, precedence, flags) {
                     return this.ArrayExpression(expr, precedence, flags);
                 },
-                ArrayExpression: function (expr, precedence, flags) {
+                ArrayExpression: function (expr, _precedence, _flags) {
                     var result, multiline, that = this;
                     if (!expr.elements.length) {
                         return '[]';
@@ -1669,7 +1669,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                             }
                             else {
                                 result.push(multiline ? indent : '');
-                                result.push(that.generateExpression(expr.elements[i], Precedence_1.default.Assignment, E_TTT));
+                                result.push(that.generateExpression(expr.elements[i], Precedence_1.Precedence.Assignment, E_TTT));
                             }
                             if (i + 1 < iz) {
                                 result.push(',' + (multiline ? newline : space));
@@ -1683,21 +1683,21 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     result.push(']');
                     return result;
                 },
-                ClassExpression: function (expr, precedence, flags) {
+                ClassExpression: function (expr, _precedence, _flags) {
                     var result, fragment;
                     result = ['class'];
                     if (expr.id) {
-                        result = join(result, this.generateExpression(expr.id, Precedence_1.default.Sequence, E_TTT));
+                        result = join(result, this.generateExpression(expr.id, Precedence_1.Precedence.Sequence, E_TTT));
                     }
                     if (expr.superClass) {
-                        fragment = join('extends', this.generateExpression(expr.superClass, Precedence_1.default.Assignment, E_TTT));
+                        fragment = join('extends', this.generateExpression(expr.superClass, Precedence_1.Precedence.Assignment, E_TTT));
                         result = join(result, fragment);
                     }
                     result.push(space);
                     result.push(this.generateStatement(expr.body, S_TFFT));
                     return result;
                 },
-                MethodDefinition: function (expr, precedence, flags) {
+                MethodDefinition: function (expr, _precedence, _flags) {
                     var result, fragment;
                     if (expr['static']) {
                         result = ['static' + space];
@@ -1720,7 +1720,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     }
                     return join(result, fragment);
                 },
-                Property: function (expr, precedence, flags) {
+                Property: function (expr, _precedence, _flags) {
                     if (expr.kind === 'get' || expr.kind === 'set') {
                         return [
                             expr.kind, noEmptySpace(),
@@ -1741,17 +1741,17 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     return [
                         this.generatePropertyKey(expr.key, expr.computed),
                         ':' + space,
-                        this.generateExpression(expr.value, Precedence_1.default.Assignment, E_TTT)
+                        this.generateExpression(expr.value, Precedence_1.Precedence.Assignment, E_TTT)
                     ];
                 },
-                ObjectExpression: function (expr, precedence, flags) {
+                ObjectExpression: function (expr, _precedence, _flags) {
                     var multiline, result, fragment, that = this;
                     if (!expr.properties.length) {
                         return '{}';
                     }
                     multiline = expr.properties.length > 1;
                     withIndent(function () {
-                        fragment = that.generateExpression(expr.properties[0], Precedence_1.default.Sequence, E_TTT);
+                        fragment = that.generateExpression(expr.properties[0], Precedence_1.Precedence.Sequence, E_TTT);
                     });
                     if (!multiline) {
                         if (!hasLineTerminator(toSourceNodeWhenNeeded(fragment).toString())) {
@@ -1765,7 +1765,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                             result.push(',' + newline);
                             for (i = 1, iz = expr.properties.length; i < iz; ++i) {
                                 result.push(indent);
-                                result.push(that.generateExpression(expr.properties[i], Precedence_1.default.Sequence, E_TTT));
+                                result.push(that.generateExpression(expr.properties[i], Precedence_1.Precedence.Sequence, E_TTT));
                                 if (i + 1 < iz) {
                                     result.push(',' + newline);
                                 }
@@ -1779,7 +1779,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     result.push('}');
                     return result;
                 },
-                ObjectPattern: function (expr, precedence, flags) {
+                ObjectPattern: function (expr, _precedence, _flags) {
                     var result, i, iz, multiline, property, that = this;
                     if (!expr.properties.length) {
                         return '{}';
@@ -1805,7 +1805,7 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         var i, iz;
                         for (i = 0, iz = expr.properties.length; i < iz; ++i) {
                             result.push(multiline ? indent : '');
-                            result.push(that.generateExpression(expr.properties[i], Precedence_1.default.Sequence, E_TTT));
+                            result.push(that.generateExpression(expr.properties[i], Precedence_1.Precedence.Sequence, E_TTT));
                             if (i + 1 < iz) {
                                 result.push(',' + (multiline ? newline : space));
                             }
@@ -1818,16 +1818,16 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     result.push('}');
                     return result;
                 },
-                ThisExpression: function (expr, precedence, flags) {
+                ThisExpression: function (_expr, _precedence, _flags) {
                     return 'this';
                 },
-                Identifier: function (expr, precedence, flags) {
+                Identifier: function (expr, _precedence, _flags) {
                     return generateIdentifier(expr);
                 },
-                ImportDefaultSpecifier: function (expr, precedence, flags) {
+                ImportDefaultSpecifier: function (expr, _precedence, _flags) {
                     return generateIdentifier(expr.id);
                 },
-                ImportNamespaceSpecifier: function (expr, precedence, flags) {
+                ImportNamespaceSpecifier: function (expr, _precedence, _flags) {
                     var result = ['*'];
                     if (expr.id) {
                         result.push(space + 'as' + noEmptySpace() + generateIdentifier(expr.id));
@@ -1837,14 +1837,14 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                 ImportSpecifier: function (expr, precedence, flags) {
                     return this.ExportSpecifier(expr, precedence, flags);
                 },
-                ExportSpecifier: function (expr, precedence, flags) {
+                ExportSpecifier: function (expr, _precedence, _flags) {
                     var result = [expr.id.name];
                     if (expr.name) {
                         result.push(noEmptySpace() + 'as' + noEmptySpace() + generateIdentifier(expr.name));
                     }
                     return result;
                 },
-                Literal: function (expr, precedence, flags) {
+                Literal: function (expr, _precedence, _flags) {
                     var raw;
                     if (expr.hasOwnProperty('raw') && parse && extra.raw) {
                         try {
@@ -1875,17 +1875,17 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                 GeneratorExpression: function (expr, precedence, flags) {
                     return this.ComprehensionExpression(expr, precedence, flags);
                 },
-                ComprehensionExpression: function (expr, precedence, flags) {
+                ComprehensionExpression: function (expr, _precedence, _flags) {
                     var result, i, iz, fragment, that = this;
                     result = (expr.type === estraverse_1.Syntax.GeneratorExpression) ? ['('] : ['['];
                     if (extra.moz.comprehensionExpressionStartsWithAssignment) {
-                        fragment = this.generateExpression(expr.body, Precedence_1.default.Assignment, E_TTT);
+                        fragment = this.generateExpression(expr.body, Precedence_1.Precedence.Assignment, E_TTT);
                         result.push(fragment);
                     }
                     if (expr.blocks) {
                         withIndent(function () {
                             for (i = 0, iz = expr.blocks.length; i < iz; ++i) {
-                                fragment = that.generateExpression(expr.blocks[i], Precedence_1.default.Sequence, E_TTT);
+                                fragment = that.generateExpression(expr.blocks[i], Precedence_1.Precedence.Sequence, E_TTT);
                                 if (i > 0 || extra.moz.comprehensionExpressionStartsWithAssignment) {
                                     result = join(result, fragment);
                                 }
@@ -1897,17 +1897,17 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                     }
                     if (expr.filter) {
                         result = join(result, 'if' + space);
-                        fragment = this.generateExpression(expr.filter, Precedence_1.default.Sequence, E_TTT);
+                        fragment = this.generateExpression(expr.filter, Precedence_1.Precedence.Sequence, E_TTT);
                         result = join(result, ['(', fragment, ')']);
                     }
                     if (!extra.moz.comprehensionExpressionStartsWithAssignment) {
-                        fragment = this.generateExpression(expr.body, Precedence_1.default.Assignment, E_TTT);
+                        fragment = this.generateExpression(expr.body, Precedence_1.Precedence.Assignment, E_TTT);
                         result = join(result, fragment);
                     }
                     result.push((expr.type === estraverse_1.Syntax.GeneratorExpression) ? ')' : ']');
                     return result;
                 },
-                ComprehensionBlock: function (expr, precedence, flags) {
+                ComprehensionBlock: function (expr, _precedence, _flags) {
                     var fragment;
                     if (expr.left.type === estraverse_1.Syntax.VariableDeclaration) {
                         fragment = [
@@ -1916,16 +1916,16 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         ];
                     }
                     else {
-                        fragment = this.generateExpression(expr.left, Precedence_1.default.Call, E_TTT);
+                        fragment = this.generateExpression(expr.left, Precedence_1.Precedence.Call, E_TTT);
                     }
                     fragment = join(fragment, expr.of ? 'of' : 'in');
-                    fragment = join(fragment, this.generateExpression(expr.right, Precedence_1.default.Sequence, E_TTT));
+                    fragment = join(fragment, this.generateExpression(expr.right, Precedence_1.Precedence.Sequence, E_TTT));
                     return ['for' + space + '(', fragment, ')'];
                 },
-                SpreadElement: function (expr, precedence, flags) {
+                SpreadElement: function (expr, _precedence, _flags) {
                     return [
                         '...',
-                        this.generateExpression(expr.argument, Precedence_1.default.Assignment, E_TTT)
+                        this.generateExpression(expr.argument, Precedence_1.Precedence.Assignment, E_TTT)
                     ];
                 },
                 TaggedTemplateExpression: function (expr, precedence, flags) {
@@ -1934,22 +1934,22 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                         itemFlags = E_TFF;
                     }
                     var result = [
-                        this.generateExpression(expr.tag, Precedence_1.default.Call, itemFlags),
-                        this.generateExpression(expr.quasi, Precedence_1.default.Primary, E_FFT)
+                        this.generateExpression(expr.tag, Precedence_1.Precedence.Call, itemFlags),
+                        this.generateExpression(expr.quasi, Precedence_1.Precedence.Primary, E_FFT)
                     ];
-                    return parenthesize(result, Precedence_1.default.TaggedTemplate, precedence);
+                    return parenthesize(result, Precedence_1.Precedence.TaggedTemplate, precedence);
                 },
-                TemplateElement: function (expr, precedence, flags) {
+                TemplateElement: function (expr, _precedence, _flags) {
                     return expr.value.raw;
                 },
-                TemplateLiteral: function (expr, precedence, flags) {
+                TemplateLiteral: function (expr, _precedence, _flags) {
                     var result, i, iz;
                     result = ['`'];
                     for (i = 0, iz = expr.quasis.length; i < iz; ++i) {
-                        result.push(this.generateExpression(expr.quasis[i], Precedence_1.default.Primary, E_TTT));
+                        result.push(this.generateExpression(expr.quasis[i], Precedence_1.Precedence.Primary, E_TTT));
                         if (i + 1 < iz) {
                             result.push('${' + space);
-                            result.push(this.generateExpression(expr.expressions[i], Precedence_1.default.Sequence, E_TTT));
+                            result.push(this.generateExpression(expr.expressions[i], Precedence_1.Precedence.Sequence, E_TTT));
                             result.push(space + '}');
                         }
                     }
@@ -1975,12 +1975,12 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
                 semicolons: false
             };
             FORMAT_DEFAULTS = getDefaultOptions().format;
-            escodegen = {
+            exports_1("escodegen", escodegen = {
                 generate: generate,
-                Precedence: updateDeeply({}, Precedence_1.default),
+                Precedence: updateDeeply({}, Precedence_1.Precedence),
                 FORMAT_MINIFY: FORMAT_MINIFY,
                 FORMAT_DEFAULT: FORMAT_DEFAULTS
-            };
+            });
         }
     };
 });

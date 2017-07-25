@@ -19,9 +19,11 @@ define(["require", "exports"], function (require, exports) {
             0x61 <= ch && ch <= 0x66 ||
             0x41 <= ch && ch <= 0x46;
     }
+    exports.isHexDigit = isHexDigit;
     function isOctalDigit(ch) {
         return ch >= 0x30 && ch <= 0x37;
     }
+    exports.isOctalDigit = isOctalDigit;
     NON_ASCII_WHITESPACES = [
         0x1680, 0x180E,
         0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A,

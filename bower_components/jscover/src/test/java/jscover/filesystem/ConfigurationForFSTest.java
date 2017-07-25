@@ -342,6 +342,7 @@ Public License instead of this License.
 
 package jscover.filesystem;
 
+import com.google.javascript.jscomp.parsing.Config;
 import jscover.util.ReflectionUtils;
 import org.junit.Test;
 
@@ -361,9 +362,8 @@ public class ConfigurationForFSTest {
         ConfigurationForFS configuration = ConfigurationForFS.parse(new String[]{"-fs", "src", "doc"});
         assertThat(configuration.showHelp(), is(false));
         assertThat(configuration.isInvalid(), is(false));
-        assertThat(configuration.getJSVersion(), equalTo(150));
+        assertThat(configuration.getECMAVersion(), equalTo(Config.LanguageMode.ECMASCRIPT8));
         assertThat(configuration.skipInstrumentation("/"), is(false));
-        assertThat(configuration.getCompilerEnvirons().getLanguageVersion(), equalTo(150));
         assertThat(configuration.isIncludeBranch(), is(true));
         assertThat(configuration.isIncludeFunction(), is(true));
         assertThat(configuration.getLogLevel(), is(SEVERE));
@@ -478,10 +478,9 @@ public class ConfigurationForFSTest {
     }
 
     @Test
-    public void shouldParseJSVersion() {
-        ConfigurationForFS configuration = ConfigurationForFS.parse(new String[]{"-fs", "--js-version=1.8", "src", "doc"});
-        assertThat(configuration.getJSVersion(), equalTo(180));
-        assertThat(configuration.getCompilerEnvirons().getLanguageVersion(), equalTo(180));
+    public void shouldParseECMAVersion() {
+        ConfigurationForFS configuration = ConfigurationForFS.parse(new String[]{"-fs", "--js-version=ECMASCRIPT7", "src", "doc"});
+        assertThat(configuration.getECMAVersion(), equalTo(Config.LanguageMode.ECMASCRIPT7));
     }
 
     @Test

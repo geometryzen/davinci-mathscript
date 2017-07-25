@@ -1,4 +1,4 @@
-import IRegExpFlags from './IRegExpFlags';
+import { IRegExpFlags } from './IRegExpFlags';
 
 export interface IToken {
     type?: number;
@@ -13,5 +13,3 @@ export interface IToken {
     startLineStart?: number;
     end: number;
 }
-
-export default IToken;

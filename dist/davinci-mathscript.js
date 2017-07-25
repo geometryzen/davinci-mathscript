@@ -440,7 +440,7 @@ define("../bower_components/almond/almond", function(){});
 define('core',["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.VERSION = '1.2.3';
+    exports.VERSION = '1.3.1';
 });
 
 define('syntax',["require", "exports"], function (require, exports) {
@@ -2586,7 +2586,7 @@ define('scanner',["require", "exports", "./assert", "./character", "./messages"]
             var self = this;
             if (flags.indexOf('u') >= 0) {
                 tmp = tmp
-                    .replace(/\\u\{([0-9a-fA-F]+)\}|\\u([a-fA-F0-9]{4})/g, function ($0, $1, $2) {
+                    .replace(/\\u\{([0-9a-fA-F]+)\}|\\u([a-fA-F0-9]{4})/g, function (_$0, $1, $2) {
                     var codePoint = parseInt($1 || $2, 16);
                     if (codePoint > 0x10FFFF) {
                         self.throwUnexpectedToken(messages_1.Messages.InvalidRegExp);
@@ -2797,7 +2797,6 @@ define('Precedence',["require", "exports"], function (require, exports) {
         Member: 18,
         Primary: 19
     };
-    exports.default = exports.Precedence;
 });
 
 define('parser',["require", "exports", "./assert", "./error-handler", "./messages", "./nodes", "./scanner", "./syntax", "./token", "./Precedence"], function (require, exports, assert_1, error_handler_1, messages_1, Node, scanner_1, syntax_1, token_1, Precedence_1) {
@@ -2824,32 +2823,32 @@ define('parser',["require", "exports", "./assert", "./error-handler", "./message
             this.scanner = new scanner_1.Scanner(code, this.errorHandler);
             this.scanner.trackComment = this.config.comment;
             this.operatorPrecedence = {
-                ')': Precedence_1.default.Sequence,
-                ';': Precedence_1.default.Sequence,
-                ',': Precedence_1.default.Sequence,
-                '=': Precedence_1.default.Sequence,
-                ']': Precedence_1.default.Sequence,
-                '||': Precedence_1.default.LogicalOR,
-                '&&': Precedence_1.default.LogicalAND,
-                '|': Precedence_1.default.BitwiseOR,
-                '^': Precedence_1.default.BitwiseXOR,
-                '&': Precedence_1.default.BitwiseAND,
-                '==': Precedence_1.default.Equality,
-                '!=': Precedence_1.default.Equality,
-                '===': Precedence_1.default.Equality,
-                '!==': Precedence_1.default.Equality,
-                '<': Precedence_1.default.Relational,
-                '>': Precedence_1.default.Relational,
-                '<=': Precedence_1.default.Relational,
-                '>=': Precedence_1.default.Relational,
-                '<<': Precedence_1.default.BitwiseSHIFT,
-                '>>': Precedence_1.default.BitwiseSHIFT,
-                '>>>': Precedence_1.default.BitwiseSHIFT,
-                '+': Precedence_1.default.Additive,
-                '-': Precedence_1.default.Additive,
-                '*': Precedence_1.default.Multiplicative,
-                '/': Precedence_1.default.Multiplicative,
-                '%': Precedence_1.default.BitwiseSHIFT
+                ')': Precedence_1.Precedence.Sequence,
+                ';': Precedence_1.Precedence.Sequence,
+                ',': Precedence_1.Precedence.Sequence,
+                '=': Precedence_1.Precedence.Sequence,
+                ']': Precedence_1.Precedence.Sequence,
+                '||': Precedence_1.Precedence.LogicalOR,
+                '&&': Precedence_1.Precedence.LogicalAND,
+                '|': Precedence_1.Precedence.BitwiseOR,
+                '^': Precedence_1.Precedence.BitwiseXOR,
+                '&': Precedence_1.Precedence.BitwiseAND,
+                '==': Precedence_1.Precedence.Equality,
+                '!=': Precedence_1.Precedence.Equality,
+                '===': Precedence_1.Precedence.Equality,
+                '!==': Precedence_1.Precedence.Equality,
+                '<': Precedence_1.Precedence.Relational,
+                '>': Precedence_1.Precedence.Relational,
+                '<=': Precedence_1.Precedence.Relational,
+                '>=': Precedence_1.Precedence.Relational,
+                '<<': Precedence_1.Precedence.BitwiseSHIFT,
+                '>>': Precedence_1.Precedence.BitwiseSHIFT,
+                '>>>': Precedence_1.Precedence.BitwiseSHIFT,
+                '+': Precedence_1.Precedence.Additive,
+                '-': Precedence_1.Precedence.Additive,
+                '*': Precedence_1.Precedence.Multiplicative,
+                '/': Precedence_1.Precedence.Multiplicative,
+                '%': Precedence_1.Precedence.BitwiseSHIFT
             };
             this.lookahead = {
                 type: 2,
@@ -2894,12 +2893,12 @@ define('parser',["require", "exports", "./assert", "./error-handler", "./message
             };
         }
         Parser.prototype.throwError = function (messageFormat) {
-            var values = [];
+            var _values = [];
             for (var _i = 1; _i < arguments.length; _i++) {
-                values[_i - 1] = arguments[_i];
+                _values[_i - 1] = arguments[_i];
             }
             var args = Array.prototype.slice.call(arguments, 1);
-            var msg = messageFormat.replace(/%(\d)/g, function (whole, idx) {
+            var msg = messageFormat.replace(/%(\d)/g, function (_whole, idx) {
                 assert_1.assert(idx < args.length, 'Message reference must be in range');
                 return args[idx];
             });
@@ -2909,12 +2908,12 @@ define('parser',["require", "exports", "./assert", "./error-handler", "./message
             throw this.errorHandler.createError(index, line, column, msg);
         };
         Parser.prototype.tolerateError = function (messageFormat) {
-            var values = [];
+            var _values = [];
             for (var _i = 1; _i < arguments.length; _i++) {
-                values[_i - 1] = arguments[_i];
+                _values[_i - 1] = arguments[_i];
             }
             var args = Array.prototype.slice.call(arguments, 1);
-            var msg = messageFormat.replace(/%(\d)/g, function (whole, idx) {
+            var msg = messageFormat.replace(/%(\d)/g, function (_whole, idx) {
                 assert_1.assert(idx < args.length, 'Message reference must be in range');
                 return args[idx];
             });
@@ -4455,7 +4454,7 @@ define('parser',["require", "exports", "./assert", "./error-handler", "./message
             }
             return this.finalize(node, new Node.Property('init', key, computed, value, method, shorthand));
         };
-        Parser.prototype.parseRestProperty = function (params, kind) {
+        Parser.prototype.parseRestProperty = function (params, _kind) {
             var node = this.createNode();
             this.expect('...');
             var arg = this.parsePattern(params);
@@ -7508,9 +7507,11 @@ define('code',["require", "exports"], function (require, exports) {
             0x61 <= ch && ch <= 0x66 ||
             0x41 <= ch && ch <= 0x46;
     }
+    exports.isHexDigit = isHexDigit;
     function isOctalDigit(ch) {
         return ch >= 0x30 && ch <= 0x37;
     }
+    exports.isOctalDigit = isOctalDigit;
     NON_ASCII_WHITESPACES = [
         0x1680, 0x180E,
         0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A,
@@ -7576,33 +7577,32 @@ define('BinaryPrecedence',["require", "exports", "./Precedence"], function (requ
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.BinaryPrecedence = {
-        '||': Precedence_1.default.LogicalOR,
-        '&&': Precedence_1.default.LogicalAND,
-        '|': Precedence_1.default.BitwiseOR,
-        '^': Precedence_1.default.BitwiseXOR,
-        '&': Precedence_1.default.BitwiseAND,
-        '==': Precedence_1.default.Equality,
-        '!=': Precedence_1.default.Equality,
-        '===': Precedence_1.default.Equality,
-        '!==': Precedence_1.default.Equality,
-        'is': Precedence_1.default.Equality,
-        'isnt': Precedence_1.default.Equality,
-        '<': Precedence_1.default.Relational,
-        '>': Precedence_1.default.Relational,
-        '<=': Precedence_1.default.Relational,
-        '>=': Precedence_1.default.Relational,
-        'in': Precedence_1.default.Relational,
-        'instanceof': Precedence_1.default.Relational,
-        '<<': Precedence_1.default.BitwiseSHIFT,
-        '>>': Precedence_1.default.BitwiseSHIFT,
-        '>>>': Precedence_1.default.BitwiseSHIFT,
-        '+': Precedence_1.default.Additive,
-        '-': Precedence_1.default.Additive,
-        '*': Precedence_1.default.Multiplicative,
-        '%': Precedence_1.default.Multiplicative,
-        '/': Precedence_1.default.Multiplicative
+        '||': Precedence_1.Precedence.LogicalOR,
+        '&&': Precedence_1.Precedence.LogicalAND,
+        '|': Precedence_1.Precedence.BitwiseOR,
+        '^': Precedence_1.Precedence.BitwiseXOR,
+        '&': Precedence_1.Precedence.BitwiseAND,
+        '==': Precedence_1.Precedence.Equality,
+        '!=': Precedence_1.Precedence.Equality,
+        '===': Precedence_1.Precedence.Equality,
+        '!==': Precedence_1.Precedence.Equality,
+        'is': Precedence_1.Precedence.Equality,
+        'isnt': Precedence_1.Precedence.Equality,
+        '<': Precedence_1.Precedence.Relational,
+        '>': Precedence_1.Precedence.Relational,
+        '<=': Precedence_1.Precedence.Relational,
+        '>=': Precedence_1.Precedence.Relational,
+        'in': Precedence_1.Precedence.Relational,
+        'instanceof': Precedence_1.Precedence.Relational,
+        '<<': Precedence_1.Precedence.BitwiseSHIFT,
+        '>>': Precedence_1.Precedence.BitwiseSHIFT,
+        '>>>': Precedence_1.Precedence.BitwiseSHIFT,
+        '+': Precedence_1.Precedence.Additive,
+        '-': Precedence_1.Precedence.Additive,
+        '*': Precedence_1.Precedence.Multiplicative,
+        '%': Precedence_1.Precedence.Multiplicative,
+        '/': Precedence_1.Precedence.Multiplicative
     };
-    exports.default = exports.BinaryPrecedence;
 });
 
 define('escodegen',["require", "exports", "./estraverse", "./code", "./code", "./code", "./code", "./Precedence", "./BinaryPrecedence"], function (require, exports, estraverse_1, code_1, code_2, code_3, code_4, Precedence_1, BinaryPrecedence_1) {
@@ -8158,11 +8158,11 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
         var verbatim, result, prec;
         verbatim = expr[extra.verbatim];
         if (typeof verbatim === 'string') {
-            result = parenthesize(generateVerbatimString(verbatim), Precedence_1.default.Sequence, precedence);
+            result = parenthesize(generateVerbatimString(verbatim), Precedence_1.Precedence.Sequence, precedence);
         }
         else {
             result = generateVerbatimString(verbatim.content);
-            prec = (verbatim.precedence != null) ? verbatim.precedence : Precedence_1.default.Sequence;
+            prec = (verbatim.precedence != null) ? verbatim.precedence : Precedence_1.Precedence.Sequence;
             result = parenthesize(result, prec, precedence);
         }
         return toSourceNodeWhenNeeded(result, expr);
@@ -8186,10 +8186,10 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 }
                 for (i = 0, iz = node.params.length; i < iz; ++i) {
                     if (hasDefault && node.defaults[i]) {
-                        result.push(this.generateAssignment(node.params[i], node.defaults[i], '=', Precedence_1.default.Assignment, E_TTT));
+                        result.push(this.generateAssignment(node.params[i], node.defaults[i], '=', Precedence_1.Precedence.Assignment, E_TTT));
                     }
                     else {
-                        result.push(this.generatePattern(node.params[i], Precedence_1.default.Assignment, E_TTT));
+                        result.push(this.generatePattern(node.params[i], Precedence_1.Precedence.Assignment, E_TTT));
                     }
                     if (i + 1 < iz) {
                         result.push(',' + space);
@@ -8272,7 +8272,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             }
             if (node.expression) {
                 result.push(space);
-                expr = this.generateExpression(node.body, Precedence_1.default.Assignment, E_TTT);
+                expr = this.generateExpression(node.body, Precedence_1.Precedence.Assignment, E_TTT);
                 if (expr.toString().charAt(0) === '{') {
                     expr = ['(', expr, ')'];
                 }
@@ -8293,10 +8293,10 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                     });
                 }
                 else {
-                    result.push(that.generateExpression(stmt.left, Precedence_1.default.Call, E_TTT));
+                    result.push(that.generateExpression(stmt.left, Precedence_1.Precedence.Call, E_TTT));
                 }
                 result = join(result, operator);
-                result = [join(result, that.generateExpression(stmt.right, Precedence_1.default.Sequence, E_TTT)), ')'];
+                result = [join(result, that.generateExpression(stmt.right, Precedence_1.Precedence.Sequence, E_TTT)), ')'];
             });
             result.push(this.maybeBlock(stmt.body, flags));
             return result;
@@ -8306,21 +8306,21 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             if (computed) {
                 result.push('[');
             }
-            result.push(this.generateExpression(expr, Precedence_1.default.Sequence, E_TTT));
+            result.push(this.generateExpression(expr, Precedence_1.Precedence.Sequence, E_TTT));
             if (computed) {
                 result.push(']');
             }
             return result;
         };
         CodeGenerator.prototype.generateAssignment = function (left, right, operator, precedence, flags) {
-            if (Precedence_1.default.Assignment < precedence) {
+            if (Precedence_1.Precedence.Assignment < precedence) {
                 flags |= F_ALLOW_IN;
             }
             return parenthesize([
-                this.generateExpression(left, Precedence_1.default.Call, flags),
+                this.generateExpression(left, Precedence_1.Precedence.Call, flags),
                 space + operator + space,
-                this.generateExpression(right, Precedence_1.default.Assignment, flags)
-            ], Precedence_1.default.Assignment, precedence);
+                this.generateExpression(right, Precedence_1.Precedence.Assignment, flags)
+            ], Precedence_1.Precedence.Assignment, precedence);
         };
         CodeGenerator.prototype.semicolon = function (flags) {
             if (!semicolons && flags & F_SEMICOLON_OPT) {
@@ -8432,13 +8432,13 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             }
             return 'continue' + this.semicolon(flags);
         },
-        ClassBody: function (stmt, flags) {
+        ClassBody: function (stmt, _flags) {
             var result = ['{', newline], that = this;
             withIndent(function (indent) {
                 var i, iz;
                 for (i = 0, iz = stmt.body.length; i < iz; ++i) {
                     result.push(indent);
-                    result.push(that.generateExpression(stmt.body[i], Precedence_1.default.Sequence, E_TTT));
+                    result.push(that.generateExpression(stmt.body[i], Precedence_1.Precedence.Sequence, E_TTT));
                     if (i + 1 < iz) {
                         result.push(newline);
                     }
@@ -8451,11 +8451,11 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             result.push('}');
             return result;
         },
-        ClassDeclaration: function (stmt, flags) {
+        ClassDeclaration: function (stmt, _flags) {
             var result, fragment;
             result = ['class ' + stmt.id.name];
             if (stmt.superClass) {
-                fragment = join('extends', this.generateExpression(stmt.superClass, Precedence_1.default.Assignment, E_TTT));
+                fragment = join('extends', this.generateExpression(stmt.superClass, Precedence_1.Precedence.Assignment, E_TTT));
                 result = join(result, fragment);
             }
             result.push(space);
@@ -8473,31 +8473,31 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             result = this.maybeBlockSuffix(stmt.body, result);
             return join(result, [
                 'while' + space + '(',
-                this.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT),
+                this.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT),
                 ')' + this.semicolon(flags)
             ]);
         },
-        CatchClause: function (stmt, flags) {
+        CatchClause: function (stmt, _flags) {
             var result, that = this;
             withIndent(function () {
                 var guard;
                 result = [
                     'catch' + space + '(',
-                    that.generateExpression(stmt.param, Precedence_1.default.Sequence, E_TTT),
+                    that.generateExpression(stmt.param, Precedence_1.Precedence.Sequence, E_TTT),
                     ')'
                 ];
                 if (stmt.guard) {
-                    guard = that.generateExpression(stmt.guard, Precedence_1.default.Sequence, E_TTT);
+                    guard = that.generateExpression(stmt.guard, Precedence_1.Precedence.Sequence, E_TTT);
                     result.splice(2, 0, ' if ', guard);
                 }
             });
             result.push(this.maybeBlock(stmt.body, S_TFFF));
             return result;
         },
-        DebuggerStatement: function (stmt, flags) {
+        DebuggerStatement: function (_stmt, flags) {
             return 'debugger' + this.semicolon(flags);
         },
-        EmptyStatement: function (stmt, flags) {
+        EmptyStatement: function (_stmt, _flags) {
             return ';';
         },
         ExportDeclaration: function (stmt, flags) {
@@ -8509,7 +8509,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                     result = join(result, this.generateStatement(stmt.declaration, bodyFlags));
                 }
                 else {
-                    result = join(result, this.generateExpression(stmt.declaration, Precedence_1.default.Assignment, E_TTT) + this.semicolon(flags));
+                    result = join(result, this.generateExpression(stmt.declaration, Precedence_1.Precedence.Assignment, E_TTT) + this.semicolon(flags));
                 }
                 return result;
             }
@@ -8527,7 +8527,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                         result.push(newline);
                         for (i = 0, iz = stmt.specifiers.length; i < iz; ++i) {
                             result.push(indent);
-                            result.push(that.generateExpression(stmt.specifiers[i], Precedence_1.default.Sequence, E_TTT));
+                            result.push(that.generateExpression(stmt.specifiers[i], Precedence_1.Precedence.Sequence, E_TTT));
                             if (i + 1 < iz) {
                                 result.push(',' + newline);
                             }
@@ -8541,7 +8541,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 if (stmt.source) {
                     result = join(result, [
                         'from' + space,
-                        this.generateExpression(stmt.source, Precedence_1.default.Sequence, E_TTT),
+                        this.generateExpression(stmt.source, Precedence_1.Precedence.Sequence, E_TTT),
                         this.semicolon(flags)
                     ]);
                 }
@@ -8591,7 +8591,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 code = fragment.charCodeAt(i + 8);
                 return code === 0x28 || code_4.isWhiteSpace(code) || code === 0x2A || code_1.isLineTerminator(code);
             }
-            result = [this.generateExpression(stmt.expression, Precedence_1.default.Sequence, E_TTT)];
+            result = [this.generateExpression(stmt.expression, Precedence_1.Precedence.Sequence, E_TTT)];
             fragment = toSourceNodeWhenNeeded(result).toString();
             if (fragment.charCodeAt(0) === 0x7B ||
                 isClassPrefixed(fragment) ||
@@ -8611,7 +8611,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 return [
                     'import',
                     space,
-                    this.generateExpression(stmt.source, Precedence_1.default.Sequence, E_TTT),
+                    this.generateExpression(stmt.source, Precedence_1.Precedence.Sequence, E_TTT),
                     this.semicolon(flags)
                 ];
             }
@@ -8621,7 +8621,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             cursor = 0;
             if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportDefaultSpecifier) {
                 result = join(result, [
-                    this.generateExpression(stmt.specifiers[cursor], Precedence_1.default.Sequence, E_TTT)
+                    this.generateExpression(stmt.specifiers[cursor], Precedence_1.Precedence.Sequence, E_TTT)
                 ]);
                 ++cursor;
             }
@@ -8632,14 +8632,14 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 if (stmt.specifiers[cursor].type === estraverse_1.Syntax.ImportNamespaceSpecifier) {
                     result = join(result, [
                         space,
-                        this.generateExpression(stmt.specifiers[cursor], Precedence_1.default.Sequence, E_TTT)
+                        this.generateExpression(stmt.specifiers[cursor], Precedence_1.Precedence.Sequence, E_TTT)
                     ]);
                 }
                 else {
                     result.push(space + '{');
                     if ((stmt.specifiers.length - cursor) === 1) {
                         result.push(space);
-                        result.push(this.generateExpression(stmt.specifiers[cursor], Precedence_1.default.Sequence, E_TTT));
+                        result.push(this.generateExpression(stmt.specifiers[cursor], Precedence_1.Precedence.Sequence, E_TTT));
                         result.push(space + '}' + space);
                     }
                     else {
@@ -8648,7 +8648,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                             result.push(newline);
                             for (i = cursor, iz = stmt.specifiers.length; i < iz; ++i) {
                                 result.push(indent);
-                                result.push(that.generateExpression(stmt.specifiers[i], Precedence_1.default.Sequence, E_TTT));
+                                result.push(that.generateExpression(stmt.specifiers[i], Precedence_1.Precedence.Sequence, E_TTT));
                                 if (i + 1 < iz) {
                                     result.push(',' + newline);
                                 }
@@ -8663,7 +8663,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             }
             result = join(result, [
                 'from' + space,
-                this.generateExpression(stmt.source, Precedence_1.default.Sequence, E_TTT),
+                this.generateExpression(stmt.source, Precedence_1.Precedence.Sequence, E_TTT),
                 this.semicolon(flags)
             ]);
             return result;
@@ -8672,14 +8672,14 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             var itemFlags = (flags & F_ALLOW_IN) ? E_TTT : E_FTT;
             if (stmt.init) {
                 return [
-                    this.generateExpression(stmt.id, Precedence_1.default.Assignment, itemFlags),
+                    this.generateExpression(stmt.id, Precedence_1.Precedence.Assignment, itemFlags),
                     space,
                     '=',
                     space,
-                    this.generateExpression(stmt.init, Precedence_1.default.Assignment, itemFlags)
+                    this.generateExpression(stmt.init, Precedence_1.Precedence.Assignment, itemFlags)
                 ];
             }
-            return this.generatePattern(stmt.id, Precedence_1.default.Assignment, itemFlags);
+            return this.generatePattern(stmt.id, Precedence_1.Precedence.Assignment, itemFlags);
         },
         VariableDeclaration: function (stmt, flags) {
             var result, i, iz, node, bodyFlags, that = this;
@@ -8717,9 +8717,9 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             return result;
         },
         ThrowStatement: function (stmt, flags) {
-            return [join('throw', this.generateExpression(stmt.argument, Precedence_1.default.Sequence, E_TTT)), this.semicolon(flags)];
+            return [join('throw', this.generateExpression(stmt.argument, Precedence_1.Precedence.Sequence, E_TTT)), this.semicolon(flags)];
         },
-        TryStatement: function (stmt, flags) {
+        TryStatement: function (stmt, _flags) {
             var result, i, iz, guardedHandlers;
             result = ['try', this.maybeBlock(stmt.block, S_TFFF)];
             result = this.maybeBlockSuffix(stmt.block, result);
@@ -8761,12 +8761,12 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             }
             return result;
         },
-        SwitchStatement: function (stmt, flags) {
+        SwitchStatement: function (stmt, _flags) {
             var result, fragment, i, iz, bodyFlags, that = this;
             withIndent(function () {
                 result = [
                     'switch' + space + '(',
-                    that.generateExpression(stmt.discriminant, Precedence_1.default.Sequence, E_TTT),
+                    that.generateExpression(stmt.discriminant, Precedence_1.Precedence.Sequence, E_TTT),
                     ')' + space + '{' + newline
                 ];
             });
@@ -8791,7 +8791,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             withIndent(function () {
                 if (stmt.test) {
                     result = [
-                        join('case', that.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT)),
+                        join('case', that.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT)),
                         ':'
                     ];
                 }
@@ -8827,7 +8827,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             withIndent(function () {
                 result = [
                     'if' + space + '(',
-                    that.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT),
+                    that.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT),
                     ')'
                 ];
             });
@@ -8860,7 +8860,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                         result.push(that.generateStatement(stmt.init, S_FFFF));
                     }
                     else {
-                        result.push(that.generateExpression(stmt.init, Precedence_1.default.Sequence, E_FTT));
+                        result.push(that.generateExpression(stmt.init, Precedence_1.Precedence.Sequence, E_FTT));
                         result.push(';');
                     }
                 }
@@ -8869,7 +8869,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 }
                 if (stmt.test) {
                     result.push(space);
-                    result.push(that.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT));
+                    result.push(that.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT));
                     result.push(';');
                 }
                 else {
@@ -8877,7 +8877,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 }
                 if (stmt.update) {
                     result.push(space);
-                    result.push(that.generateExpression(stmt.update, Precedence_1.default.Sequence, E_TTT));
+                    result.push(that.generateExpression(stmt.update, Precedence_1.Precedence.Sequence, E_TTT));
                     result.push(')');
                 }
                 else {
@@ -8896,7 +8896,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
         LabeledStatement: function (stmt, flags) {
             return [stmt.label.name + ':', this.maybeBlock(stmt.body, flags & F_SEMICOLON_OPT ? S_TFFT : S_TFFF)];
         },
-        Program: function (stmt, flags) {
+        Program: function (stmt, _flags) {
             var result, fragment, i, iz, bodyFlags;
             iz = stmt.body.length;
             result = [safeConcatenation && iz > 0 ? '\n' : ''];
@@ -8939,7 +8939,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             }
             return result;
         },
-        FunctionDeclaration: function (stmt, flags) {
+        FunctionDeclaration: function (stmt, _flags) {
             return [
                 generateAsyncPrefix(stmt, true),
                 'function',
@@ -8950,7 +8950,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
         },
         ReturnStatement: function (stmt, flags) {
             if (stmt.argument) {
-                return [join('return', this.generateExpression(stmt.argument, Precedence_1.default.Sequence, E_TTT)), this.semicolon(flags)];
+                return [join('return', this.generateExpression(stmt.argument, Precedence_1.Precedence.Sequence, E_TTT)), this.semicolon(flags)];
             }
             return ['return' + this.semicolon(flags)];
         },
@@ -8959,7 +8959,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             withIndent(function () {
                 result = [
                     'while' + space + '(',
-                    that.generateExpression(stmt.test, Precedence_1.default.Sequence, E_TTT),
+                    that.generateExpression(stmt.test, Precedence_1.Precedence.Sequence, E_TTT),
                     ')'
                 ];
             });
@@ -8971,7 +8971,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             withIndent(function () {
                 result = [
                     'with' + space + '(',
-                    that.generateExpression(stmt.object, Precedence_1.default.Sequence, E_TTT),
+                    that.generateExpression(stmt.object, Precedence_1.Precedence.Sequence, E_TTT),
                     ')'
                 ];
             });
@@ -8983,42 +8983,42 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
     CodeGenerator.Expression = {
         SequenceExpression: function (expr, precedence, flags) {
             var result, i, iz;
-            if (Precedence_1.default.Sequence < precedence) {
+            if (Precedence_1.Precedence.Sequence < precedence) {
                 flags |= F_ALLOW_IN;
             }
             result = [];
             for (i = 0, iz = expr.expressions.length; i < iz; ++i) {
-                result.push(this.generateExpression(expr.expressions[i], Precedence_1.default.Assignment, flags));
+                result.push(this.generateExpression(expr.expressions[i], Precedence_1.Precedence.Assignment, flags));
                 if (i + 1 < iz) {
                     result.push(',' + space);
                 }
             }
-            return parenthesize(result, Precedence_1.default.Sequence, precedence);
+            return parenthesize(result, Precedence_1.Precedence.Sequence, precedence);
         },
         AssignmentExpression: function (expr, precedence, flags) {
             return this.generateAssignment(expr.left, expr.right, expr.operator, precedence, flags);
         },
-        ArrowFunctionExpression: function (expr, precedence, flags) {
-            return parenthesize(this.generateFunctionBody(expr), Precedence_1.default.ArrowFunction, precedence);
+        ArrowFunctionExpression: function (expr, precedence, _flags) {
+            return parenthesize(this.generateFunctionBody(expr), Precedence_1.Precedence.ArrowFunction, precedence);
         },
         ConditionalExpression: function (expr, precedence, flags) {
-            if (Precedence_1.default.Conditional < precedence) {
+            if (Precedence_1.Precedence.Conditional < precedence) {
                 flags |= F_ALLOW_IN;
             }
             return parenthesize([
-                this.generateExpression(expr.test, Precedence_1.default.LogicalOR, flags),
+                this.generateExpression(expr.test, Precedence_1.Precedence.LogicalOR, flags),
                 space + '?' + space,
-                this.generateExpression(expr.consequent, Precedence_1.default.Assignment, flags),
+                this.generateExpression(expr.consequent, Precedence_1.Precedence.Assignment, flags),
                 space + ':' + space,
-                this.generateExpression(expr.alternate, Precedence_1.default.Assignment, flags)
-            ], Precedence_1.default.Conditional, precedence);
+                this.generateExpression(expr.alternate, Precedence_1.Precedence.Assignment, flags)
+            ], Precedence_1.Precedence.Conditional, precedence);
         },
         LogicalExpression: function (expr, precedence, flags) {
             return this.BinaryExpression(expr, precedence, flags);
         },
         BinaryExpression: function (expr, precedence, flags) {
             var result, currentPrecedence, fragment, leftSource;
-            currentPrecedence = BinaryPrecedence_1.default[expr.operator];
+            currentPrecedence = BinaryPrecedence_1.BinaryPrecedence[expr.operator];
             if (currentPrecedence < precedence) {
                 flags |= F_ALLOW_IN;
             }
@@ -9046,10 +9046,10 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
         },
         CallExpression: function (expr, precedence, flags) {
             var result, i, iz;
-            result = [this.generateExpression(expr.callee, Precedence_1.default.Call, E_TTF)];
+            result = [this.generateExpression(expr.callee, Precedence_1.Precedence.Call, E_TTF)];
             result.push('(');
             for (i = 0, iz = expr['arguments'].length; i < iz; ++i) {
-                result.push(this.generateExpression(expr['arguments'][i], Precedence_1.default.Assignment, E_TTT));
+                result.push(this.generateExpression(expr['arguments'][i], Precedence_1.Precedence.Assignment, E_TTT));
                 if (i + 1 < iz) {
                     result.push(',' + space);
                 }
@@ -9058,31 +9058,31 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             if (!(flags & F_ALLOW_CALL)) {
                 return ['(', result, ')'];
             }
-            return parenthesize(result, Precedence_1.default.Call, precedence);
+            return parenthesize(result, Precedence_1.Precedence.Call, precedence);
         },
         NewExpression: function (expr, precedence, flags) {
             var result, length, i, iz, itemFlags;
             length = expr['arguments'].length;
             itemFlags = (flags & F_ALLOW_UNPARATH_NEW && !parentheses && length === 0) ? E_TFT : E_TFF;
-            result = join('new', this.generateExpression(expr.callee, Precedence_1.default.New, itemFlags));
+            result = join('new', this.generateExpression(expr.callee, Precedence_1.Precedence.New, itemFlags));
             if (!(flags & F_ALLOW_UNPARATH_NEW) || parentheses || length > 0) {
                 result.push('(');
                 for (i = 0, iz = length; i < iz; ++i) {
-                    result.push(this.generateExpression(expr['arguments'][i], Precedence_1.default.Assignment, E_TTT));
+                    result.push(this.generateExpression(expr['arguments'][i], Precedence_1.Precedence.Assignment, E_TTT));
                     if (i + 1 < iz) {
                         result.push(',' + space);
                     }
                 }
                 result.push(')');
             }
-            return parenthesize(result, Precedence_1.default.New, precedence);
+            return parenthesize(result, Precedence_1.Precedence.New, precedence);
         },
         MemberExpression: function (expr, precedence, flags) {
             var result, fragment;
-            result = [this.generateExpression(expr.object, Precedence_1.default.Call, (flags & F_ALLOW_CALL) ? E_TTF : E_TFF)];
+            result = [this.generateExpression(expr.object, Precedence_1.Precedence.Call, (flags & F_ALLOW_CALL) ? E_TTF : E_TFF)];
             if (expr.computed) {
                 result.push('[');
-                result.push(this.generateExpression(expr.property, Precedence_1.default.Sequence, flags & F_ALLOW_CALL ? E_TTT : E_TFT));
+                result.push(this.generateExpression(expr.property, Precedence_1.Precedence.Sequence, flags & F_ALLOW_CALL ? E_TTT : E_TFT));
                 result.push(']');
             }
             else {
@@ -9098,11 +9098,11 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 result.push('.');
                 result.push(generateIdentifier(expr.property));
             }
-            return parenthesize(result, Precedence_1.default.Member, precedence);
+            return parenthesize(result, Precedence_1.Precedence.Member, precedence);
         },
-        UnaryExpression: function (expr, precedence, flags) {
+        UnaryExpression: function (expr, precedence, _flags) {
             var result, fragment, rightCharCode, leftSource, leftCharCode;
-            fragment = this.generateExpression(expr.argument, Precedence_1.default.Unary, E_TTT);
+            fragment = this.generateExpression(expr.argument, Precedence_1.Precedence.Unary, E_TTT);
             if (space === '') {
                 result = join(expr.operator, fragment);
             }
@@ -9125,9 +9125,9 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                     }
                 }
             }
-            return parenthesize(result, Precedence_1.default.Unary, precedence);
+            return parenthesize(result, Precedence_1.Precedence.Unary, precedence);
         },
-        YieldExpression: function (expr, precedence, flags) {
+        YieldExpression: function (expr, precedence, _flags) {
             var result;
             if (expr.delegate) {
                 result = 'yield*';
@@ -9136,27 +9136,27 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 result = 'yield';
             }
             if (expr.argument) {
-                result = join(result, this.generateExpression(expr.argument, Precedence_1.default.Yield, E_TTT));
+                result = join(result, this.generateExpression(expr.argument, Precedence_1.Precedence.Yield, E_TTT));
             }
-            return parenthesize(result, Precedence_1.default.Yield, precedence);
+            return parenthesize(result, Precedence_1.Precedence.Yield, precedence);
         },
-        AwaitExpression: function (expr, precedence, flags) {
-            var result = join(expr.delegate ? 'await*' : 'await', this.generateExpression(expr.argument, Precedence_1.default.Await, E_TTT));
-            return parenthesize(result, Precedence_1.default.Await, precedence);
+        AwaitExpression: function (expr, precedence, _flags) {
+            var result = join(expr.delegate ? 'await*' : 'await', this.generateExpression(expr.argument, Precedence_1.Precedence.Await, E_TTT));
+            return parenthesize(result, Precedence_1.Precedence.Await, precedence);
         },
-        UpdateExpression: function (expr, precedence, flags) {
+        UpdateExpression: function (expr, precedence, _flags) {
             if (expr.prefix) {
                 return parenthesize([
                     expr.operator,
-                    this.generateExpression(expr.argument, Precedence_1.default.Unary, E_TTT)
-                ], Precedence_1.default.Unary, precedence);
+                    this.generateExpression(expr.argument, Precedence_1.Precedence.Unary, E_TTT)
+                ], Precedence_1.Precedence.Unary, precedence);
             }
             return parenthesize([
-                this.generateExpression(expr.argument, Precedence_1.default.Postfix, E_TTT),
+                this.generateExpression(expr.argument, Precedence_1.Precedence.Postfix, E_TTT),
                 expr.operator
-            ], Precedence_1.default.Postfix, precedence);
+            ], Precedence_1.Precedence.Postfix, precedence);
         },
-        FunctionExpression: function (expr, precedence, flags) {
+        FunctionExpression: function (expr, _precedence, _flags) {
             var result = [
                 generateAsyncPrefix(expr, true),
                 'function'
@@ -9171,13 +9171,13 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             result.push(this.generateFunctionBody(expr));
             return result;
         },
-        ExportBatchSpecifier: function (expr, precedence, flags) {
+        ExportBatchSpecifier: function (_expr, _precedence, _flags) {
             return '*';
         },
         ArrayPattern: function (expr, precedence, flags) {
             return this.ArrayExpression(expr, precedence, flags);
         },
-        ArrayExpression: function (expr, precedence, flags) {
+        ArrayExpression: function (expr, _precedence, _flags) {
             var result, multiline, that = this;
             if (!expr.elements.length) {
                 return '[]';
@@ -9197,7 +9197,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                     }
                     else {
                         result.push(multiline ? indent : '');
-                        result.push(that.generateExpression(expr.elements[i], Precedence_1.default.Assignment, E_TTT));
+                        result.push(that.generateExpression(expr.elements[i], Precedence_1.Precedence.Assignment, E_TTT));
                     }
                     if (i + 1 < iz) {
                         result.push(',' + (multiline ? newline : space));
@@ -9211,21 +9211,21 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             result.push(']');
             return result;
         },
-        ClassExpression: function (expr, precedence, flags) {
+        ClassExpression: function (expr, _precedence, _flags) {
             var result, fragment;
             result = ['class'];
             if (expr.id) {
-                result = join(result, this.generateExpression(expr.id, Precedence_1.default.Sequence, E_TTT));
+                result = join(result, this.generateExpression(expr.id, Precedence_1.Precedence.Sequence, E_TTT));
             }
             if (expr.superClass) {
-                fragment = join('extends', this.generateExpression(expr.superClass, Precedence_1.default.Assignment, E_TTT));
+                fragment = join('extends', this.generateExpression(expr.superClass, Precedence_1.Precedence.Assignment, E_TTT));
                 result = join(result, fragment);
             }
             result.push(space);
             result.push(this.generateStatement(expr.body, S_TFFT));
             return result;
         },
-        MethodDefinition: function (expr, precedence, flags) {
+        MethodDefinition: function (expr, _precedence, _flags) {
             var result, fragment;
             if (expr['static']) {
                 result = ['static' + space];
@@ -9248,7 +9248,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             }
             return join(result, fragment);
         },
-        Property: function (expr, precedence, flags) {
+        Property: function (expr, _precedence, _flags) {
             if (expr.kind === 'get' || expr.kind === 'set') {
                 return [
                     expr.kind, noEmptySpace(),
@@ -9269,17 +9269,17 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             return [
                 this.generatePropertyKey(expr.key, expr.computed),
                 ':' + space,
-                this.generateExpression(expr.value, Precedence_1.default.Assignment, E_TTT)
+                this.generateExpression(expr.value, Precedence_1.Precedence.Assignment, E_TTT)
             ];
         },
-        ObjectExpression: function (expr, precedence, flags) {
+        ObjectExpression: function (expr, _precedence, _flags) {
             var multiline, result, fragment, that = this;
             if (!expr.properties.length) {
                 return '{}';
             }
             multiline = expr.properties.length > 1;
             withIndent(function () {
-                fragment = that.generateExpression(expr.properties[0], Precedence_1.default.Sequence, E_TTT);
+                fragment = that.generateExpression(expr.properties[0], Precedence_1.Precedence.Sequence, E_TTT);
             });
             if (!multiline) {
                 if (!hasLineTerminator(toSourceNodeWhenNeeded(fragment).toString())) {
@@ -9293,7 +9293,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                     result.push(',' + newline);
                     for (i = 1, iz = expr.properties.length; i < iz; ++i) {
                         result.push(indent);
-                        result.push(that.generateExpression(expr.properties[i], Precedence_1.default.Sequence, E_TTT));
+                        result.push(that.generateExpression(expr.properties[i], Precedence_1.Precedence.Sequence, E_TTT));
                         if (i + 1 < iz) {
                             result.push(',' + newline);
                         }
@@ -9307,7 +9307,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             result.push('}');
             return result;
         },
-        ObjectPattern: function (expr, precedence, flags) {
+        ObjectPattern: function (expr, _precedence, _flags) {
             var result, i, iz, multiline, property, that = this;
             if (!expr.properties.length) {
                 return '{}';
@@ -9333,7 +9333,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 var i, iz;
                 for (i = 0, iz = expr.properties.length; i < iz; ++i) {
                     result.push(multiline ? indent : '');
-                    result.push(that.generateExpression(expr.properties[i], Precedence_1.default.Sequence, E_TTT));
+                    result.push(that.generateExpression(expr.properties[i], Precedence_1.Precedence.Sequence, E_TTT));
                     if (i + 1 < iz) {
                         result.push(',' + (multiline ? newline : space));
                     }
@@ -9346,16 +9346,16 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             result.push('}');
             return result;
         },
-        ThisExpression: function (expr, precedence, flags) {
+        ThisExpression: function (_expr, _precedence, _flags) {
             return 'this';
         },
-        Identifier: function (expr, precedence, flags) {
+        Identifier: function (expr, _precedence, _flags) {
             return generateIdentifier(expr);
         },
-        ImportDefaultSpecifier: function (expr, precedence, flags) {
+        ImportDefaultSpecifier: function (expr, _precedence, _flags) {
             return generateIdentifier(expr.id);
         },
-        ImportNamespaceSpecifier: function (expr, precedence, flags) {
+        ImportNamespaceSpecifier: function (expr, _precedence, _flags) {
             var result = ['*'];
             if (expr.id) {
                 result.push(space + 'as' + noEmptySpace() + generateIdentifier(expr.id));
@@ -9365,14 +9365,14 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
         ImportSpecifier: function (expr, precedence, flags) {
             return this.ExportSpecifier(expr, precedence, flags);
         },
-        ExportSpecifier: function (expr, precedence, flags) {
+        ExportSpecifier: function (expr, _precedence, _flags) {
             var result = [expr.id.name];
             if (expr.name) {
                 result.push(noEmptySpace() + 'as' + noEmptySpace() + generateIdentifier(expr.name));
             }
             return result;
         },
-        Literal: function (expr, precedence, flags) {
+        Literal: function (expr, _precedence, _flags) {
             var raw;
             if (expr.hasOwnProperty('raw') && parse && extra.raw) {
                 try {
@@ -9403,17 +9403,17 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
         GeneratorExpression: function (expr, precedence, flags) {
             return this.ComprehensionExpression(expr, precedence, flags);
         },
-        ComprehensionExpression: function (expr, precedence, flags) {
+        ComprehensionExpression: function (expr, _precedence, _flags) {
             var result, i, iz, fragment, that = this;
             result = (expr.type === estraverse_1.Syntax.GeneratorExpression) ? ['('] : ['['];
             if (extra.moz.comprehensionExpressionStartsWithAssignment) {
-                fragment = this.generateExpression(expr.body, Precedence_1.default.Assignment, E_TTT);
+                fragment = this.generateExpression(expr.body, Precedence_1.Precedence.Assignment, E_TTT);
                 result.push(fragment);
             }
             if (expr.blocks) {
                 withIndent(function () {
                     for (i = 0, iz = expr.blocks.length; i < iz; ++i) {
-                        fragment = that.generateExpression(expr.blocks[i], Precedence_1.default.Sequence, E_TTT);
+                        fragment = that.generateExpression(expr.blocks[i], Precedence_1.Precedence.Sequence, E_TTT);
                         if (i > 0 || extra.moz.comprehensionExpressionStartsWithAssignment) {
                             result = join(result, fragment);
                         }
@@ -9425,17 +9425,17 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             }
             if (expr.filter) {
                 result = join(result, 'if' + space);
-                fragment = this.generateExpression(expr.filter, Precedence_1.default.Sequence, E_TTT);
+                fragment = this.generateExpression(expr.filter, Precedence_1.Precedence.Sequence, E_TTT);
                 result = join(result, ['(', fragment, ')']);
             }
             if (!extra.moz.comprehensionExpressionStartsWithAssignment) {
-                fragment = this.generateExpression(expr.body, Precedence_1.default.Assignment, E_TTT);
+                fragment = this.generateExpression(expr.body, Precedence_1.Precedence.Assignment, E_TTT);
                 result = join(result, fragment);
             }
             result.push((expr.type === estraverse_1.Syntax.GeneratorExpression) ? ')' : ']');
             return result;
         },
-        ComprehensionBlock: function (expr, precedence, flags) {
+        ComprehensionBlock: function (expr, _precedence, _flags) {
             var fragment;
             if (expr.left.type === estraverse_1.Syntax.VariableDeclaration) {
                 fragment = [
@@ -9444,16 +9444,16 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 ];
             }
             else {
-                fragment = this.generateExpression(expr.left, Precedence_1.default.Call, E_TTT);
+                fragment = this.generateExpression(expr.left, Precedence_1.Precedence.Call, E_TTT);
             }
             fragment = join(fragment, expr.of ? 'of' : 'in');
-            fragment = join(fragment, this.generateExpression(expr.right, Precedence_1.default.Sequence, E_TTT));
+            fragment = join(fragment, this.generateExpression(expr.right, Precedence_1.Precedence.Sequence, E_TTT));
             return ['for' + space + '(', fragment, ')'];
         },
-        SpreadElement: function (expr, precedence, flags) {
+        SpreadElement: function (expr, _precedence, _flags) {
             return [
                 '...',
-                this.generateExpression(expr.argument, Precedence_1.default.Assignment, E_TTT)
+                this.generateExpression(expr.argument, Precedence_1.Precedence.Assignment, E_TTT)
             ];
         },
         TaggedTemplateExpression: function (expr, precedence, flags) {
@@ -9462,22 +9462,22 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
                 itemFlags = E_TFF;
             }
             var result = [
-                this.generateExpression(expr.tag, Precedence_1.default.Call, itemFlags),
-                this.generateExpression(expr.quasi, Precedence_1.default.Primary, E_FFT)
+                this.generateExpression(expr.tag, Precedence_1.Precedence.Call, itemFlags),
+                this.generateExpression(expr.quasi, Precedence_1.Precedence.Primary, E_FFT)
             ];
-            return parenthesize(result, Precedence_1.default.TaggedTemplate, precedence);
+            return parenthesize(result, Precedence_1.Precedence.TaggedTemplate, precedence);
         },
-        TemplateElement: function (expr, precedence, flags) {
+        TemplateElement: function (expr, _precedence, _flags) {
             return expr.value.raw;
         },
-        TemplateLiteral: function (expr, precedence, flags) {
+        TemplateLiteral: function (expr, _precedence, _flags) {
             var result, i, iz;
             result = ['`'];
             for (i = 0, iz = expr.quasis.length; i < iz; ++i) {
-                result.push(this.generateExpression(expr.quasis[i], Precedence_1.default.Primary, E_TTT));
+                result.push(this.generateExpression(expr.quasis[i], Precedence_1.Precedence.Primary, E_TTT));
                 if (i + 1 < iz) {
                     result.push('${' + space);
-                    result.push(this.generateExpression(expr.expressions[i], Precedence_1.default.Sequence, E_TTT));
+                    result.push(this.generateExpression(expr.expressions[i], Precedence_1.Precedence.Sequence, E_TTT));
                     result.push(space + '}');
                 }
             }
@@ -9495,7 +9495,7 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
             return codegen.generateStatement(node, S_TFFF);
         }
         if (isExpression(node)) {
-            return codegen.generateExpression(node, Precedence_1.default.Sequence, E_TTT);
+            return codegen.generateExpression(node, Precedence_1.Precedence.Sequence, E_TTT);
         }
         throw new Error('Unknown node type: ' + node.type);
     }
@@ -9563,9 +9563,9 @@ define('escodegen',["require", "exports", "./estraverse", "./code", "./code", ".
         semicolons: false
     };
     FORMAT_DEFAULTS = getDefaultOptions().format;
-    var escodegen = {
+    exports.escodegen = {
         generate: generate,
-        Precedence: updateDeeply({}, Precedence_1.default),
+        Precedence: updateDeeply({}, Precedence_1.Precedence),
         FORMAT_MINIFY: FORMAT_MINIFY,
         FORMAT_DEFAULT: FORMAT_DEFAULTS
     };
@@ -9583,7 +9583,7 @@ define('generateRandomId',["require", "exports"], function (require, exports) {
         }
         return id;
     }
-    exports.default = generateRandomId;
+    exports.generateRandomId = generateRandomId;
 });
 
 define('getLoopProtectorBlocks',["require", "exports", "./esprima"], function (require, exports, esprima_1) {
@@ -9597,7 +9597,7 @@ define('getLoopProtectorBlocks',["require", "exports", "./esprima"], function (r
             inside: ast2.body[0]
         };
     }
-    exports.default = getLoopProtectorBlocks;
+    exports.getLoopProtectorBlocks = getLoopProtectorBlocks;
 });
 
 define('davinci-mathscript',["require", "exports", "./core", "./esprima", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax", "./syntax"], function (require, exports, core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, syntax_2) {
@@ -9647,8 +9647,8 @@ define('davinci-mathscript',["require", "exports", "./core", "./esprima", "./esp
             var el = statements[i];
             if (el && el.type === syntax_1.Syntax.ForStatement || el.type === syntax_1.Syntax.WhileStatement || el.type === syntax_1.Syntax.DoWhileStatement) {
                 var loop = el;
-                var randomVariableName = '_' + generateRandomId_1.default(5);
-                var insertionBlocks = getLoopProtectorBlocks_1.default(randomVariableName, millis);
+                var randomVariableName = '_' + generateRandomId_1.generateRandomId(5);
+                var insertionBlocks = getLoopProtectorBlocks_1.getLoopProtectorBlocks(randomVariableName, millis);
                 statements.splice(i, 0, insertionBlocks.before);
                 if (!Array.isArray(loop.body)) {
                     loop.body = {
@@ -9921,6 +9921,7 @@ define('davinci-mathscript',["require", "exports", "./core", "./esprima", "./esp
                     break;
                 }
                 case syntax_1.Syntax.BreakStatement:
+                case syntax_1.Syntax.ContinueStatement:
                 case syntax_1.Syntax.EmptyStatement:
                 case syntax_1.Syntax.Literal:
                 case syntax_1.Syntax.Identifier:
@@ -9929,7 +9930,8 @@ define('davinci-mathscript',["require", "exports", "./core", "./esprima", "./esp
                     break;
                 }
                 default: {
-                    console.log(JSON.stringify(node, null, 2));
+                    console.warn("Unhandled " + node.type);
+                    console.warn("" + JSON.stringify(node, null, 2));
                 }
             }
         }

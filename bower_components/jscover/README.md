@@ -2,6 +2,7 @@
 ================================
 
 [![Build Status](https://travis-ci.org/tntim96/JSCover.svg?branch=master)](https://travis-ci.org/tntim96/JSCover)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/JSCover)
 
 JSCover is an easy-to-use JavaScript code coverage measuring tool. It is an enhanced version of the popular
 [JSCoverage](http://siliconforks.com/jscoverage/) tool, having added several features including **branch coverage**,
@@ -19,7 +20,7 @@ Development
 -----------
 Development with JSCover is simple (clean check-out and build should just work). It is an Ant build using Maven's
 dependency management. What you need:
-* Java (minimum 1.6)
+* Java 1.8+ (runtime requires Java 1.8+)
 * Ant (developed with version 1.9.2 to 1.9.8)
 
 Most development has been done with IntelliJ ultimate edition, and some with Eclipse and IntelliJ community edition.

@@ -51,32 +51,32 @@ System.register(["./assert", "./error-handler", "./messages", "./nodes", "./scan
                     this.scanner = new scanner_1.Scanner(code, this.errorHandler);
                     this.scanner.trackComment = this.config.comment;
                     this.operatorPrecedence = {
-                        ')': Precedence_1.default.Sequence,
-                        ';': Precedence_1.default.Sequence,
-                        ',': Precedence_1.default.Sequence,
-                        '=': Precedence_1.default.Sequence,
-                        ']': Precedence_1.default.Sequence,
-                        '||': Precedence_1.default.LogicalOR,
-                        '&&': Precedence_1.default.LogicalAND,
-                        '|': Precedence_1.default.BitwiseOR,
-                        '^': Precedence_1.default.BitwiseXOR,
-                        '&': Precedence_1.default.BitwiseAND,
-                        '==': Precedence_1.default.Equality,
-                        '!=': Precedence_1.default.Equality,
-                        '===': Precedence_1.default.Equality,
-                        '!==': Precedence_1.default.Equality,
-                        '<': Precedence_1.default.Relational,
-                        '>': Precedence_1.default.Relational,
-                        '<=': Precedence_1.default.Relational,
-                        '>=': Precedence_1.default.Relational,
-                        '<<': Precedence_1.default.BitwiseSHIFT,
-                        '>>': Precedence_1.default.BitwiseSHIFT,
-                        '>>>': Precedence_1.default.BitwiseSHIFT,
-                        '+': Precedence_1.default.Additive,
-                        '-': Precedence_1.default.Additive,
-                        '*': Precedence_1.default.Multiplicative,
-                        '/': Precedence_1.default.Multiplicative,
-                        '%': Precedence_1.default.BitwiseSHIFT
+                        ')': Precedence_1.Precedence.Sequence,
+                        ';': Precedence_1.Precedence.Sequence,
+                        ',': Precedence_1.Precedence.Sequence,
+                        '=': Precedence_1.Precedence.Sequence,
+                        ']': Precedence_1.Precedence.Sequence,
+                        '||': Precedence_1.Precedence.LogicalOR,
+                        '&&': Precedence_1.Precedence.LogicalAND,
+                        '|': Precedence_1.Precedence.BitwiseOR,
+                        '^': Precedence_1.Precedence.BitwiseXOR,
+                        '&': Precedence_1.Precedence.BitwiseAND,
+                        '==': Precedence_1.Precedence.Equality,
+                        '!=': Precedence_1.Precedence.Equality,
+                        '===': Precedence_1.Precedence.Equality,
+                        '!==': Precedence_1.Precedence.Equality,
+                        '<': Precedence_1.Precedence.Relational,
+                        '>': Precedence_1.Precedence.Relational,
+                        '<=': Precedence_1.Precedence.Relational,
+                        '>=': Precedence_1.Precedence.Relational,
+                        '<<': Precedence_1.Precedence.BitwiseSHIFT,
+                        '>>': Precedence_1.Precedence.BitwiseSHIFT,
+                        '>>>': Precedence_1.Precedence.BitwiseSHIFT,
+                        '+': Precedence_1.Precedence.Additive,
+                        '-': Precedence_1.Precedence.Additive,
+                        '*': Precedence_1.Precedence.Multiplicative,
+                        '/': Precedence_1.Precedence.Multiplicative,
+                        '%': Precedence_1.Precedence.BitwiseSHIFT
                     };
                     this.lookahead = {
                         type: 2,
@@ -121,12 +121,12 @@ System.register(["./assert", "./error-handler", "./messages", "./nodes", "./scan
                     };
                 }
                 Parser.prototype.throwError = function (messageFormat) {
-                    var values = [];
+                    var _values = [];
                     for (var _i = 1; _i < arguments.length; _i++) {
-                        values[_i - 1] = arguments[_i];
+                        _values[_i - 1] = arguments[_i];
                     }
                     var args = Array.prototype.slice.call(arguments, 1);
-                    var msg = messageFormat.replace(/%(\d)/g, function (whole, idx) {
+                    var msg = messageFormat.replace(/%(\d)/g, function (_whole, idx) {
                         assert_1.assert(idx < args.length, 'Message reference must be in range');
                         return args[idx];
                     });
@@ -136,12 +136,12 @@ System.register(["./assert", "./error-handler", "./messages", "./nodes", "./scan
                     throw this.errorHandler.createError(index, line, column, msg);
                 };
                 Parser.prototype.tolerateError = function (messageFormat) {
-                    var values = [];
+                    var _values = [];
                     for (var _i = 1; _i < arguments.length; _i++) {
-                        values[_i - 1] = arguments[_i];
+                        _values[_i - 1] = arguments[_i];
                     }
                     var args = Array.prototype.slice.call(arguments, 1);
-                    var msg = messageFormat.replace(/%(\d)/g, function (whole, idx) {
+                    var msg = messageFormat.replace(/%(\d)/g, function (_whole, idx) {
                         assert_1.assert(idx < args.length, 'Message reference must be in range');
                         return args[idx];
                     });
@@ -1682,7 +1682,7 @@ System.register(["./assert", "./error-handler", "./messages", "./nodes", "./scan
                     }
                     return this.finalize(node, new Node.Property('init', key, computed, value, method, shorthand));
                 };
-                Parser.prototype.parseRestProperty = function (params, kind) {
+                Parser.prototype.parseRestProperty = function (params, _kind) {
                     var node = this.createNode();
                     this.expect('...');
                     var arg = this.parsePattern(params);

@@ -1,12 +1,12 @@
 import { assert } from './assert';
 import { ErrorHandler } from './error-handler';
-import IToken from './IToken';
+import { IToken } from './IToken';
 import { Messages } from './messages';
 import * as Node from './nodes';
 import { Comment, RawToken, Scanner, SourceLocation } from './scanner';
 import { Syntax } from './syntax';
 import { Token, TokenName } from './token';
-import Precedence from './Precedence';
+import { Precedence } from './Precedence';
 
 interface Config {
     range: boolean;
@@ -184,9 +184,9 @@ export class Parser {
         };
     }
 
-    throwError(messageFormat: string, ...values): void {
+    throwError(messageFormat: string, ..._values): void {
         const args = Array.prototype.slice.call(arguments, 1);
-        const msg = messageFormat.replace(/%(\d)/g, (whole, idx) => {
+        const msg = messageFormat.replace(/%(\d)/g, (_whole, idx) => {
             assert(idx < args.length, 'Message reference must be in range');
             return args[idx];
         }
@@ -198,9 +198,9 @@ export class Parser {
         throw this.errorHandler.createError(index, line, column, msg);
     }
 
-    tolerateError(messageFormat, ...values) {
+    tolerateError(messageFormat, ..._values) {
         const args = Array.prototype.slice.call(arguments, 1);
-        const msg = messageFormat.replace(/%(\d)/g, (whole, idx) => {
+        const msg = messageFormat.replace(/%(\d)/g, (_whole, idx) => {
             assert(idx < args.length, 'Message reference must be in range');
             return args[idx];
         }
@@ -2023,7 +2023,7 @@ export class Parser {
     }
 
     // TODO: Should kind be passed to the parsePattern
-    parseRestProperty(params, kind?: 'const' | 'let' | 'var'): Node.RestProperty {
+    parseRestProperty(params, _kind?: 'const' | 'let' | 'var'): Node.RestProperty {
         const node = this.createNode();
         this.expect('...');
         const arg = this.parsePattern(params);

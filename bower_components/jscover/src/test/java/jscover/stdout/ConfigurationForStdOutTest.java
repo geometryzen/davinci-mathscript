@@ -345,12 +345,11 @@ package jscover.stdout;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 import static com.google.javascript.jscomp.parsing.Config.LanguageMode.ECMASCRIPT7;
 import static java.util.logging.Level.SEVERE;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 public class ConfigurationForStdOutTest {
 
@@ -366,13 +365,13 @@ public class ConfigurationForStdOutTest {
     }
 
     @Test
-    public void shouldGetSourceFile() throws IOException {
+    public void shouldGetSourceFile() {
         ConfigurationForStdOut configuration = ConfigurationForStdOut.parse(new String[]{"-io", "doc/example/script.js"});
         assertThat(configuration.getSrcFile(), equalTo(new File("doc/example/script.js")));
     }
 
     @Test
-    public void shouldSetHelp() throws IOException {
+    public void shouldSetHelp() {
         ConfigurationForStdOut configuration = ConfigurationForStdOut.parse(new String[]{"-io", "-h"});
         assertThat(configuration.showHelp(), is(true));
     }

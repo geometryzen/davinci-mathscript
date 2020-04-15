@@ -350,7 +350,7 @@ import java.util.TreeSet;
 //Function Coverage added by Howard Abrams, CA Technologies (HA-CA) - May 20 2013, tntim96
 class NodeProcessor {
     private StatementBuilder statementBuilder = new StatementBuilder();
-    private SortedSet<Integer> validLines = new TreeSet<Integer>();
+    private SortedSet<Integer> validLines = new TreeSet<>();
     private int functionNumber;// Function Coverage (HA-CA)
     private String fileName;
     private boolean includeFunctionCoverage;
@@ -399,13 +399,18 @@ class NodeProcessor {
                 || node.isWhile()
                 || node.isDo()
                 || node.isForIn()
+                || node.isForOf()
                 || node.isSwitch()
-                || node.isLet()) {
-            if (parent.isCase()) {
-                //Don't do anything here. Direct modification of statements will result in concurrent modification exception.
-            } else if (parent.isLabel()) {
+                || node.isLet()
+                || node.isExport()
+                || node.isImport()
+                || node.isImportStar()
+                || node.isClass()) {
+            if (parent.isLabel()) {
                 //Don't do anything here.
-            } else if (isLoopInitializer(node)) {
+            } else if (parent.isArrayLit()) {
+                //Don't do anything here.
+            } else if (parent.isClassMembers()) {
                 //Don't do anything here.
             } else if (parent != null) {
                 addInstrumentationBefore(node);
@@ -416,6 +421,8 @@ class NodeProcessor {
             if (!parent.isHook()
                     && !parent.isStringKey()
                     && !parent.isCall()
+                    && !parent.isNew()
+                    && !parent.isReturn()
                     && !parent.isName()
                     && !parent.isArrayLit()
                     && !parent.isAssign()
@@ -432,25 +439,19 @@ class NodeProcessor {
         return true;
     }
 
-    private boolean isLoopInitializer(Node node) {
-        if (node.getParent().isVanillaFor()) {
-            if (node.getFirstChild() == node)
-                return true;
-        }
-        return false;
-    }
-
     private void addInstrumentationBefore(Node node) {
         Node parent = node.getParent();
-        if (parent.isIf()) {
-//            addIfScope(node, (IfStatement) parent);
-        } else if (parent.isVanillaFor()) {
-//            addLoopScope(node, (Loop) parent);
-        } else if (parent.isWith()) {
-//            addWithScope(node, (WithStatement) parent);
+        if (parent.isVanillaFor()) {
+        } else if (parent.isForOf()) {
+        } else if (parent.isForIn()) {
         } else if (parent.isGetterDef()) {
         } else if (parent.isSetterDef()) {
         } else if (parent.isGetProp()) {
+        } else if (parent.isMemberFunctionDef()) {
+        } else if (parent.isExport()) {
+        } else if (parent.isImport()) {
+        } else if (parent.isImportStar()) {
+        } else if (parent.isComputedProp()) {
         } else {
             parent.addChildBefore(buildInstrumentationStatement(node.getLineno()), node);
         }

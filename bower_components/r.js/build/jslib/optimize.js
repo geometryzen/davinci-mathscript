@@ -15,7 +15,8 @@ function (lang,   logger,   envOptimize,        file,           parse,
         cssUrlRegExp = /\url\(\s*([^\)]+)\s*\)?/g,
         protocolRegExp = /^\w+:/,
         SourceMapGenerator = sourceMap.SourceMapGenerator,
-        SourceMapConsumer =sourceMap.SourceMapConsumer;
+        SourceMapConsumer = sourceMap.SourceMapConsumer,
+        es5PlusGuidance = 'If the source uses ES2015 or later syntax, please pass "optimize: \'none\'" to r.js and use an ES2015+ compatible minifier after running r.js. The included UglifyJS only understands ES5 or earlier syntax.';
 
     /**
      * If an URL from a CSS url value contains start/end quotes, remove them.
@@ -411,7 +412,6 @@ function (lang,   logger,   envOptimize,        file,           parse,
                 var result, existingMap, resultMap, finalMap, sourceIndex,
                     uconfig = {},
                     existingMapPath = outFileName + '.map',
-                    preamble = config.preamble || "",
                     baseName = fileName && fileName.split('/').pop();
 
                 config = config || {};
@@ -459,9 +459,13 @@ function (lang,   logger,   envOptimize,        file,           parse,
                         fileContents = result.code;
                     }
                 } catch (e) {
-                    throw new Error('Cannot uglify file: ' + fileName + '. Skipping it. Error is:\n' + e.toString());
+                    var errorString = e.toString();
+                    var isSyntaxError = /SyntaxError/.test(errorString);
+                    throw new Error('Cannot uglify file: ' + fileName +
+                                    '. Skipping it. Error is:\n' + errorString +
+                                  (isSyntaxError ? '\n\n' + es5PlusGuidance : ''));
                 }
-                return preamble + fileContents;
+                return fileContents;
             }
         }
     };

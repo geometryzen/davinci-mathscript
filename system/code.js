@@ -1,5 +1,6 @@
 System.register([], function (exports_1, context_1) {
     'use strict';
+    var ES6Regex, ES5Regex, NON_ASCII_WHITESPACES, IDENTIFIER_START, IDENTIFIER_PART, ch;
     var __moduleName = context_1 && context_1.id;
     function isDecimalDigit(ch) {
         return 0x30 <= ch && ch <= 0x39;
@@ -52,7 +53,6 @@ System.register([], function (exports_1, context_1) {
         return isIdentifierPartES6(ch);
     }
     exports_1("isIdentifierPart", isIdentifierPart);
-    var ES6Regex, ES5Regex, NON_ASCII_WHITESPACES, IDENTIFIER_START, IDENTIFIER_PART, ch;
     return {
         setters: [],
         execute: function () {

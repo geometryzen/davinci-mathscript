@@ -1,12 +1,12 @@
 {
   "name": "jscover",
   "homepage": "https://github.com/tntim96/JSCover",
-  "version": "2.0.1",
-  "_release": "2.0.1",
+  "version": "2.0.9",
+  "_release": "2.0.9",
   "_resolution": {
     "type": "version",
-    "tag": "v2.0.1",
-    "commit": "9cac08ebbe948d7886e4bd467bbf589b606f4bd1"
+    "tag": "v2.0.9",
+    "commit": "1463856911450a916babcbb6c656b65c7a26b7ac"
   },
   "_source": "http://github.com/tntim96/JSCover.git",
   "_target": "*",

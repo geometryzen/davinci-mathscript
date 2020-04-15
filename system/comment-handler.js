@@ -1,7 +1,7 @@
 System.register(["./syntax"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var syntax_1, CommentHandler;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (syntax_1_1) {

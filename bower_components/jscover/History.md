@@ -1,3 +1,53 @@
+2.0.9 / 2020-01-10
+==================
+  * Add support for for...of (https://github.com/tntim96/JSCover/issues/276)
+  * Don't instrument for..of loop code (https://github.com/tntim96/JSCover/issues/279)
+  * Should not instrument between return of function (https://github.com/tntim96/JSCover/issues/280)
+  * Should not instrument inside for...in (https://github.com/tntim96/JSCover/issues/281)
+  * Upgrade closure-compiler v20190618 to v20200101
+  * Internal: Mockito 2.28.2 to 3.2.4, HtmlUnit 2.35 to 2.36.0, Jacoco 0.8.4 to 0.8.5, Jasmine 3.4.0 to 3.5.0, JUnit 4.12 to 4.13
+
+2.0.8 / 2019-06-22
+==================
+  * Upgrade closure-compiler v20181210 to v20190618, Rhino 1.7.10 to 1.7.11
+  * Instrumentation added in class body (https://github.com/tntim96/JSCover/issues/275)
+  * Internal: Mockito 2.23.4 to 2.28.2, HtmlUnit 2.30 to 2.35.0, Upgrade Jasmine 3.3.0 to 3.4.0
+
+2.0.7 / 2019-01-01
+==================
+  * Upgrade closure-compiler v20180506 to v20181210
+  * Internal: Mockito 2.18.3 to 2.23.4, HtmlUnit 2.31 to 2.33, Upgrade Jasmine 3.1.0 to 3.3.0
+  * Internal: Swap from Cobertura to Jacoco for coverage
+
+2.0.6 / 2018-05-28
+==================
+  * Add GNU classpath exception to license (https://github.com/tntim96/JSCover/issues/271)
+  * Upgrade closure-compiler v20180204 to v20180506
+  * Bump JS language in from ECMASCRIPT8 to ES_NEXT 
+  * Internal: Mockito 2.18.0 to 2.18.3, HtmlUnit 2.30 to 2.31
+
+2.0.5 / 2018-04-11
+==================
+  * Upgrade closure-compiler v20180204 to v20180402
+  * Internal: HtmlUnit 2.29 to 2.30, Upgrade Jasmine 3.0.0 to 3.1.0, Mockito 2.15.0 to 2.18
+
+2.0.4 / 2018-02-17
+==================
+  * Upgrade closure-compiler v20171023 to v20180204 
+  * Internal: Upgrade HtmlUnit 2.27 to 2.29, Mockito 2.11.0 to 2.15, Jasmine 2.8.0 to 3.0.0
+
+2.0.3 / 2017-11-05
+==================
+  * Fix instrumentation fn declaration in new operator (https://github.com/tntim96/JSCover/issues/265)
+  * Upgrade closure-compiler v20170626 to v20171023 
+  * Internal: Upgrade Jasmine 2.7.0 to 2.8.0, Mockito 2.8.47 to 2.11.0
+
+2.0.2 / 2017-08-05
+==================
+  * Fix instrumentation for ES6 class members (https://github.com/tntim96/JSCover/issues/261)
+  * Fix instrumentation for array definition across lines (https://github.com/tntim96/JSCover/issues/260)
+  * Internal: Upgrade Jasmine 2.6.4 to 2.7.0
+
 2.0.1 / 2017-07-23
 ==================
   * Convert JSON merger from Mozilla Rhino to Google GSON (https://github.com/tntim96/JSCover/issues/258)

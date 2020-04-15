@@ -347,6 +347,7 @@ import com.google.javascript.jscomp.parsing.ParserRunner;
 import com.google.javascript.jscomp.parsing.parser.trees.Comment;
 import com.google.javascript.rhino.SimpleErrorReporter;
 import com.google.javascript.rhino.SimpleSourceFile;
+import com.google.javascript.rhino.StaticSourceFile;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -357,8 +358,8 @@ import static com.google.javascript.jscomp.parsing.Config.JsDocParsing.INCLUDE_D
 import static com.google.javascript.jscomp.parsing.Config.LanguageMode.ECMASCRIPT8;
 import static com.google.javascript.jscomp.parsing.Config.RunMode.KEEP_GOING;
 import static jscover.instrument.CommentsHandler.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CommentsHandlerTest {
@@ -414,7 +415,7 @@ public class CommentsHandlerTest {
     private List<Comment> parse(String source) {
         SimpleErrorReporter errorReporter = new SimpleErrorReporter();
         return ParserRunner.parse(
-                new SimpleSourceFile("test.js", false),
+                new SimpleSourceFile("test.js", StaticSourceFile.SourceKind.STRONG),
                 source,
                 parserConfig,
                 errorReporter).comments;

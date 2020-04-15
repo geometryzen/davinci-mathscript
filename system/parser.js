@@ -1,7 +1,7 @@
 System.register(["./assert", "./error-handler", "./messages", "./nodes", "./scanner", "./syntax", "./token", "./Precedence"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var assert_1, error_handler_1, messages_1, Node, scanner_1, syntax_1, token_1, Precedence_1, ArrowParameterPlaceHolder, Parser;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (assert_1_1) {

@@ -1,5 +1,6 @@
 System.register(["./comment-handler", "./jsx-parser", "./parser", "./tokenizer", "./syntax"], function (exports_1, context_1) {
     "use strict";
+    var comment_handler_1, jsx_parser_1, parser_1, tokenizer_1, version;
     var __moduleName = context_1 && context_1.id;
     function parse(code, options, delegate) {
         var commentHandler = null;
@@ -83,7 +84,6 @@ System.register(["./comment-handler", "./jsx-parser", "./parser", "./tokenizer",
         return tokens;
     }
     exports_1("tokenize", tokenize);
-    var comment_handler_1, jsx_parser_1, parser_1, tokenizer_1, version;
     return {
         setters: [
             function (comment_handler_1_1) {

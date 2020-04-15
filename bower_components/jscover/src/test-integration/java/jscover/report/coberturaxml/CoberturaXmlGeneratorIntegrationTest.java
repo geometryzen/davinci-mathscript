@@ -344,26 +344,21 @@ package jscover.report.coberturaxml;
 
 import jscover.report.JSONDataMerger;
 import jscover.util.IoUtils;
-import jscover.util.LocalEntityResolver;
-import jscover.util.ReThrowingErrorHandler;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
 public class CoberturaXmlGeneratorIntegrationTest {
     private CoberturaXmlGenerator xmlGenerator = new CoberturaXmlGenerator();
@@ -469,13 +464,7 @@ public class CoberturaXmlGeneratorIntegrationTest {
     }
 
     private Document parseXml(String xml) throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(true);
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        builder.setEntityResolver(new LocalEntityResolver());
-        //Turn on line below when XML DTD validation will pass.
-        builder.setErrorHandler(new ReThrowingErrorHandler());
-        return builder.parse(new ByteArrayInputStream(xml.getBytes()));
+        return CoberturaXmlGeneratorTest.parseXml(xml);
     }
 
     private String getXPath(XPath xpath, Document document, String expression) throws Exception {

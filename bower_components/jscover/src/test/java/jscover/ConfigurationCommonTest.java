@@ -345,15 +345,15 @@ package jscover;
 import com.google.javascript.jscomp.parsing.Config;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class ConfigurationCommonTest {
     private ConfigurationCommon config = new ConfigurationCommon();
 
     @Test
     public void shouldHaveDefaults() {
-        assertThat(config.getECMAVersion(), is(Config.LanguageMode.ECMASCRIPT8));
+        assertThat(config.getECMAVersion(), is(Config.LanguageMode.ES_NEXT));
         assertThat(config.isIncludeUnloadedJS(), is(false));
         assertThat(config.isIncludeBranch(), is(true));
         assertThat(config.isIncludeFunction(), is(true));

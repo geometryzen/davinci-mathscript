@@ -1,7 +1,7 @@
 System.register(["./jsx-syntax"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var jsx_syntax_1, JSXClosingElement, JSXElement, JSXEmptyExpression, JSXExpressionContainer, JSXIdentifier, JSXMemberExpression, JSXAttribute, JSXNamespacedName, JSXOpeningElement, JSXSpreadAttribute, JSXText;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (jsx_syntax_1_1) {

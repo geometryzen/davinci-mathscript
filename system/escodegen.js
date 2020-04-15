@@ -1,5 +1,6 @@
 System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"], function (exports_1, context_1) {
     "use strict";
+    var estraverse_1, code_1, code_2, code_3, code_4, Precedence_1, BinaryPrecedence_1, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS, F_ALLOW_IN, F_ALLOW_CALL, F_ALLOW_UNPARATH_NEW, F_FUNC_BODY, F_DIRECTIVE_CTX, F_SEMICOLON_OPT, E_FTT, E_TTF, E_TTT, E_TFF, E_FFT, E_TFT, S_TFFF, S_TFFT, S_FFFF, S_TFTF, S_TTFF, CodeGenerator, escodegen;
     var __moduleName = context_1 && context_1.id;
     function isExpression(node) {
         return CodeGenerator.Expression.hasOwnProperty(node.type);
@@ -629,7 +630,6 @@ System.register(["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"]
         return pair.map.toString();
     }
     exports_1("generate", generate);
-    var estraverse_1, code_1, code_2, code_3, code_4, Precedence_1, BinaryPrecedence_1, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS, F_ALLOW_IN, F_ALLOW_CALL, F_ALLOW_UNPARATH_NEW, F_FUNC_BODY, F_DIRECTIVE_CTX, F_SEMICOLON_OPT, E_FTT, E_TTF, E_TTT, E_TFF, E_FFT, E_TFT, S_TFFF, S_TFFT, S_FFFF, S_TFTF, S_TTFF, CodeGenerator, escodegen;
     return {
         setters: [
             function (estraverse_1_1) {

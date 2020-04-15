@@ -116,7 +116,7 @@ function addInfiniteLoopProtection(statements: StatementListItem[], millis: numb
             // If the loop's body is a single statement, then convert it into a block statement
             // so that we can insert our conditional break inside it.
             if (!Array.isArray(loop.body)) {
-                loop.body = {
+                loop.body = <BlockStatement>{
                     body: [loop.body],
                     type: Syntax.BlockStatement
                 };

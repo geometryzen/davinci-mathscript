@@ -351,10 +351,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 
 //Function Coverage added by Howard Abrams, CA Technologies (HA-CA) - May 20 2013, tntim96
@@ -380,6 +380,35 @@ public class InstrumenterTest {
         String source = "var x,y;\nx = 1;\ny = x * 1;";
         String instrumentedSource = sourceProcessor.instrumentSource(source);
         String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\nvar x, y;\n_$jscoverage['test.js'].lineData[2]++;\nx = 1;\n_$jscoverage['test.js'].lineData[3]++;\ny = x * 1;\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentDeclarationAcrossLines() {
+        String source = "var x,\n" +
+                "    y = new X(function () {\n" +
+                "        return 1;\n" +
+                "    });";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "var x, y = new X(function() {\n" +
+                "  _$jscoverage['test.js'].functionData[0]++;\n" +
+                "  _$jscoverage['test.js'].lineData[3]++;\n" +
+                "  return 1;\n" +
+                "});\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldNotInstrumentReturnOfFunction() {
+        String source = "return (\n" +
+                "  function() {\n" +
+                "});";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "return function() {\n" +
+                "  _$jscoverage['test.js'].functionData[0]++;\n" +
+                "};\n";
         assertEquals(expectedSource, instrumentedSource);
     }
 
@@ -447,6 +476,44 @@ public class InstrumenterTest {
                 "  _$jscoverage['test.js'].lineData[2]++;\n" +
                 "  i++;\n" +
                 "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentLoopWithLetAcrossLines() {
+        String source = "for (\nlet i = 0; i < 2; i++ )\n" +
+                "  i++";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "for (let i = 0; i < 2; i++) {\n" +
+                "  _$jscoverage['test.js'].lineData[3]++;\n" +
+                "  i++;\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+
+    @Test
+    public void shouldInstrumentForOfLoopAcrossLines() {
+        String source = "for (\nconst [x, y] of m)\n" +
+                "  console.log(x,y);";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "for (const [x, y] of m) {\n" +
+                "  _$jscoverage['test.js'].lineData[3]++;\n" +
+                "  console.log(x, y);\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldNotInstrumentInsideForIn() {
+        String source = "for (\n" +
+                "var x in y) { }";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "for (" +
+                "var x in y) {\n}\n";
         assertEquals(expectedSource, instrumentedSource);
     }
 
@@ -608,6 +675,14 @@ public class InstrumenterTest {
         String source = "if (x > 10)\n{\n  x++;\n}";
         String instrumentedSource = sourceProcessor.instrumentSource(source);
         String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\nif (x > 10) {\n  _$jscoverage['test.js'].lineData[3]++;\n  x++;\n}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentIfAcrossLines() {
+        String source = "if (\nx > 10)\n{\n  x++;\n}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\nif (x > 10) {\n  _$jscoverage['test.js'].lineData[4]++;\n  x++;\n}\n";
         assertEquals(expectedSource, instrumentedSource);
     }
 
@@ -868,6 +943,46 @@ public class InstrumenterTest {
     }
 
     @Test
+    public void shouldInstrumentArrayAcrossLines() {
+        String source ="var x = [y,\n,];";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "var x = [y, , ];\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentLoopAcrossLines() {
+        String source ="for (\nx in y)\n;";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "for (x in y) {\n" +
+                "  _$jscoverage['test.js'].lineData[3]++;\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentForOf() {
+        String source ="var m = [[1,2],[3,4]];\n" +
+                "for (const [x, y] of m) {\n" +
+                "  console.log(x);\n" +
+                "  console.log(y);\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "var m = [[1, 2], [3, 4]];\n" +
+                "_$jscoverage['test.js'].lineData[2]++;\n" +
+                "for (const [x, y] of m) {\n" +
+                "  _$jscoverage['test.js'].lineData[3]++;\n" +
+                "  console.log(x);\n" +
+                "  _$jscoverage['test.js'].lineData[4]++;\n" +
+                "  console.log(y);\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
     public void shouldInstrumentIgnoringLine() {
         String source = "var x = 7;" + CommentsHandler.EXCL_LINE;
         String instrumentedSource = sourceProcessor.instrumentSource(source);
@@ -884,6 +999,51 @@ public class InstrumenterTest {
     }
 
     @Test
+    public void shouldInstrumentES6Export() {
+        String source = "export var pi = 3.141593;";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "export var pi = 3.141593;\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ExportStar() {
+        String source = "export * from 'lib/math'";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "export*from 'lib/math';\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ExportDefault() {
+        String source = "export default x => Math.exp(x);";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "export default x => Math.exp(x)\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6Import() {
+        String source = "import{sum, pi}from 'lib/math';";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "import{sum, pi}from 'lib/math';\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ImportStar() {
+        String source = "import * as math from 'lib/math';";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "import*as math from 'lib/math';\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
     public void shouldInstrumentES6StringStartsWith() {
         String source = "var x = 'abc'.startsWith('a');";
         String instrumentedSource = sourceProcessor.instrumentSource(source);
@@ -894,10 +1054,10 @@ public class InstrumenterTest {
 
     @Test
     public void shouldInstrumentES6ArrowFunction() {
-        String source = "var a3 = a.map( s => s.length );";
+        String source = "var a3 = a.map(s => s.length );";
         String instrumentedSource = sourceProcessor.instrumentSource(source);
         String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
-                "var a3 = a.map((s) => s.length);\n";
+                "var a3 = a.map(s => s.length);\n";
         assertEquals(expectedSource, instrumentedSource);
     }
 
@@ -907,6 +1067,340 @@ public class InstrumenterTest {
         String instrumentedSource = sourceProcessor.instrumentSource(source);
         String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
                 "myFunction(...args);\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6RestParameter() {
+        String source = "myFunction(x, ...args);";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "myFunction(x, ...args);\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ComputedObjectPropertyName() {
+        String source = "let obj = {\n" +
+                "    foo: \"bar\",\n" +
+                "    [ \"baz\" + quux() ]: 42\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "let obj = {foo:'bar', ['baz' + quux()]:42};\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6MemberFunction() {
+        String source = "var x = {\n" +
+                "    mounted () {\n" +
+                "        this.onReady();\n" +
+                "    }\n" +
+                "};";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "var x = {mounted() {\n" +
+                "  _$jscoverage['test.js'].functionData[0]++;\n" +
+                "  _$jscoverage['test.js'].lineData[3]++;\n" +
+                "  this.onReady();\n" +
+                "}};\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ClassMemberFunction() {
+        String source = "class Animal {\n" +
+                "    speak () {\n" +
+                "        return 1;\n" +
+                "    }\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "class Animal {\n" +
+                "  speak() {\n" +
+                "    _$jscoverage['test.js'].functionData[0]++;\n" +
+                "    _$jscoverage['test.js'].lineData[3]++;\n" +
+                "    return 1;\n" +
+                "  }\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ClassConstructor() {
+        String source = "class Rectangle {\n" +
+                "  constructor(height, width) {\n" +
+                "    this.height = height;\n" +
+                "    this.width = width;\n" +
+                "  }\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "class Rectangle {\n" +
+                "  constructor(height, width) {\n" +
+                "    _$jscoverage['test.js'].functionData[0]++;\n" +
+                "    _$jscoverage['test.js'].lineData[3]++;\n" +
+                "    this.height = height;\n" +
+                "    _$jscoverage['test.js'].lineData[4]++;\n" +
+                "    this.width = width;\n" +
+                "  }\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldNotInstrumentES6ClassStatement() {
+        String source = "class Rectangle {\n" +
+                "  ;\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "class Rectangle {\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ClassPrototypeMethod() {
+        String source = "class Rectangle {\n" +
+                "  get area() {\n" +
+                "    return 1;\n" +
+                "  }\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "class Rectangle {\n" +
+                "  get area() {\n" +
+                "    _$jscoverage['test.js'].functionData[0]++;\n" +
+                "    _$jscoverage['test.js'].lineData[3]++;\n" +
+                "    return 1;\n" +
+                "  }\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ClassStaticMethod() {
+        String source = "class Rectangle {\n" +
+                "  static area(height, width) {\n" +
+                "    return height * width;\n" +
+                "  }\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "class Rectangle {\n" +
+                "  static area(height, width) {\n" +
+                "    _$jscoverage['test.js'].functionData[0]++;\n" +
+                "    _$jscoverage['test.js'].lineData[3]++;\n" +
+                "    return height * width;\n" +
+                "  }\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ClassSuper() {
+        String source = "class Lion extends Cat {\n" +
+                "  speak() {\n" +
+                "    super.speak();\n" +
+                "    console.log(this.name + ' roars.');\n" +
+                "  }\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "class Lion extends Cat {\n" +
+                "  speak() {\n" +
+                "    _$jscoverage['test.js'].functionData[0]++;\n" +
+                "    _$jscoverage['test.js'].lineData[3]++;\n" +
+                "    super.speak();\n" +
+                "    _$jscoverage['test.js'].lineData[4]++;\n" +
+                "    console.log(this.name + ' roars.');\n" +
+                "  }\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6ClassMixin() {
+        String source = "var calculatorMixin = Base => class extends Base {\n" +
+                "  calc() { }\n" +
+                "};";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "var calculatorMixin = Base => class extends Base {\n" +
+                "  calc() {\n" +
+                "    _$jscoverage['test.js'].functionData[0]++;\n" +
+                "  }\n" +
+                "};\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6Const() {
+        String source = "const PI = 3.141593;";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "const PI = 3.141593;\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+
+    @Test
+    public void shouldInstrumentES6DefaultParamValues() {
+        String source = "function f(x, y = 7, z = 42) {\n" +
+                "    return x + y + z\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "function f(x, y = 7, z = 42) {\n" +
+                "  _$jscoverage['test.js'].functionData[0]++;\n" +
+                "  _$jscoverage['test.js'].lineData[2]++;\n" +
+                "  return x + y + z;\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6StatementBodies() {
+        String source = "nums.forEach(v => {\n" +
+                "    if (v % 5 === 0)\n" +
+                "      fives.push(v)\n" +
+                "})";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "nums.forEach(v => {\n" +
+                "  _$jscoverage['test.js'].lineData[2]++;\n" +
+                "  if (v % 5 === 0) {\n" +
+                "    _$jscoverage['test.js'].lineData[3]++;\n" +
+                "    fives.push(v);\n" +
+                "  }\n" +
+                "});\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6BlockScopedFunction() {
+        String source = "{\n" +
+                "    function foo() {\n" +
+                "        return 1\n" +
+                "    }\n" +
+                "\n" +
+                "    foo() === 1\n" +
+                "    {\n" +
+                "        function foo() {\n" +
+                "            return 2\n" +
+                "        }\n" +
+                "\n" +
+                "        foo() === 2\n" +
+                "    }\n" +
+                "    foo() === 1\n" +
+                "} ";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = " {\n" +
+                "  _$jscoverage['test.js'].lineData[2]++;\n" +
+                "  function foo() {\n" +
+                "    _$jscoverage['test.js'].functionData[0]++;\n" +
+                "    _$jscoverage['test.js'].lineData[3]++;\n" +
+                "    return 1;\n" +
+                "  }\n" +
+                "  _$jscoverage['test.js'].lineData[6]++;\n" +
+                "  foo() === 1;\n" +
+                "  {\n" +
+                "    _$jscoverage['test.js'].lineData[8]++;\n" +
+                "    function foo() {\n" +
+                "      _$jscoverage['test.js'].functionData[1]++;\n" +
+                "      _$jscoverage['test.js'].lineData[9]++;\n" +
+                "      return 2;\n" +
+                "    }\n" +
+                "    _$jscoverage['test.js'].lineData[12]++;\n" +
+                "    foo() === 2;\n" +
+                "  }\n" +
+                "  _$jscoverage['test.js'].lineData[14]++;\n" +
+                "  foo() === 1;\n" +
+                "}\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6Iterator() {
+        String source = "let fibonacci = {\n" +
+                "    [Symbol.iterator]() {\n" +
+                "        let pre = 0, cur = 1;\n" +
+                "        return {\n" +
+                "            next() {\n" +
+                "                [pre, cur] = [cur, pre + cur];\n" +
+                "                return {done: false, value: cur}\n" +
+                "            }\n" +
+                "        }\n" +
+                "    }\n" +
+                "};";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "let fibonacci = {[Symbol.iterator]() {\n" +
+                "  _$jscoverage['test.js'].functionData[0]++;\n" +
+                "  _$jscoverage['test.js'].lineData[3]++;\n" +
+                "  let pre = 0, cur = 1;\n" +
+                "  _$jscoverage['test.js'].lineData[4]++;\n" +
+                "  return {next() {\n" +
+                "    _$jscoverage['test.js'].functionData[1]++;\n" +
+                "    _$jscoverage['test.js'].lineData[6]++;\n" +
+                "    [pre, cur] = [cur, pre + cur];\n" +
+                "    _$jscoverage['test.js'].lineData[7]++;\n" +
+                "    return {done:false, value:cur};\n" +
+                "  }};\n" +
+                "}};\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6GeneratorFunctionIterator() {
+        String source = "let fibonacci = {\n" +
+                "    * [Symbol.iterator]() {\n" +
+                "        let pre = 0, cur = 1;\n" +
+                "        for (; ;) {\n" +
+                "            [pre, cur] = [cur, pre + cur];\n" +
+                "            yield cur\n" +
+                "        }\n" +
+                "    }\n" +
+                "};";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "let fibonacci = {*[Symbol.iterator]() {\n" +
+                "  _$jscoverage['test.js'].functionData[0]++;\n" +
+                "  _$jscoverage['test.js'].lineData[3]++;\n" +
+                "  let pre = 0, cur = 1;\n" +
+                "  _$jscoverage['test.js'].lineData[4]++;\n" +
+                "  for (;;) {\n" +
+                "    _$jscoverage['test.js'].lineData[5]++;\n" +
+                "    [pre, cur] = [cur, pre + cur];\n" +
+                "    _$jscoverage['test.js'].lineData[6]++;\n" +
+                "    yield cur;\n" +
+                "  }\n" +
+                "}};\n";
+        assertEquals(expectedSource, instrumentedSource);
+    }
+
+    @Test
+    public void shouldInstrumentES6GeneratorDirect() {
+        String source = "function* range(start, end, step) {\n" +
+                "    while (start < end) {\n" +
+                "        yield start;\n" +
+                "        start += step;\n" +
+                "    }\n" +
+                "}";
+        String instrumentedSource = sourceProcessor.instrumentSource(source);
+        String expectedSource = "_$jscoverage['test.js'].lineData[1]++;\n" +
+                "function* range(start, end, step) {\n" +
+                "  _$jscoverage['test.js'].functionData[0]++;\n" +
+                "  _$jscoverage['test.js'].lineData[2]++;\n" +
+                "  while (start < end) {\n" +
+                "    _$jscoverage['test.js'].lineData[3]++;\n" +
+                "    yield start;\n" +
+                "    _$jscoverage['test.js'].lineData[4]++;\n" +
+                "    start += step;\n" +
+                "  }\n" +
+                "}\n";
         assertEquals(expectedSource, instrumentedSource);
     }
 }

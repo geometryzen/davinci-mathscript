@@ -862,7 +862,8 @@ define(function (require) {
         uglify2: true,
         closure: true,
         map: true,
-        throwWhen: true
+        throwWhen: true,
+        rawText: true
     };
 
     build.hasDotPropMatch = function (prop) {
@@ -1977,7 +1978,11 @@ define(function (require) {
                                         singleContents = config.onBuildWrite(moduleName, path, singleContents);
                                     }
                                 };
-                                builder.write(parts.prefix, parts.name, writeApi);
+
+                                builder.write(parts.prefix, parts.name, writeApi, {
+                                    name: module.onCompleteData.name,
+                                    path: module.onCompleteData.path
+                                });
                             }
                             return;
                         } else {

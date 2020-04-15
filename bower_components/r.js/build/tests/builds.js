@@ -866,7 +866,7 @@ define(['build', 'env!env/file', 'env', 'lang'], function (build, file, env, lan
 
                 build(["lib/plugins/buildPluginFirst.js"]);
 
-                t.is(nol(c("lib/plugins/expected.js")),
+                t.is(nol(c("lib/plugins/expected-buildPluginFirst.js")),
                      nol(c("lib/plugins/main-builtPluginFirst.js")));
 
                 require._buildReset();
@@ -2276,6 +2276,26 @@ define(['build', 'env!env/file', 'env', 'lang'], function (build, file, env, lan
                 build(["lib/sourcemapSingle/build.js"]);
 
                 sourcemapEquals(t, c("lib/sourcemapSingle/expected-main-built.js.map"), c("lib/sourcemapSingle/main-built.js.map"));
+
+                require._buildReset();
+            }
+
+        ]
+    );
+    doh.run();
+
+    //Test a single file with optimize, preserve license comments, and source maps
+    doh.register("sourcemapComments",
+        [
+            function sourcemapComments(t) {
+                file.deleteFile("lib/sourcemapComments/main-built.js");
+                file.deleteFile("lib/sourcemapComments/main-built.js.map");
+
+                build(["lib/sourcemapComments/build.js"]);
+
+                t.is(nol(c("lib/sourcemapComments/expected-main-built.js")),
+                     nol(c("lib/sourcemapComments/main-built.js")));
+                sourcemapEquals(t, c("lib/sourcemapComments/expected-main-built.js.map"), c("lib/sourcemapComments/main-built.js.map"));
 
                 require._buildReset();
             }

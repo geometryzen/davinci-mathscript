@@ -1,5 +1,6 @@
 System.register([], function (exports_1, context_1) {
     'use strict';
+    var isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE, Syntax;
     var __moduleName = context_1 && context_1.id;
     function ignoreJSHintError(what) {
     }
@@ -190,7 +191,6 @@ System.register([], function (exports_1, context_1) {
         });
         return tree;
     }
-    var isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE, Syntax;
     return {
         setters: [],
         execute: function () {

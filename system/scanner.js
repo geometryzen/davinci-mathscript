@@ -1,5 +1,6 @@
 System.register(["./assert", "./character", "./messages"], function (exports_1, context_1) {
     "use strict";
+    var assert_1, character_1, messages_1, Scanner;
     var __moduleName = context_1 && context_1.id;
     function hexValue(ch) {
         return '0123456789abcdef'.indexOf(ch.toLowerCase());
@@ -7,7 +8,6 @@ System.register(["./assert", "./character", "./messages"], function (exports_1, 
     function octalValue(ch) {
         return '01234567'.indexOf(ch);
     }
-    var assert_1, character_1, messages_1, Scanner;
     return {
         setters: [
             function (assert_1_1) {

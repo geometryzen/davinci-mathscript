@@ -1,4 +1,3 @@
-
 define('util',[],function () {
     function upper(text) {
         return text.toUpperCase();
@@ -38,17 +37,18 @@ define('plug',['converter'], function (converter) {
             onLoad(converted);
         },
 
-        write: function (pluginName, moduleName, write, config) {
+        write: function (pluginName, moduleName, write, data) {
             if (moduleName in buildMap) {
                 var content = jsEscape(buildMap[moduleName]);
                 write("define('" + pluginName + "!" + moduleName  +
-                      "', function () { return '" + content + "';});\n");
+                      "', function () { /* name: " + data.name + " path: " + data.path.split(/[\/\\]/).pop() + " */ return '" + content + "';});\n");
             }
         }
     };
 });
 
-define('plug!shouldbeuppercasetext', function () { return 'SHOULDBEUPPERCASETEXT';});
+
+define('plug!shouldbeuppercasetext', function () { /* name: main path: main-built.js */ return 'SHOULDBEUPPERCASETEXT';});
 
 require(['plug', 'converter', 'plug!shouldbeuppercasetext'],
 function (plug,   converter,   text) {
@@ -58,3 +58,4 @@ function (plug,   converter,   text) {
 });
 
 define("main", function(){});
+

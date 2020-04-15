@@ -380,9 +380,9 @@ public class ConfigurationCommon extends Configuration {
     protected boolean includeFunction = true;
     protected boolean localStorage;
     protected boolean isolateBrowser;
-    protected final List<PatternMatcher> patternMatchers = new ArrayList<PatternMatcher>();
+    protected final List<PatternMatcher> patternMatchers = new ArrayList<>();
     private boolean includeUnloadedJS;
-    protected Config.LanguageMode ECMAVersion = Config.LanguageMode.ECMASCRIPT8;
+    protected Config.LanguageMode ECMAVersion = Config.LanguageMode.ES_NEXT;
     protected boolean defaultSkip;
     protected IoUtils ioUtils = IoUtils.getInstance();
     protected Level logLevel = SEVERE;

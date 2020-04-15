@@ -1,5 +1,6 @@
 System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax"], function (exports_1, context_1) {
     "use strict";
+    var core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
     var __moduleName = context_1 && context_1.id;
     function transpileTree(code, options) {
         if (options === void 0) { options = {}; }
@@ -441,7 +442,6 @@ System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./
         return esprima_2.tokenize(code, options, delegate);
     }
     exports_1("tokenize", tokenize);
-    var core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
     return {
         setters: [
             function (core_1_1) {

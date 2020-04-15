@@ -1,12 +1,12 @@
 {
   "name": "r.js",
   "homepage": "https://github.com/jrburke/r.js",
-  "version": "2.3.4",
-  "_release": "2.3.4",
+  "version": "2.3.6",
+  "_release": "2.3.6",
   "_resolution": {
     "type": "version",
-    "tag": "2.3.4",
-    "commit": "bb334dfa5b378db459e3148051033e671bccc500"
+    "tag": "2.3.6",
+    "commit": "5ecbe618af8b4f61d6e9a2ebf7800ed0b6b80eb7"
   },
   "_source": "https://github.com/jrburke/r.js.git",
   "_target": "~2.3.3",

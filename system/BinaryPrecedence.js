@@ -1,7 +1,7 @@
 System.register(["./Precedence"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Precedence_1, BinaryPrecedence;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (Precedence_1_1) {

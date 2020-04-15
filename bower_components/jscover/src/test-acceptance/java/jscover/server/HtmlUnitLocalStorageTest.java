@@ -344,7 +344,6 @@ package jscover.server;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import jscover.Main;
 import org.junit.AfterClass;
@@ -362,7 +361,7 @@ public class HtmlUnitLocalStorageTest {
     private static Main main = new Main();
     private static String reportDir = "target/localStorage";
 
-    protected WebClient webClient = new WebClient(BrowserVersion.FIREFOX_45);
+    protected WebClient webClient = new WebClient(BrowserVersion.FIREFOX_60);
     private static String[] args = new String[]{
             "-ws",
             "--document-root=src/test-acceptance/resources",
@@ -377,12 +376,8 @@ public class HtmlUnitLocalStorageTest {
     }
 
     @BeforeClass
-    public static void setUpOnce() throws IOException {
-        server = new Thread(new Runnable() {
-            public void run() {
-                main.runMain(args);
-            }
-        });
+    public static void setUpOnce() {
+        server = new Thread(() -> main.runMain(args));
         server.start();
     }
 

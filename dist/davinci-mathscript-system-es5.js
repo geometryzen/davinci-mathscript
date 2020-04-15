@@ -1,8 +1,8 @@
 System.register("core.js", [], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var VERSION;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -13,6 +13,7 @@ System.register("core.js", [], function (exports_1, context_1) {
 System.register('estraverse.js', [], function (exports_1, context_1) {
     'use strict';
 
+    var isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE, Syntax;
     var __moduleName = context_1 && context_1.id;
     function ignoreJSHintError(what) {}
     function deepCopy(obj) {
@@ -206,7 +207,6 @@ System.register('estraverse.js', [], function (exports_1, context_1) {
         });
         return tree;
     }
-    var isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE, Syntax;
     return {
         setters: [],
         execute: function () {
@@ -651,6 +651,7 @@ System.register('estraverse.js', [], function (exports_1, context_1) {
 System.register("code.js", [], function (exports_1, context_1) {
     'use strict';
 
+    var ES6Regex, ES5Regex, NON_ASCII_WHITESPACES, IDENTIFIER_START, IDENTIFIER_PART, ch;
     var __moduleName = context_1 && context_1.id;
     function isDecimalDigit(ch) {
         return 0x30 <= ch && ch <= 0x39;
@@ -700,7 +701,6 @@ System.register("code.js", [], function (exports_1, context_1) {
         return isIdentifierPartES6(ch);
     }
     exports_1("isIdentifierPart", isIdentifierPart);
-    var ES6Regex, ES5Regex, NON_ASCII_WHITESPACES, IDENTIFIER_START, IDENTIFIER_PART, ch;
     return {
         setters: [],
         execute: function () {
@@ -727,8 +727,8 @@ System.register("code.js", [], function (exports_1, context_1) {
 System.register("BinaryPrecedence.js", ["./Precedence"], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var Precedence_1, BinaryPrecedence;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [function (Precedence_1_1) {
             Precedence_1 = Precedence_1_1;
@@ -767,6 +767,7 @@ System.register("BinaryPrecedence.js", ["./Precedence"], function (exports_1, co
 System.register("escodegen.js", ["./estraverse", "./code", "./Precedence", "./BinaryPrecedence"], function (exports_1, context_1) {
     "use strict";
 
+    var estraverse_1, code_1, code_2, code_3, code_4, Precedence_1, BinaryPrecedence_1, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS, F_ALLOW_IN, F_ALLOW_CALL, F_ALLOW_UNPARATH_NEW, F_FUNC_BODY, F_DIRECTIVE_CTX, F_SEMICOLON_OPT, E_FTT, E_TTF, E_TTT, E_TFF, E_FFT, E_TFT, S_TFFF, S_TFFT, S_FFFF, S_TFTF, S_TTFF, CodeGenerator, escodegen;
     var __moduleName = context_1 && context_1.id;
     function isExpression(node) {
         return CodeGenerator.Expression.hasOwnProperty(node.type);
@@ -1374,7 +1375,6 @@ System.register("escodegen.js", ["./estraverse", "./code", "./Precedence", "./Bi
         return pair.map.toString();
     }
     exports_1("generate", generate);
-    var estraverse_1, code_1, code_2, code_3, code_4, Precedence_1, BinaryPrecedence_1, SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS, F_ALLOW_IN, F_ALLOW_CALL, F_ALLOW_UNPARATH_NEW, F_FUNC_BODY, F_DIRECTIVE_CTX, F_SEMICOLON_OPT, E_FTT, E_TTF, E_TTT, E_TFF, E_FFT, E_TFT, S_TFFF, S_TFFT, S_FFFF, S_TFTF, S_TTFF, CodeGenerator, escodegen;
     return {
         setters: [function (estraverse_1_1) {
             estraverse_1 = estraverse_1_1;
@@ -2612,6 +2612,7 @@ System.register("escodegen.js", ["./estraverse", "./code", "./Precedence", "./Bi
 System.register("generateRandomId.js", [], function (exports_1, context_1) {
     "use strict";
 
+    var alphaNum;
     var __moduleName = context_1 && context_1.id;
     function generateRandomId(length) {
         if (length === void 0) {
@@ -2624,7 +2625,6 @@ System.register("generateRandomId.js", [], function (exports_1, context_1) {
         return id;
     }
     exports_1("generateRandomId", generateRandomId);
-    var alphaNum;
     return {
         setters: [],
         execute: function () {
@@ -2635,8 +2635,8 @@ System.register("generateRandomId.js", [], function (exports_1, context_1) {
 System.register("comment-handler.js", ["./syntax"], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var syntax_1, CommentHandler;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [function (syntax_1_1) {
             syntax_1 = syntax_1_1;
@@ -2789,8 +2789,8 @@ System.register("comment-handler.js", ["./syntax"], function (exports_1, context
 System.register("jsx-nodes.js", ["./jsx-syntax"], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var jsx_syntax_1, JSXClosingElement, JSXElement, JSXEmptyExpression, JSXExpressionContainer, JSXIdentifier, JSXMemberExpression, JSXAttribute, JSXNamespacedName, JSXOpeningElement, JSXSpreadAttribute, JSXText;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [function (jsx_syntax_1_1) {
             jsx_syntax_1 = jsx_syntax_1_1;
@@ -2897,8 +2897,8 @@ System.register("jsx-nodes.js", ["./jsx-syntax"], function (exports_1, context_1
 System.register("jsx-syntax.js", [], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var JSXSyntax;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -2921,8 +2921,8 @@ System.register("jsx-syntax.js", [], function (exports_1, context_1) {
 System.register("xhtml-entities.js", [], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var XHTMLEntities;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -3187,10 +3187,13 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
     "use strict";
 
     var __extends = this && this.__extends || function () {
-        var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
-            d.__proto__ = b;
-        } || function (d, b) {
-            for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        var extendStatics = function (d, b) {
+            extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+                d.__proto__ = b;
+            } || function (d, b) {
+                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+            };
+            return extendStatics(d, b);
         };
         return function (d, b) {
             extendStatics(d, b);
@@ -3200,6 +3203,7 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
             d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
         };
     }();
+    var character_1, JSXNode, jsx_syntax_1, Node, parser_1, token_1, xhtml_entities_1, JSXParser;
     var __moduleName = context_1 && context_1.id;
     function getQualifiedElementName(elementName) {
         var qualifiedName;
@@ -3221,7 +3225,6 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
         }
         return qualifiedName;
     }
-    var character_1, JSXNode, jsx_syntax_1, Node, parser_1, token_1, xhtml_entities_1, JSXParser;
     return {
         setters: [function (character_1_1) {
             character_1 = character_1_1;
@@ -3704,8 +3707,8 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
 System.register("nodes.js", ["./syntax"], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var syntax_1, ArrayExpression, ArrayPattern, ArrowFunctionExpression, AssignmentExpression, AssignmentPattern, AsyncArrowFunctionExpression, AsyncFunctionDeclaration, AsyncFunctionExpression, AwaitExpression, BinaryExpression, BlockStatement, BreakStatement, CallExpression, CatchClause, ClassBody, ClassDeclaration, ClassExpression, ComputedMemberExpression, ConditionalExpression, ContinueStatement, DebuggerStatement, Directive, DoWhileStatement, EmptyStatement, ExportAllDeclaration, ExportDefaultDeclaration, ExportNamedDeclaration, ExportSpecifier, ExpressionStatement, ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement, Import, ImportDeclaration, ImportDefaultSpecifier, ImportNamespaceSpecifier, ImportSpecifier, LabeledStatement, Literal, MetaProperty, MethodDefinition, Module, NewExpression, ObjectExpression, ObjectPattern, Property, RegexLiteral, RestElement, RestProperty, ReturnStatement, Script, SequenceExpression, SpreadElement, SpreadProperty, StaticMemberExpression, Super, SwitchCase, SwitchStatement, TaggedTemplateExpression, TemplateElement, TemplateLiteral, ThisExpression, ThrowStatement, TryStatement, UnaryExpression, UpdateExpression, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement, YieldExpression;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [function (syntax_1_1) {
             syntax_1 = syntax_1_1;
@@ -4410,8 +4413,8 @@ System.register("nodes.js", ["./syntax"], function (exports_1, context_1) {
 System.register("Precedence.js", [], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var Precedence;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -4446,8 +4449,8 @@ System.register("Precedence.js", [], function (exports_1, context_1) {
 System.register("parser.js", ["./assert", "./error-handler", "./messages", "./nodes", "./scanner", "./syntax", "./token", "./Precedence"], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var assert_1, error_handler_1, messages_1, Node, scanner_1, syntax_1, token_1, Precedence_1, ArrowParameterPlaceHolder, Parser;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [function (assert_1_1) {
             assert_1 = assert_1_1;
@@ -7350,8 +7353,8 @@ System.register("parser.js", ["./assert", "./error-handler", "./messages", "./no
 System.register('error-handler.js', [], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var ErrorHandler;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -7425,8 +7428,8 @@ System.register("assert.js", [], function (exports_1, context_1) {
 System.register("character.js", [], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var Regex, Character;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -7466,8 +7469,8 @@ System.register("character.js", [], function (exports_1, context_1) {
 System.register("messages.js", [], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var Messages;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -7540,6 +7543,7 @@ System.register("messages.js", [], function (exports_1, context_1) {
 System.register("scanner.js", ["./assert", "./character", "./messages"], function (exports_1, context_1) {
     "use strict";
 
+    var assert_1, character_1, messages_1, Scanner;
     var __moduleName = context_1 && context_1.id;
     function hexValue(ch) {
         return '0123456789abcdef'.indexOf(ch.toLowerCase());
@@ -7547,7 +7551,6 @@ System.register("scanner.js", ["./assert", "./character", "./messages"], functio
     function octalValue(ch) {
         return '01234567'.indexOf(ch);
     }
-    var assert_1, character_1, messages_1, Scanner;
     return {
         setters: [function (assert_1_1) {
             assert_1 = assert_1_1;
@@ -8578,8 +8581,8 @@ System.register("scanner.js", ["./assert", "./character", "./messages"], functio
 System.register("token.js", [], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var TokenName;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -8601,8 +8604,8 @@ System.register("token.js", [], function (exports_1, context_1) {
 System.register("tokenizer.js", ["./error-handler", "./scanner", "./token"], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var error_handler_1, scanner_1, token_1, Reader, Tokenizer;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [function (error_handler_1_1) {
             error_handler_1 = error_handler_1_1;
@@ -8742,6 +8745,7 @@ System.register("tokenizer.js", ["./error-handler", "./scanner", "./token"], fun
 System.register("esprima.js", ["./comment-handler", "./jsx-parser", "./parser", "./tokenizer", "./syntax"], function (exports_1, context_1) {
     "use strict";
 
+    var comment_handler_1, jsx_parser_1, parser_1, tokenizer_1, version;
     var __moduleName = context_1 && context_1.id;
     function parse(code, options, delegate) {
         var commentHandler = null;
@@ -8827,7 +8831,6 @@ System.register("esprima.js", ["./comment-handler", "./jsx-parser", "./parser", 
         return tokens;
     }
     exports_1("tokenize", tokenize);
-    var comment_handler_1, jsx_parser_1, parser_1, tokenizer_1, version;
     return {
         setters: [function (comment_handler_1_1) {
             comment_handler_1 = comment_handler_1_1;
@@ -8850,6 +8853,7 @@ System.register("esprima.js", ["./comment-handler", "./jsx-parser", "./parser", 
 System.register("getLoopProtectorBlocks.js", ["./esprima"], function (exports_1, context_1) {
     "use strict";
 
+    var esprima_1;
     var __moduleName = context_1 && context_1.id;
     function getLoopProtectorBlocks(varName, timeout) {
         var ast1 = esprima_1.parse("var " + varName + " = Date.now()");
@@ -8860,7 +8864,6 @@ System.register("getLoopProtectorBlocks.js", ["./esprima"], function (exports_1,
         };
     }
     exports_1("getLoopProtectorBlocks", getLoopProtectorBlocks);
-    var esprima_1;
     return {
         setters: [function (esprima_1_1) {
             esprima_1 = esprima_1_1;
@@ -8871,8 +8874,8 @@ System.register("getLoopProtectorBlocks.js", ["./esprima"], function (exports_1,
 System.register("syntax.js", [], function (exports_1, context_1) {
     "use strict";
 
-    var __moduleName = context_1 && context_1.id;
     var Syntax;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -8953,6 +8956,7 @@ System.register("syntax.js", [], function (exports_1, context_1) {
 System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax"], function (exports_1, context_1) {
     "use strict";
 
+    var core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
     var __moduleName = context_1 && context_1.id;
     function transpileTree(code, options) {
         if (options === void 0) {
@@ -9496,7 +9500,6 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
         return esprima_2.tokenize(code, options, delegate);
     }
     exports_1("tokenize", tokenize);
-    var core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
     return {
         setters: [function (core_1_1) {
             core_1 = core_1_1;

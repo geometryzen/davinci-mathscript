@@ -1,1 +1,0 @@
-module.exports = require("npm:hash-base@2.0.2/index.js");

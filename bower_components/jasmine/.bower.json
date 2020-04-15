@@ -1,6 +1,6 @@
 {
   "name": "jasmine-core",
-  "homepage": "http://jasmine.github.io",
+  "homepage": "https://jasmine.github.io",
   "authors": [
     "slackersoft <gregg@slackersoft.net>"
   ],
@@ -37,12 +37,12 @@
     "lib/jasmine-core/*.py",
     "sauce_connect.log"
   ],
-  "version": "2.6.4",
-  "_release": "2.6.4",
+  "version": "2.99.2",
+  "_release": "2.99.2",
   "_resolution": {
     "type": "version",
-    "tag": "v2.6.4",
-    "commit": "d5147f4d40e8a00f459c3e1d5dde71b1ad9fdfa4"
+    "tag": "v2.99.2",
+    "commit": "5d91a2ef7c062a18f86687ee93598ad4f829c62d"
   },
   "_source": "https://github.com/pivotal/jasmine.git",
   "_target": "^2.5.2",

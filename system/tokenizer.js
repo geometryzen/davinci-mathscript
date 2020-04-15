@@ -1,7 +1,7 @@
 System.register(["./error-handler", "./scanner", "./token"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var error_handler_1, scanner_1, token_1, Reader, Tokenizer;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (error_handler_1_1) {

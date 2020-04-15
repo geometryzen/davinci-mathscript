@@ -350,11 +350,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 
 public class HtmlUnitJSTest {
@@ -374,17 +374,13 @@ public class HtmlUnitJSTest {
     };
 
     @BeforeClass
-    public static void setUpOnce() throws IOException {
-        server = new Thread(new Runnable() {
-            public void run() {
-                main.runMain(args);
-            }
-        });
+    public static void setUpOnce() {
+        server = new Thread(() -> main.runMain(args));
         server.start();
     }
 
     @AfterClass
-    public static void tearDown() throws InterruptedException {
+    public static void tearDown() {
         main.stop();
     }
 
@@ -399,7 +395,7 @@ public class HtmlUnitJSTest {
         assertThat(passed.size(), equalTo(1));
         assertThat(frame.getByXPath("//span[contains(@class,'jasmine-failed')]").size(), equalTo(0));
         assertThat(frame.getByXPath("//span[contains(@class,'jasmine-skipped')]").size(), equalTo(0));
-        assertThat(passed.get(0).asText(), equalTo("15 specs, 0 failures"));
+        assertThat(passed.get(0).asText(), startsWith("15 specs, 0 failures"));
 
         //Store Report
         frame.executeJavaScript("jscoverage_report();");

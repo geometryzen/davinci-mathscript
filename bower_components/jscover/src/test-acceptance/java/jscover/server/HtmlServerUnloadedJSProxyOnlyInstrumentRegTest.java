@@ -342,20 +342,12 @@ Public License instead of this License.
 
 package jscover.server;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-
 import com.gargoylesoftware.htmlunit.ProxyConfig;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
 import jscover.Main;
 import jscover.util.IoUtils;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -365,7 +357,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
 
 //Provided by https://github.com/devangnegandhi 6 Sept 2013
 public class HtmlServerUnloadedJSProxyOnlyInstrumentRegTest {
@@ -390,25 +385,19 @@ public class HtmlServerUnloadedJSProxyOnlyInstrumentRegTest {
     };
 
     @BeforeClass
-    public static void setUpOnce() throws IOException {
-        proxyServer = new Thread(new Runnable() {
-            public void run() {
-                main.runMain(args);
-            }
-        });
+    public static void setUpOnce() {
+        proxyServer = new Thread(() -> main.runMain(args));
         proxyServer.start();
-        webServer = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    serverSocket = new ServerSocket(9001);
-                    File wwwRoot = new File("src/test-integration/resources/jsSearch");
-                    while (true) {
-                        Socket socket = serverSocket.accept();
-                        (new HttpServer(socket, wwwRoot, "testVersion")).start();
-                    }
-                } catch (IOException e) {
-                    //throw new RuntimeException(e);
+        webServer = new Thread(() -> {
+            try {
+                serverSocket = new ServerSocket(9001);
+                File wwwRoot = new File("src/test-integration/resources/jsSearch");
+                while (true) {
+                    Socket socket = serverSocket.accept();
+                    (new HttpServer(socket, wwwRoot, "testVersion")).start();
                 }
+            } catch (IOException e) {
+                //throw new RuntimeException(e);
             }
         });
         webServer.start();
@@ -421,7 +410,7 @@ public class HtmlServerUnloadedJSProxyOnlyInstrumentRegTest {
     }
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
         ProxyConfig proxyConfig = new ProxyConfig("localhost", proxyPort);
         proxyConfig.addHostsToProxyBypass("127.0.0.1");
         webClient.getOptions().setProxyConfig(proxyConfig);
@@ -474,6 +463,6 @@ public class HtmlServerUnloadedJSProxyOnlyInstrumentRegTest {
     }
 
     private HtmlElement getHtmlElement(HtmlPage page, String xpathExpr) {
-        return (HtmlElement) ((ArrayList) page.getByXPath(xpathExpr)).get(0);
+        return (HtmlElement) (page.getByXPath(xpathExpr)).get(0);
     }
 }

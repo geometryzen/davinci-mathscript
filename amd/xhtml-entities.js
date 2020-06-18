@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.XHTMLEntities = void 0;
     exports.XHTMLEntities = {
         quot: '\u0022',
         amp: '\u0026',

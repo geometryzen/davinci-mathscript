@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "./character", "./jsx-nodes", "./jsx-syntax", "./nodes", "./parser", "./token", "./xhtml-entities"], function (require, exports, character_1, JSXNode, jsx_syntax_1, Node, parser_1, token_1, xhtml_entities_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.JSXParser = void 0;
     token_1.TokenName[100] = 'JSXIdentifier';
     token_1.TokenName[101] = 'JSXText';
     function getQualifiedElementName(elementName) {

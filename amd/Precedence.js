@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Precedence = void 0;
     exports.Precedence = {
         Sequence: 0,
         Yield: 1,

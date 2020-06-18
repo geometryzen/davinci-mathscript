@@ -1,6 +1,7 @@
 define(["require", "exports", "./jsx-syntax"], function (require, exports, jsx_syntax_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.JSXText = exports.JSXSpreadAttribute = exports.JSXOpeningElement = exports.JSXNamespacedName = exports.JSXAttribute = exports.JSXMemberExpression = exports.JSXIdentifier = exports.JSXExpressionContainer = exports.JSXEmptyExpression = exports.JSXElement = exports.JSXClosingElement = void 0;
     var JSXClosingElement = (function () {
         function JSXClosingElement(name) {
             this.type = jsx_syntax_1.JSXSyntax.JSXClosingElement;

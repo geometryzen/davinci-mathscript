@@ -1,6 +1,7 @@
 define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax", "./syntax"], function (require, exports, core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, syntax_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.tokenize = exports.parseModule = exports.parseScript = exports.parse = exports.Ms = exports.tilde = exports.bang = exports.pos = exports.neg = exports.lt = exports.le = exports.gt = exports.ge = exports.ne = exports.eq = exports.div = exports.mul = exports.sub = exports.add = exports.transpile = void 0;
     var MATHSCRIPT_NAMESPACE = "Ms";
     var binOp = {
         '+': 'add',
@@ -490,6 +491,6 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
         return esprima_2.tokenize(code, options, delegate);
     }
     exports.tokenize = tokenize;
-    exports.Syntax = syntax_2.Syntax;
+    Object.defineProperty(exports, "Syntax", { enumerable: true, get: function () { return syntax_2.Syntax; } });
     exports.default = exports.Ms;
 });

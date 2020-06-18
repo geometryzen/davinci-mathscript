@@ -1,6 +1,7 @@
 define(["require", "exports", "./error-handler", "./scanner", "./token"], function (require, exports, error_handler_1, scanner_1, token_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Tokenizer = void 0;
     var Reader = (function () {
         function Reader() {
             this.values = [];

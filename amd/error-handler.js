@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ErrorHandler = void 0;
     var ErrorHandler = (function () {
         function ErrorHandler() {
             this.errors = [];

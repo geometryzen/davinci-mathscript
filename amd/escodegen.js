@@ -1,6 +1,7 @@
 define(["require", "exports", "./estraverse", "./code", "./code", "./code", "./code", "./Precedence", "./BinaryPrecedence"], function (require, exports, estraverse_1, code_1, code_2, code_3, code_4, Precedence_1, BinaryPrecedence_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.escodegen = exports.generate = void 0;
     var SourceNode, isArray, base, indent, json, renumber, hexadecimal, quotes, escapeless, newline, space, parentheses, semicolons, safeConcatenation, directive, extra, parse, sourceMap, sourceCode, preserveBlankLines, FORMAT_MINIFY, FORMAT_DEFAULTS;
     function isExpression(node) {
         return CodeGenerator.Expression.hasOwnProperty(node.type);

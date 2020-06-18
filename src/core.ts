@@ -22,4 +22,4 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-export const VERSION = '1.3.1';
+export const VERSION = '1.3.2';

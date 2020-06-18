@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Syntax = void 0;
     var isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE;
     function ignoreJSHintError(what) {
     }

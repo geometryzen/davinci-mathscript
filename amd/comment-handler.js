@@ -1,6 +1,7 @@
 define(["require", "exports", "./syntax"], function (require, exports, syntax_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.CommentHandler = void 0;
     var CommentHandler = (function () {
         function CommentHandler() {
             this.attach = false;

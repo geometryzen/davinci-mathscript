@@ -1,6 +1,7 @@
 define(["require", "exports", "./comment-handler", "./jsx-parser", "./parser", "./tokenizer", "./syntax"], function (require, exports, comment_handler_1, jsx_parser_1, parser_1, tokenizer_1, syntax_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.version = exports.tokenize = exports.parseScript = exports.parseModule = exports.parse = void 0;
     function parse(code, options, delegate) {
         var commentHandler = null;
         var proxyDelegate = function (node, metadata) {
@@ -83,6 +84,6 @@ define(["require", "exports", "./comment-handler", "./jsx-parser", "./parser", "
         return tokens;
     }
     exports.tokenize = tokenize;
-    exports.Syntax = syntax_1.Syntax;
+    Object.defineProperty(exports, "Syntax", { enumerable: true, get: function () { return syntax_1.Syntax; } });
     exports.version = '1.1.2';
 });

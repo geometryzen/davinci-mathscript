@@ -180,7 +180,7 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "cipher-base": "npm:cipher-base@1.0.4",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
-      "inherits": "npm:inherits@2.0.1",
+      "inherits": "npm:inherits@2.0.4",
       "md5.js": "npm:md5.js@1.3.5",
       "ripemd160": "npm:ripemd160@2.0.2",
       "sha.js": "npm:sha.js@2.4.11"
@@ -190,7 +190,7 @@ System.config({
       "cipher-base": "npm:cipher-base@1.0.4",
       "create-hash": "npm:create-hash@1.2.0",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
-      "inherits": "npm:inherits@2.0.1",
+      "inherits": "npm:inherits@2.0.4",
       "ripemd160": "npm:ripemd160@2.0.2",
       "safe-buffer": "npm:safe-buffer@5.2.1",
       "sha.js": "npm:sha.js@2.4.11"

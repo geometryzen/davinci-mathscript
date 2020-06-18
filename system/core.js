@@ -5,7 +5,7 @@ System.register([], function (exports_1, context_1) {
     return {
         setters: [],
         execute: function () {
-            exports_1("VERSION", VERSION = '1.3.2');
+            exports_1("VERSION", VERSION = '1.3.3');
         }
     };
 });

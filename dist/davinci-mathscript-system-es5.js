@@ -6,7 +6,7 @@ System.register("core.js", [], function (exports_1, context_1) {
     return {
         setters: [],
         execute: function () {
-            exports_1("VERSION", VERSION = '1.3.3');
+            exports_1("VERSION", VERSION = '1.3.4');
         }
     };
 });

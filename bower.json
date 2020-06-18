@@ -1,12 +1,12 @@
 {
     "name": "davinci-mathscript",
-    "version": "1.3.3",
+    "version": "1.3.4",
     "description": "MathScript transcompiler to JavaScript.",
     "author": {
         "name": "David Holmes",
         "email": "david.geo.holmes@gmail.com"
     },
-    "main": "./dist/davinci-mathscript.js",
+    "main": "dist/davinci-mathscript.js",
     "repository": {
         "type": "git",
         "url": "git://github.com/geometryzen/davinci-mathscript.git"

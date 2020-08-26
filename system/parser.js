@@ -1,6 +1,6 @@
-System.register(["./assert", "./error-handler", "./messages", "./nodes", "./scanner", "./syntax", "./token", "./Precedence"], function (exports_1, context_1) {
+System.register(["./assert", "./error-handler", "./messages", "./nodes", "./Precedence", "./scanner", "./syntax", "./token"], function (exports_1, context_1) {
     "use strict";
-    var assert_1, error_handler_1, messages_1, Node, scanner_1, syntax_1, token_1, Precedence_1, ArrowParameterPlaceHolder, Parser;
+    var assert_1, error_handler_1, messages_1, Node, Precedence_1, scanner_1, syntax_1, token_1, ArrowParameterPlaceHolder, Parser;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -16,6 +16,9 @@ System.register(["./assert", "./error-handler", "./messages", "./nodes", "./scan
             function (Node_1) {
                 Node = Node_1;
             },
+            function (Precedence_1_1) {
+                Precedence_1 = Precedence_1_1;
+            },
             function (scanner_1_1) {
                 scanner_1 = scanner_1_1;
             },
@@ -24,9 +27,6 @@ System.register(["./assert", "./error-handler", "./messages", "./nodes", "./scan
             },
             function (token_1_1) {
                 token_1 = token_1_1;
-            },
-            function (Precedence_1_1) {
-                Precedence_1 = Precedence_1_1;
             }
         ],
         execute: function () {

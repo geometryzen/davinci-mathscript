@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.TokenName = void 0;
     ;
     exports.TokenName = {};
     exports.TokenName[1] = 'Boolean';
@@ -13,4 +14,6 @@ define(["require", "exports"], function (require, exports) {
     exports.TokenName[8] = 'String';
     exports.TokenName[9] = 'RegularExpression';
     exports.TokenName[10] = 'Template';
+    exports.TokenName[11] = 'JSXIdentifier';
+    exports.TokenName[12] = 'JSXText';
 });

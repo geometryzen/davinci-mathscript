@@ -1,7 +1,7 @@
 import { SourceLocation } from './scanner';
 import { Syntax } from './syntax';
 
-interface Comment {
+export interface Comment {
     type: string;
     value: string;
     range?: [number, number];

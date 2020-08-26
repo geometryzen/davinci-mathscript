@@ -1,13 +1,15 @@
 /* tslint:disable:max-classes-per-file */
 
-declare class Error {
+export class Error {
     public name: string;
     public message: string;
     public index: number;
     public lineNumber: number;
     public column: number;
     public description: string;
-    constructor(message: string);
+    constructor(message: string) {
+        this.message = message;
+    }
 }
 
 export class ErrorHandler {

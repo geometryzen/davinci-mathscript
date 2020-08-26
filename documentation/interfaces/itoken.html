@@ -64,6 +64,14 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>RawToken is converted into IToken by the parser.ts convertToken() function.
+						Hence, this could be called a ParserToken.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -101,11 +109,11 @@
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
 					<a name="end" class="tsd-anchor"></a>
-					<h3>end</h3>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> end</h3>
 					<div class="tsd-signature tsd-kind-icon">end<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L14">IToken.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L77">token.ts:77</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -115,7 +123,7 @@
 					<div class="tsd-signature tsd-kind-icon">line<wbr>Number<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L6">IToken.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L69">token.ts:69</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -125,7 +133,7 @@
 					<div class="tsd-signature tsd-kind-icon">line<wbr>Start<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L7">IToken.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L70">token.ts:70</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -135,7 +143,7 @@
 					<div class="tsd-signature tsd-kind-icon">literal<span class="tsd-signature-symbol">:</span> <a href="iregexpflags.html" class="tsd-signature-type">IRegExpFlags</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L8">IToken.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L71">token.ts:71</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -145,7 +153,7 @@
 					<div class="tsd-signature tsd-kind-icon">loc<span class="tsd-signature-symbol">:</span> <a href="sourcelocation.html" class="tsd-signature-type">SourceLocation</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/tokenizer.ts#L15">tokenizer.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L78">token.ts:78</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -155,17 +163,17 @@
 					<div class="tsd-signature tsd-kind-icon">octal<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L9">IToken.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L72">token.ts:72</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
 					<a name="range" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> range</h3>
-					<div class="tsd-signature tsd-kind-icon">range<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div>
+					<div class="tsd-signature tsd-kind-icon">range<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/tokenizer.ts#L14">tokenizer.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L79">token.ts:79</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -175,8 +183,7 @@
 					<div class="tsd-signature tsd-kind-icon">regex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>flags<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>pattern<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L10">IToken.ts:10</a></li>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/tokenizer.ts#L10">tokenizer.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L73">token.ts:73</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -193,11 +200,11 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
 					<a name="start" class="tsd-anchor"></a>
-					<h3>start</h3>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> start</h3>
 					<div class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L11">IToken.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L74">token.ts:74</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -207,7 +214,7 @@
 					<div class="tsd-signature tsd-kind-icon">start<wbr>Line<wbr>Number<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L12">IToken.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L75">token.ts:75</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -217,29 +224,27 @@
 					<div class="tsd-signature tsd-kind-icon">start<wbr>Line<wbr>Start<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L13">IToken.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L76">token.ts:76</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
 					<a name="type" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"BlockComment"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"LineComment"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L4">IToken.ts:4</a></li>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/tokenizer.ts#L8">tokenizer.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L67">token.ts:67</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
 					<a name="value" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> value</h3>
-					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/IToken.ts#L5">IToken.ts:5</a></li>
-							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/6dc8a87/src/tokenizer.ts#L9">tokenizer.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/geometryzen/davinci-mathscript/blob/7972cfb/src/token.ts#L68">token.ts:68</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -320,6 +325,5 @@
 </footer>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

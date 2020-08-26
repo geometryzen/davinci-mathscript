@@ -5,10 +5,10 @@ System.register([], function (exports_1, context_1) {
     function ignoreJSHintError(what) {
     }
     function deepCopy(obj) {
-        var ret = {}, key, val;
-        for (key in obj) {
+        var ret = {};
+        for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
-                val = obj[key];
+                var val = obj[key];
                 if (typeof val === 'object' && val !== null) {
                     ret[key] = deepCopy(val);
                 }
@@ -115,7 +115,11 @@ System.register([], function (exports_1, context_1) {
         return comment;
     }
     function attachComments(tree, providedComments, tokens) {
-        var comments = [], comment, len, i, cursor;
+        var comments = [];
+        var comment;
+        var len;
+        var i;
+        var cursor;
         if (!tree.range) {
             throw new Error('attachComments needs range information');
         }

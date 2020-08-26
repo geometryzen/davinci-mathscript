@@ -1,10 +1,17 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
-    var ErrorHandler;
+    var Error, ErrorHandler;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
+            Error = (function () {
+                function Error(message) {
+                    this.message = message;
+                }
+                return Error;
+            }());
+            exports_1("Error", Error);
             ErrorHandler = (function () {
                 function ErrorHandler() {
                     this.errors = [];

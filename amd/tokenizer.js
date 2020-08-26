@@ -1,6 +1,8 @@
 define(["require", "exports", "./error-handler", "./scanner", "./token"], function (require, exports, error_handler_1, scanner_1, token_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Tokenizer = void 0;
+    var UNTRACKED_LOCATION = { start: { line: -1, column: -1 }, end: { line: -1, column: -1 } };
     var Reader = (function () {
         function Reader() {
             this.values = [];
@@ -31,11 +33,21 @@ define(["require", "exports", "./error-handler", "./scanner", "./token"], functi
                     regex = false;
                     if (this.values[this.curly - 3] === 'function') {
                         var check = this.values[this.curly - 4];
-                        regex = check ? !this.beforeFunctionExpression(check) : false;
+                        if (typeof check === 'string') {
+                            regex = check ? !this.beforeFunctionExpression(check) : false;
+                        }
+                        else {
+                            regex = false;
+                        }
                     }
                     else if (this.values[this.curly - 4] === 'function') {
                         var check = this.values[this.curly - 5];
-                        regex = check ? !this.beforeFunctionExpression(check) : true;
+                        if (typeof check === 'string') {
+                            regex = check ? !this.beforeFunctionExpression(check) : true;
+                        }
+                        else {
+                            regex = true;
+                        }
                     }
                     break;
                 default:
@@ -94,15 +106,11 @@ define(["require", "exports", "./error-handler", "./scanner", "./token"], functi
                     }
                 }
                 if (!this.scanner.eof()) {
-                    var loc = void 0;
-                    if (this.trackLoc) {
-                        loc = {
-                            start: {
-                                line: this.scanner.lineNumber,
-                                column: this.scanner.index - this.scanner.lineStart
-                            },
-                            end: {}
-                        };
+                    var trackLoc = this.trackLoc;
+                    var loc = trackLoc ? { start: { line: 0, column: 0 }, end: { line: 0, column: 0 } } : UNTRACKED_LOCATION;
+                    if (trackLoc) {
+                        loc.start.line = this.scanner.lineNumber;
+                        loc.start.column = this.scanner.index - this.scanner.lineStart;
                     }
                     var startRegex = (this.scanner.source[this.scanner.index] === '/') && this.reader.isRegexStart();
                     var token = startRegex ? this.scanner.scanRegExp() : this.scanner.lex();
@@ -114,11 +122,9 @@ define(["require", "exports", "./error-handler", "./scanner", "./token"], functi
                     if (this.trackRange) {
                         entry.range = [token.start, token.end];
                     }
-                    if (this.trackLoc) {
-                        loc.end = {
-                            line: this.scanner.lineNumber,
-                            column: this.scanner.index - this.scanner.lineStart
-                        };
+                    if (trackLoc) {
+                        loc.end.line = this.scanner.lineNumber;
+                        loc.end.column = this.scanner.index - this.scanner.lineStart;
                         entry.loc = loc;
                     }
                     if (token.type === 9) {

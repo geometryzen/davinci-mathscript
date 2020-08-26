@@ -17,6 +17,8 @@ System.register([], function (exports_1, context_1) {
             TokenName[8] = 'String';
             TokenName[9] = 'RegularExpression';
             TokenName[10] = 'Template';
+            TokenName[11] = 'JSXIdentifier';
+            TokenName[12] = 'JSXText';
         }
     };
 });

@@ -17,12 +17,10 @@ System.register('estraverse.js', [], function (exports_1, context_1) {
     var __moduleName = context_1 && context_1.id;
     function ignoreJSHintError(what) {}
     function deepCopy(obj) {
-        var ret = {},
-            key,
-            val;
-        for (key in obj) {
+        var ret = {};
+        for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
-                val = obj[key];
+                var val = obj[key];
                 if (typeof val === 'object' && val !== null) {
                     ret[key] = deepCopy(val);
                 } else {
@@ -129,11 +127,11 @@ System.register('estraverse.js', [], function (exports_1, context_1) {
         return comment;
     }
     function attachComments(tree, providedComments, tokens) {
-        var comments = [],
-            comment,
-            len,
-            i,
-            cursor;
+        var comments = [];
+        var comment;
+        var len;
+        var i;
+        var cursor;
         if (!tree.range) {
             throw new Error('attachComments needs range information');
         }
@@ -3183,7 +3181,7 @@ System.register("xhtml-entities.js", [], function (exports_1, context_1) {
         }
     };
 });
-System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", "./nodes", "./parser", "./token", "./xhtml-entities"], function (exports_1, context_1) {
+System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", "./nodes", "./parser", "./xhtml-entities"], function (exports_1, context_1) {
     "use strict";
 
     var __extends = this && this.__extends || function () {
@@ -3191,7 +3189,7 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
             extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
                 d.__proto__ = b;
             } || function (d, b) {
-                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+                for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
             };
             return extendStatics(d, b);
         };
@@ -3203,7 +3201,7 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
             d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
         };
     }();
-    var character_1, JSXNode, jsx_syntax_1, Node, parser_1, token_1, xhtml_entities_1, JSXParser;
+    var character_1, JSXNode, jsx_syntax_1, Node, parser_1, xhtml_entities_1, JSXParser;
     var __moduleName = context_1 && context_1.id;
     function getQualifiedElementName(elementName) {
         var qualifiedName;
@@ -3236,14 +3234,10 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
             Node = Node_1;
         }, function (parser_1_1) {
             parser_1 = parser_1_1;
-        }, function (token_1_1) {
-            token_1 = token_1_1;
         }, function (xhtml_entities_1_1) {
             xhtml_entities_1 = xhtml_entities_1_1;
         }],
         execute: function () {
-            token_1.TokenName[100] = 'JSXIdentifier';
-            token_1.TokenName[101] = 'JSXText';
             JSXParser = function (_super) {
                 __extends(JSXParser, _super);
                 function JSXParser(code, options, delegate) {
@@ -3403,7 +3397,7 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
                         }
                         var id = this.scanner.source.slice(start, this.scanner.index);
                         return {
-                            type: 100,
+                            type: 11,
                             value: id,
                             lineNumber: this.scanner.lineNumber,
                             lineStart: this.scanner.lineStart,
@@ -3452,7 +3446,7 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
                     this.lastMarker.line = this.scanner.lineNumber;
                     this.lastMarker.column = this.scanner.index - this.scanner.lineStart;
                     var token = {
-                        type: 101,
+                        type: 12,
                         value: text,
                         lineNumber: this.scanner.lineNumber,
                         lineStart: this.scanner.lineStart,
@@ -3484,7 +3478,7 @@ System.register("jsx-parser.js", ["./character", "./jsx-nodes", "./jsx-syntax", 
                 JSXParser.prototype.parseJSXIdentifier = function () {
                     var node = this.createJSXNode();
                     var token = this.nextJSXToken();
-                    if (token.type !== 100) {
+                    if (token.type !== 11) {
                         this.throwUnexpectedToken(token);
                     }
                     return this.finalize(node, new JSXNode.JSXIdentifier(token.value));
@@ -4446,10 +4440,10 @@ System.register("Precedence.js", [], function (exports_1, context_1) {
         }
     };
 });
-System.register("parser.js", ["./assert", "./error-handler", "./messages", "./nodes", "./scanner", "./syntax", "./token", "./Precedence"], function (exports_1, context_1) {
+System.register("parser.js", ["./assert", "./error-handler", "./messages", "./nodes", "./Precedence", "./scanner", "./syntax", "./token"], function (exports_1, context_1) {
     "use strict";
 
-    var assert_1, error_handler_1, messages_1, Node, scanner_1, syntax_1, token_1, Precedence_1, ArrowParameterPlaceHolder, Parser;
+    var assert_1, error_handler_1, messages_1, Node, Precedence_1, scanner_1, syntax_1, token_1, ArrowParameterPlaceHolder, Parser;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [function (assert_1_1) {
@@ -4460,14 +4454,14 @@ System.register("parser.js", ["./assert", "./error-handler", "./messages", "./no
             messages_1 = messages_1_1;
         }, function (Node_1) {
             Node = Node_1;
+        }, function (Precedence_1_1) {
+            Precedence_1 = Precedence_1_1;
         }, function (scanner_1_1) {
             scanner_1 = scanner_1_1;
         }, function (syntax_1_1) {
             syntax_1 = syntax_1_1;
         }, function (token_1_1) {
             token_1 = token_1_1;
-        }, function (Precedence_1_1) {
-            Precedence_1 = Precedence_1_1;
         }],
         execute: function () {
             ArrowParameterPlaceHolder = 'ArrowParameterPlaceHolder';
@@ -7350,14 +7344,21 @@ System.register("parser.js", ["./assert", "./error-handler", "./messages", "./no
         }
     };
 });
-System.register('error-handler.js', [], function (exports_1, context_1) {
+System.register("error-handler.js", [], function (exports_1, context_1) {
     "use strict";
 
-    var ErrorHandler;
+    var Error, ErrorHandler;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
+            Error = function () {
+                function Error(message) {
+                    this.message = message;
+                }
+                return Error;
+            }();
+            exports_1("Error", Error);
             ErrorHandler = function () {
                 function ErrorHandler() {
                     this.errors = [];
@@ -8598,13 +8599,15 @@ System.register("token.js", [], function (exports_1, context_1) {
             TokenName[8] = 'String';
             TokenName[9] = 'RegularExpression';
             TokenName[10] = 'Template';
+            TokenName[11] = 'JSXIdentifier';
+            TokenName[12] = 'JSXText';
         }
     };
 });
 System.register("tokenizer.js", ["./error-handler", "./scanner", "./token"], function (exports_1, context_1) {
     "use strict";
 
-    var error_handler_1, scanner_1, token_1, Reader, Tokenizer;
+    var error_handler_1, scanner_1, token_1, UNTRACKED_LOCATION, Reader, Tokenizer;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [function (error_handler_1_1) {
@@ -8615,6 +8618,7 @@ System.register("tokenizer.js", ["./error-handler", "./scanner", "./token"], fun
             token_1 = token_1_1;
         }],
         execute: function () {
+            UNTRACKED_LOCATION = { start: { line: -1, column: -1 }, end: { line: -1, column: -1 } };
             Reader = function () {
                 function Reader() {
                     this.values = [];
@@ -8639,10 +8643,18 @@ System.register("tokenizer.js", ["./error-handler", "./scanner", "./token"], fun
                             regex = false;
                             if (this.values[this.curly - 3] === 'function') {
                                 var check = this.values[this.curly - 4];
-                                regex = check ? !this.beforeFunctionExpression(check) : false;
+                                if (typeof check === 'string') {
+                                    regex = check ? !this.beforeFunctionExpression(check) : false;
+                                } else {
+                                    regex = false;
+                                }
                             } else if (this.values[this.curly - 4] === 'function') {
                                 var check = this.values[this.curly - 5];
-                                regex = check ? !this.beforeFunctionExpression(check) : true;
+                                if (typeof check === 'string') {
+                                    regex = check ? !this.beforeFunctionExpression(check) : true;
+                                } else {
+                                    regex = true;
+                                }
                             }
                             break;
                         default:
@@ -8699,15 +8711,11 @@ System.register("tokenizer.js", ["./error-handler", "./scanner", "./token"], fun
                             }
                         }
                         if (!this.scanner.eof()) {
-                            var loc = void 0;
-                            if (this.trackLoc) {
-                                loc = {
-                                    start: {
-                                        line: this.scanner.lineNumber,
-                                        column: this.scanner.index - this.scanner.lineStart
-                                    },
-                                    end: {}
-                                };
+                            var trackLoc = this.trackLoc;
+                            var loc = trackLoc ? { start: { line: 0, column: 0 }, end: { line: 0, column: 0 } } : UNTRACKED_LOCATION;
+                            if (trackLoc) {
+                                loc.start.line = this.scanner.lineNumber;
+                                loc.start.column = this.scanner.index - this.scanner.lineStart;
                             }
                             var startRegex = this.scanner.source[this.scanner.index] === '/' && this.reader.isRegexStart();
                             var token = startRegex ? this.scanner.scanRegExp() : this.scanner.lex();
@@ -8719,11 +8727,9 @@ System.register("tokenizer.js", ["./error-handler", "./scanner", "./token"], fun
                             if (this.trackRange) {
                                 entry.range = [token.start, token.end];
                             }
-                            if (this.trackLoc) {
-                                loc.end = {
-                                    line: this.scanner.lineNumber,
-                                    column: this.scanner.index - this.scanner.lineStart
-                                };
+                            if (trackLoc) {
+                                loc.end.line = this.scanner.lineNumber;
+                                loc.end.column = this.scanner.index - this.scanner.lineStart;
                                 entry.loc = loc;
                             }
                             if (token.type === 9) {
@@ -8750,12 +8756,11 @@ System.register("esprima.js", ["./comment-handler", "./jsx-parser", "./parser", 
     function parse(code, options, delegate) {
         var commentHandler = null;
         var proxyDelegate = function (node, metadata) {
-            if (delegate) {
-                delegate(node, metadata);
-            }
+            var token = delegate ? delegate(node, metadata) : node;
             if (commentHandler) {
                 commentHandler.visit(node, metadata);
             }
+            return token;
         };
         var parserDelegate = typeof delegate === 'function' ? proxyDelegate : null;
         var collectComment = false;
@@ -8953,26 +8958,30 @@ System.register("syntax.js", [], function (exports_1, context_1) {
         }
     };
 });
-System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax"], function (exports_1, context_1) {
+System.register("davinci-mathscript.js", ["./core", "./escodegen", "./esprima", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax"], function (exports_1, context_1) {
     "use strict";
 
-    var core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
+    var core_1, escodegen_1, esprima_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
     var __moduleName = context_1 && context_1.id;
-    function transpileTree(code, options) {
+    function transpileTree(code, options, delegate) {
         if (options === void 0) {
             options = {};
         }
-        var tree = esprima_1.parse(code, options, void 0);
+        var tree = esprima_1.parse(code, options, delegate);
         if (typeof options.timeout === undefined) {
             options.timeout = 1000;
         }
         visit(tree, options);
         return tree;
     }
-    function transpile(code, options) {
-        var tree = transpileTree(code, options);
-        var codeOut = escodegen_1.generate(tree);
-        return codeOut;
+    function transpile(code, transpileOptions, delegate, generateOptions) {
+        var tree = transpileTree(code, transpileOptions, delegate);
+        var generated = escodegen_1.generate(tree, generateOptions);
+        if (typeof generated === 'string') {
+            return generated;
+        } else {
+            return generated.code;
+        }
     }
     exports_1("transpile", transpile);
     function addInfiniteLoopProtection(statements, millis) {
@@ -9328,21 +9337,20 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
         return x !== null && typeof x === 'object' && typeof x[name] === 'function';
     }
     function binEval(lhs, rhs, lprop, rprop, fallback) {
-        var result;
         if (specialMethod(lhs, lprop)) {
-            result = lhs[lprop](rhs);
+            var result = lhs[lprop](rhs);
             if (typeof result !== 'undefined') {
                 return result;
             } else {
                 if (specialMethod(rhs, rprop)) {
-                    result = rhs[rprop](lhs);
-                    if (typeof result !== 'undefined') {
-                        return result;
+                    var result_1 = rhs[rprop](lhs);
+                    if (typeof result_1 !== 'undefined') {
+                        return result_1;
                     }
                 }
             }
         } else if (specialMethod(rhs, rprop)) {
-            result = rhs[rprop](lhs);
+            var result = rhs[rprop](lhs);
             if (typeof result !== 'undefined') {
                 return result;
             }
@@ -9497,17 +9505,16 @@ System.register("davinci-mathscript.js", ["./core", "./esprima", "./escodegen", 
     }
     exports_1("parseModule", parseModule);
     function tokenize(code, options, delegate) {
-        return esprima_2.tokenize(code, options, delegate);
+        return esprima_1.tokenize(code, options, delegate);
     }
     exports_1("tokenize", tokenize);
     return {
         setters: [function (core_1_1) {
             core_1 = core_1_1;
-        }, function (esprima_1_1) {
-            esprima_1 = esprima_1_1;
-            esprima_2 = esprima_1_1;
         }, function (escodegen_1_1) {
             escodegen_1 = escodegen_1_1;
+        }, function (esprima_1_1) {
+            esprima_1 = esprima_1_1;
         }, function (generateRandomId_1_1) {
             generateRandomId_1 = generateRandomId_1_1;
         }, function (getLoopProtectorBlocks_1_1) {

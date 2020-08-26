@@ -2,7 +2,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -11,11 +11,10 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./character", "./jsx-nodes", "./jsx-syntax", "./nodes", "./parser", "./token", "./xhtml-entities"], function (require, exports, character_1, JSXNode, jsx_syntax_1, Node, parser_1, token_1, xhtml_entities_1) {
+define(["require", "exports", "./character", "./jsx-nodes", "./jsx-syntax", "./nodes", "./parser", "./xhtml-entities"], function (require, exports, character_1, JSXNode, jsx_syntax_1, Node, parser_1, xhtml_entities_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    token_1.TokenName[100] = 'JSXIdentifier';
-    token_1.TokenName[101] = 'JSXText';
+    exports.JSXParser = void 0;
     function getQualifiedElementName(elementName) {
         var qualifiedName;
         switch (elementName.type) {
@@ -203,7 +202,7 @@ define(["require", "exports", "./character", "./jsx-nodes", "./jsx-syntax", "./n
                 }
                 var id = this.scanner.source.slice(start, this.scanner.index);
                 return {
-                    type: 100,
+                    type: 11,
                     value: id,
                     lineNumber: this.scanner.lineNumber,
                     lineStart: this.scanner.lineStart,
@@ -252,7 +251,7 @@ define(["require", "exports", "./character", "./jsx-nodes", "./jsx-syntax", "./n
             this.lastMarker.line = this.scanner.lineNumber;
             this.lastMarker.column = this.scanner.index - this.scanner.lineStart;
             var token = {
-                type: 101,
+                type: 12,
                 value: text,
                 lineNumber: this.scanner.lineNumber,
                 lineStart: this.scanner.lineStart,
@@ -284,7 +283,7 @@ define(["require", "exports", "./character", "./jsx-nodes", "./jsx-syntax", "./n
         JSXParser.prototype.parseJSXIdentifier = function () {
             var node = this.createJSXNode();
             var token = this.nextJSXToken();
-            if (token.type !== 100) {
+            if (token.type !== 11) {
                 this.throwUnexpectedToken(token);
             }
             return this.finalize(node, new JSXNode.JSXIdentifier(token.value));

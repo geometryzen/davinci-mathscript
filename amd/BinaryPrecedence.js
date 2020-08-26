@@ -1,6 +1,7 @@
 define(["require", "exports", "./Precedence"], function (require, exports, Precedence_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.BinaryPrecedence = void 0;
     exports.BinaryPrecedence = {
         '||': Precedence_1.Precedence.LogicalOR,
         '&&': Precedence_1.Precedence.LogicalAND,

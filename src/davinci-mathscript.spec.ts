@@ -1,9 +1,6 @@
-import { Syntax } from './syntax';
+import { add, div, eq, ge, gt, le, lt, mul, ne, neg, parse, pos, sub, tilde, transpile } from './davinci-mathscript';
 import { ExpressionStatement } from './nodes';
-import { parse, transpile } from './davinci-mathscript';
-import { add, sub, mul, div } from './davinci-mathscript';
-import { eq, ne, ge, gt, le, lt } from './davinci-mathscript';
-import { pos, neg, tilde } from './davinci-mathscript';
+import { Syntax } from './syntax';
 
 // Complex knows about Scalar, but Scalar does not know about Complex.
 class Scalar {
@@ -210,7 +207,7 @@ class Foo { }
 
 describe("MathScript", function () {
 
-    function stripWS(s) {
+    function stripWS(s: string) {
         return s.replace(/\t/g, ' ').replace(/\n/g, ' ').replace(/(\s[\s]+)/g, '');
     }
 
@@ -365,62 +362,62 @@ describe("MathScript", function () {
 
         describe("Precedence", function () {
             it("a << b ^ c", function () {
-                var code = transpile("a << b ^ c", { operatorOverloading: true });
+                const code = transpile("a << b ^ c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(Ms.lshift(a, b), c);");
             });
             it("a ^ b << c", function () {
-                var code = transpile("a ^ b << c", { operatorOverloading: true });
+                const code = transpile("a ^ b << c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(a, Ms.lshift(b, c));");
             });
 
             it("a >> b ^ c", function () {
-                var code = transpile("a >> b ^ c", { operatorOverloading: true });
+                const code = transpile("a >> b ^ c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(Ms.rshift(a, b), c);");
             });
             it("a ^ b >> c", function () {
-                var code = transpile("a ^ b >> c", { operatorOverloading: true });
+                const code = transpile("a ^ b >> c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(a, Ms.rshift(b, c));");
             });
 
             it("a | b ^ c", function () {
-                var code = transpile("a | b ^ c", { operatorOverloading: true });
+                const code = transpile("a | b ^ c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(Ms.vbar(a, b), c);");
             });
             it("a ^ b | c", function () {
-                var code = transpile("a ^ b | c", { operatorOverloading: true });
+                const code = transpile("a ^ b | c", { operatorOverloading: true });
                 expect(code).toBe("Ms.wedge(a, Ms.vbar(b, c));");
             });
 
             it("a ^ b * c", function () {
-                var code = transpile("a ^ b * c", { operatorOverloading: true });
+                const code = transpile("a ^ b * c", { operatorOverloading: true });
                 expect(code).toBe("Ms.mul(Ms.wedge(a, b), c);");
             });
             it("a * b ^ c", function () {
-                var code = transpile("a * b ^ c", { operatorOverloading: true });
+                const code = transpile("a * b ^ c", { operatorOverloading: true });
                 expect(code).toBe("Ms.mul(a, Ms.wedge(b, c));");
             });
 
             it("a * b + c", function () {
-                var code = transpile("a * b + c", { operatorOverloading: true });
+                const code = transpile("a * b + c", { operatorOverloading: true });
                 expect(code).toBe("Ms.add(Ms.mul(a, b), c);");
             });
             it("a + b * c", function () {
-                var code = transpile("a + b * c", { operatorOverloading: true });
+                const code = transpile("a + b * c", { operatorOverloading: true });
                 expect(code).toBe("Ms.add(a, Ms.mul(b, c));");
             });
         });
 
         describe("BreakStatement", function () {
             it("should be preserved", function () {
-                var sourceCode = "switch (x) { case 1: {}break; }";
-                var code = transpile(sourceCode, { operatorOverloading: true });
+                const sourceCode = "switch (x) { case 1: {}break; }";
+                const code = transpile(sourceCode, { operatorOverloading: true });
                 expect(stripWS(code)).toBe(sourceCode);
             });
         });
 
         describe("CallExpression", function () {
             it("should transpile its arguments", function () {
-                var code = transpile("f(2+3)", { operatorOverloading: true });
+                const code = transpile("f(2+3)", { operatorOverloading: true });
                 expect(code).toBe("f(Ms.add(2, 3));");
             });
         });
@@ -440,6 +437,14 @@ describe("MathScript", function () {
             const code = transpile("; ;", { operatorOverloading: true });
             expect(stripWS(code)).toBe("; ;");
         });
+
+        // Can't handle ES6. It's a known known.
+        /*
+        xit("Export", function () {
+            const code = transpile("export {}", { operatorOverloading: true });
+            expect(stripWS(code)).toBe("???");
+        });
+        */
 
         it("IfStatement", function () {
             const code = transpile("if (1+2)\n    2+3\nelse\n    3+4", { operatorOverloading: true });

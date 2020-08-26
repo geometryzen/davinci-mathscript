@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     'use strict';
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Syntax = void 0;
     var isArray, VisitorOption, VisitorKeys, objectCreate, objectKeys, BREAK, SKIP, REMOVE;
     function ignoreJSHintError(what) {
     }
@@ -11,10 +12,10 @@ define(["require", "exports"], function (require, exports) {
         };
     }
     function deepCopy(obj) {
-        var ret = {}, key, val;
-        for (key in obj) {
+        var ret = {};
+        for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
-                val = obj[key];
+                var val = obj[key];
                 if (typeof val === 'object' && val !== null) {
                     ret[key] = deepCopy(val);
                 }
@@ -560,7 +561,11 @@ define(["require", "exports"], function (require, exports) {
         return comment;
     }
     function attachComments(tree, providedComments, tokens) {
-        var comments = [], comment, len, i, cursor;
+        var comments = [];
+        var comment;
+        var len;
+        var i;
+        var cursor;
         if (!tree.range) {
             throw new Error('attachComments needs range information');
         }

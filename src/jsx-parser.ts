@@ -3,7 +3,7 @@ import * as JSXNode from './jsx-nodes';
 import { JSXSyntax } from './jsx-syntax';
 import * as Node from './nodes';
 import { Marker, Parser } from './parser';
-import { Token, TokenName } from './token';
+import { Token, RawToken } from './token';
 import { XHTMLEntities } from './xhtml-entities';
 
 interface MetaJSXElement {
@@ -12,23 +12,6 @@ interface MetaJSXElement {
     closing: JSXNode.JSXClosingElement | null;
     children: JSXNode.JSXChild[];
 }
-
-const enum JSXToken {
-    Identifier = 100,
-    Text
-}
-
-interface RawJSXToken {
-    type: Token | JSXToken;
-    value: string;
-    lineNumber: number;
-    lineStart: number;
-    start: number;
-    end: number;
-}
-
-TokenName[JSXToken.Identifier] = 'JSXIdentifier';
-TokenName[JSXToken.Text] = 'JSXText';
 
 // Fully qualified element name, e.g. <svg:path> returns "svg:path"
 function getQualifiedElementName(elementName: JSXNode.JSXElementName): string {
@@ -161,7 +144,7 @@ export class JSXParser extends Parser {
 
     // Scan the next JSX token. This replaces Scanner#lex when in JSX mode.
 
-    lexJSX(): RawJSXToken {
+    lexJSX(): RawToken {
         const cp = this.scanner.source.charCodeAt(this.scanner.index);
 
         // < > / : = { }
@@ -250,7 +233,7 @@ export class JSXParser extends Parser {
             }
             const id = this.scanner.source.slice(start, this.scanner.index);
             return {
-                type: JSXToken.Identifier,
+                type: Token.JSXIdentifier,
                 value: id,
                 lineNumber: this.scanner.lineNumber,
                 lineStart: this.scanner.lineStart,
@@ -262,7 +245,7 @@ export class JSXParser extends Parser {
         return this.scanner.throwUnexpectedToken();
     }
 
-    nextJSXToken(): RawJSXToken {
+    nextJSXToken(): RawToken {
         this.collectComments();
 
         this.startMarker.index = this.scanner.index;
@@ -280,7 +263,7 @@ export class JSXParser extends Parser {
         return token;
     }
 
-    nextJSXText(): RawJSXToken {
+    nextJSXText(): RawToken {
         this.startMarker.index = this.scanner.index;
         this.startMarker.line = this.scanner.lineNumber;
         this.startMarker.column = this.scanner.index - this.scanner.lineStart;
@@ -309,7 +292,7 @@ export class JSXParser extends Parser {
         this.lastMarker.column = this.scanner.index - this.scanner.lineStart;
 
         const token = {
-            type: JSXToken.Text,
+            type: Token.JSXText,
             value: text,
             lineNumber: this.scanner.lineNumber,
             lineStart: this.scanner.lineStart,
@@ -324,7 +307,7 @@ export class JSXParser extends Parser {
         return token;
     }
 
-    peekJSXToken(): RawJSXToken {
+    peekJSXToken(): RawToken {
         const state = this.scanner.saveState();
         this.scanner.scanComments();
         const next = this.lexJSX();
@@ -353,10 +336,11 @@ export class JSXParser extends Parser {
     parseJSXIdentifier(): JSXNode.JSXIdentifier {
         const node = this.createJSXNode();
         const token = this.nextJSXToken();
-        if (token.type !== JSXToken.Identifier) {
+        if (token.type !== Token.JSXIdentifier) {
             this.throwUnexpectedToken(token);
         }
-        return this.finalize(node, new JSXNode.JSXIdentifier(token.value));
+        // The cast is appropriate because we have determined the token type.
+        return this.finalize(node, new JSXNode.JSXIdentifier(token.value as string));
     }
 
     parseJSXElementName(): JSXNode.JSXElementName {
@@ -534,7 +518,7 @@ export class JSXParser extends Parser {
             const token = this.nextJSXText();
             if (token.start < token.end) {
                 const raw = this.getTokenRaw(token);
-                const child = this.finalize(node, new JSXNode.JSXText(token.value, raw));
+                const child = this.finalize(node, new JSXNode.JSXText(token.value as string, raw));
                 children.push(child);
             }
             if (this.scanner.source[this.scanner.index] === '{') {

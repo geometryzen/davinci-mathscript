@@ -1,20 +1,25 @@
-System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax"], function (exports_1, context_1) {
+System.register(["./core", "./escodegen", "./esprima", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax"], function (exports_1, context_1) {
     "use strict";
-    var core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
+    var core_1, escodegen_1, esprima_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, MATHSCRIPT_NAMESPACE, binOp, unaryOp, Ms;
     var __moduleName = context_1 && context_1.id;
-    function transpileTree(code, options) {
+    function transpileTree(code, options, delegate) {
         if (options === void 0) { options = {}; }
-        var tree = esprima_1.parse(code, options, void 0);
+        var tree = esprima_1.parse(code, options, delegate);
         if (typeof options.timeout === undefined) {
             options.timeout = 1000;
         }
         visit(tree, options);
         return tree;
     }
-    function transpile(code, options) {
-        var tree = transpileTree(code, options);
-        var codeOut = escodegen_1.generate(tree);
-        return codeOut;
+    function transpile(code, transpileOptions, delegate, generateOptions) {
+        var tree = transpileTree(code, transpileOptions, delegate);
+        var generated = escodegen_1.generate(tree, generateOptions);
+        if (typeof generated === 'string') {
+            return generated;
+        }
+        else {
+            return generated.code;
+        }
     }
     exports_1("transpile", transpile);
     function addInfiniteLoopProtection(statements, millis) {
@@ -318,23 +323,22 @@ System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./
         return (x !== null) && (typeof x === 'object') && (typeof x[name] === 'function');
     }
     function binEval(lhs, rhs, lprop, rprop, fallback) {
-        var result;
         if (specialMethod(lhs, lprop)) {
-            result = lhs[lprop](rhs);
+            var result = lhs[lprop](rhs);
             if (typeof result !== 'undefined') {
                 return result;
             }
             else {
                 if (specialMethod(rhs, rprop)) {
-                    result = rhs[rprop](lhs);
-                    if (typeof result !== 'undefined') {
-                        return result;
+                    var result_1 = rhs[rprop](lhs);
+                    if (typeof result_1 !== 'undefined') {
+                        return result_1;
                     }
                 }
             }
         }
         else if (specialMethod(rhs, rprop)) {
-            result = rhs[rprop](lhs);
+            var result = rhs[rprop](lhs);
             if (typeof result !== 'undefined') {
                 return result;
             }
@@ -439,7 +443,7 @@ System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./
     }
     exports_1("parseModule", parseModule);
     function tokenize(code, options, delegate) {
-        return esprima_2.tokenize(code, options, delegate);
+        return esprima_1.tokenize(code, options, delegate);
     }
     exports_1("tokenize", tokenize);
     return {
@@ -447,12 +451,11 @@ System.register(["./core", "./esprima", "./escodegen", "./generateRandomId", "./
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (esprima_1_1) {
-                esprima_1 = esprima_1_1;
-                esprima_2 = esprima_1_1;
-            },
             function (escodegen_1_1) {
                 escodegen_1 = escodegen_1_1;
+            },
+            function (esprima_1_1) {
+                esprima_1 = esprima_1_1;
             },
             function (generateRandomId_1_1) {
                 generateRandomId_1 = generateRandomId_1_1;

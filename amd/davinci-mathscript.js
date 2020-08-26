@@ -1,6 +1,7 @@
-define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax", "./syntax"], function (require, exports, core_1, esprima_1, esprima_2, escodegen_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, syntax_2) {
+define(["require", "exports", "./core", "./escodegen", "./esprima", "./generateRandomId", "./getLoopProtectorBlocks", "./syntax", "./syntax"], function (require, exports, core_1, escodegen_1, esprima_1, generateRandomId_1, getLoopProtectorBlocks_1, syntax_1, syntax_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Syntax = exports.tokenize = exports.parseModule = exports.parseScript = exports.parse = exports.Ms = exports.tilde = exports.bang = exports.pos = exports.neg = exports.lt = exports.le = exports.gt = exports.ge = exports.ne = exports.eq = exports.div = exports.mul = exports.sub = exports.add = exports.transpile = void 0;
     var MATHSCRIPT_NAMESPACE = "Ms";
     var binOp = {
         '+': 'add',
@@ -25,19 +26,24 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
         '!': 'bang',
         '~': 'tilde'
     };
-    function transpileTree(code, options) {
+    function transpileTree(code, options, delegate) {
         if (options === void 0) { options = {}; }
-        var tree = esprima_1.parse(code, options, void 0);
+        var tree = esprima_1.parse(code, options, delegate);
         if (typeof options.timeout === undefined) {
             options.timeout = 1000;
         }
         visit(tree, options);
         return tree;
     }
-    function transpile(code, options) {
-        var tree = transpileTree(code, options);
-        var codeOut = escodegen_1.generate(tree);
-        return codeOut;
+    function transpile(code, transpileOptions, delegate, generateOptions) {
+        var tree = transpileTree(code, transpileOptions, delegate);
+        var generated = escodegen_1.generate(tree, generateOptions);
+        if (typeof generated === 'string') {
+            return generated;
+        }
+        else {
+            return generated.code;
+        }
     }
     exports.transpile = transpile;
     function addInfiniteLoopProtection(statements, millis) {
@@ -341,23 +347,22 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
         return (x !== null) && (typeof x === 'object') && (typeof x[name] === 'function');
     }
     function binEval(lhs, rhs, lprop, rprop, fallback) {
-        var result;
         if (specialMethod(lhs, lprop)) {
-            result = lhs[lprop](rhs);
+            var result = lhs[lprop](rhs);
             if (typeof result !== 'undefined') {
                 return result;
             }
             else {
                 if (specialMethod(rhs, rprop)) {
-                    result = rhs[rprop](lhs);
-                    if (typeof result !== 'undefined') {
-                        return result;
+                    var result_1 = rhs[rprop](lhs);
+                    if (typeof result_1 !== 'undefined') {
+                        return result_1;
                     }
                 }
             }
         }
         else if (specialMethod(rhs, rprop)) {
-            result = rhs[rprop](lhs);
+            var result = rhs[rprop](lhs);
             if (typeof result !== 'undefined') {
                 return result;
             }
@@ -487,9 +492,9 @@ define(["require", "exports", "./core", "./esprima", "./esprima", "./escodegen",
     }
     exports.parseModule = parseModule;
     function tokenize(code, options, delegate) {
-        return esprima_2.tokenize(code, options, delegate);
+        return esprima_1.tokenize(code, options, delegate);
     }
     exports.tokenize = tokenize;
-    exports.Syntax = syntax_2.Syntax;
+    Object.defineProperty(exports, "Syntax", { enumerable: true, get: function () { return syntax_2.Syntax; } });
     exports.default = exports.Ms;
 });

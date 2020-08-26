@@ -1,12 +1,12 @@
 import { assert } from './assert';
 import { ErrorHandler } from './error-handler';
-import { IToken } from './IToken';
+import { ParseDelegate, ParseOptions } from './esprima';
 import { Messages } from './messages';
 import * as Node from './nodes';
-import { Comment, RawToken, Scanner, SourceLocation } from './scanner';
-import { Syntax } from './syntax';
-import { Token, TokenName } from './token';
 import { Precedence } from './Precedence';
+import { Comment, Scanner } from './scanner';
+import { Syntax } from './syntax';
+import { IToken, RawToken, Token, TokenName } from './token';
 
 interface Config {
     range: boolean;
@@ -51,17 +51,6 @@ interface DeclarationOptions {
     inFor: boolean;
 }
 
-interface TokenEntry {
-    type: string;
-    value: string;
-    regex?: {
-        pattern: string;
-        flags: string;
-    };
-    range?: [number, number];
-    loc?: SourceLocation;
-}
-
 export interface MetaData {
     start: {
         line: number;
@@ -77,7 +66,7 @@ export interface MetaData {
 
 export class Parser {
     readonly config: Config;
-    readonly delegate: ((node, metadata: MetaData) => void) | null;
+    readonly delegate: ParseDelegate | null;
     readonly errorHandler: ErrorHandler;
     readonly scanner: Scanner;
     readonly operatorPrecedence: { [ch: string]: number };
@@ -86,11 +75,11 @@ export class Parser {
     hasLineTerminator: boolean;
 
     context: Context;
-    tokens: any[];
+    tokens: IToken[];
     startMarker: Marker;
     lastMarker: Marker;
 
-    constructor(code: string, options: any = {}, delegate: ((node, metadata: MetaData) => void) | null) {
+    constructor(code: string, options: ParseOptions = {}, delegate: ParseDelegate | null) {
         this.config = {
             range: (typeof options.range === 'boolean') && options.range,
             loc: (typeof options.loc === 'boolean') && options.loc,
@@ -184,7 +173,7 @@ export class Parser {
         };
     }
 
-    throwError(messageFormat: string, ..._values): void {
+    throwError(messageFormat: string, ..._values: any[]): void {
         const args = Array.prototype.slice.call(arguments, 1);
         const msg = messageFormat.replace(/%(\d)/g, (_whole, idx) => {
             assert(idx < args.length, 'Message reference must be in range');
@@ -198,7 +187,7 @@ export class Parser {
         throw this.errorHandler.createError(index, line, column, msg);
     }
 
-    tolerateError(messageFormat, ..._values) {
+    tolerateError(messageFormat: string, ..._values: any[]) {
         const args = Array.prototype.slice.call(arguments, 1);
         const msg = messageFormat.replace(/%(\d)/g, (_whole, idx) => {
             assert(idx < args.length, 'Message reference must be in range');
@@ -213,7 +202,7 @@ export class Parser {
     }
 
     // Throw an exception because of the token.
-    unexpectedTokenError(token?: IToken, message?: string): Error {
+    unexpectedTokenError(token?: RawToken, message?: string): Error {
         let msg = message || Messages.UnexpectedToken;
 
         let value;
@@ -257,15 +246,15 @@ export class Parser {
         }
     }
 
-    throwUnexpectedToken(token?, message?): never {
+    throwUnexpectedToken(token?: RawToken, message?: string): never {
         throw this.unexpectedTokenError(token, message);
     }
 
-    tolerateUnexpectedToken(token?, message?) {
+    tolerateUnexpectedToken(token?: RawToken, message?: string): void {
         this.errorHandler.tolerate(this.unexpectedTokenError(token, message));
     }
 
-    collectComments() {
+    collectComments(): void {
         if (!this.config.comment) {
             this.scanner.scanComments();
         } else {
@@ -273,7 +262,7 @@ export class Parser {
             if (comments.length > 0 && this.delegate) {
                 for (let i = 0; i < comments.length; ++i) {
                     const e: Comment = comments[i];
-                    let node;
+                    let node: IToken;
                     node = {
                         type: e.multiLine ? 'BlockComment' : 'LineComment',
                         value: this.scanner.source.slice(e.slice[0], e.slice[1])
@@ -304,12 +293,12 @@ export class Parser {
 
     // From internal representation to an external structure
 
-    getTokenRaw(token): string {
+    getTokenRaw(token: RawToken): string {
         return this.scanner.source.slice(token.start, token.end);
     }
 
-    convertToken(token: RawToken): TokenEntry {
-        let t: TokenEntry = {
+    convertToken(token: RawToken): IToken {
+        let t: IToken = {
             type: TokenName[token.type],
             value: this.getTokenRaw(token)
         };

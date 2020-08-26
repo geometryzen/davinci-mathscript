@@ -1,6 +1,7 @@
 define(["require", "exports", "./assert", "./character", "./messages"], function (require, exports, assert_1, character_1, messages_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Scanner = void 0;
     function hexValue(ch) {
         return '0123456789abcdef'.indexOf(ch.toLowerCase());
     }

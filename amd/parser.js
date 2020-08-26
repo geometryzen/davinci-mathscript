@@ -1,6 +1,7 @@
-define(["require", "exports", "./assert", "./error-handler", "./messages", "./nodes", "./scanner", "./syntax", "./token", "./Precedence"], function (require, exports, assert_1, error_handler_1, messages_1, Node, scanner_1, syntax_1, token_1, Precedence_1) {
+define(["require", "exports", "./assert", "./error-handler", "./messages", "./nodes", "./Precedence", "./scanner", "./syntax", "./token"], function (require, exports, assert_1, error_handler_1, messages_1, Node, Precedence_1, scanner_1, syntax_1, token_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Parser = void 0;
     var ArrowParameterPlaceHolder = 'ArrowParameterPlaceHolder';
     var Parser = (function () {
         function Parser(code, options, delegate) {

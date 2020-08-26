@@ -1,5 +1,7 @@
+import { Comment } from './comment-handler';
+import { Error } from './error-handler';
 import { Syntax } from './syntax';
-import { IToken } from './IToken';
+import { IToken } from './token';
 
 export type ArgumentListElement = Expression | SpreadElement;
 export type ArrayExpressionElement = Expression | SpreadElement | null;
@@ -571,9 +573,9 @@ export class Module {
     readonly type: string;
     readonly body: StatementListItem[];
     readonly sourceType: string;
-    comments?: any;
+    comments?: Comment[];
     tokens?: IToken[];
-    errors?: any;
+    errors?: Error[];
     constructor(body: StatementListItem[]) {
         this.type = Syntax.Program;
         this.body = body;
@@ -673,9 +675,9 @@ export class Script {
     readonly type: string;
     readonly body: StatementListItem[];
     readonly sourceType: string;
-    comments?: any;
+    comments?: Comment[];
     tokens?: IToken[];
-    errors?: any;
+    errors?: Error[];
     constructor(body: StatementListItem[]) {
         this.type = Syntax.Program;
         this.body = body;

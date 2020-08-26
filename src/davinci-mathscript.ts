@@ -1,42 +1,10 @@
 import { VERSION } from './core';
-import { parse as esprimaParse, ParseOptions, parseScript as esprimaParseScript, parseModule as esprimaParseModule } from './esprima';
-import { tokenize as esprimaTokenize } from './esprima';
-import { MetaData } from './parser';
-import { generate } from './escodegen';
+import { generate, GenerateOptions } from './escodegen';
+import { parse as esprimaParse, parseModule as esprimaParseModule, ParseOptions, parseScript as esprimaParseScript, tokenize as esprimaTokenize, ParseDelegate } from './esprima';
 import { generateRandomId } from './generateRandomId';
 import { getLoopProtectorBlocks } from './getLoopProtectorBlocks';
-import { StatementListItem } from './nodes';
-import { BlockStatement } from './nodes';
-import { FunctionDeclaration } from './nodes';
-import { VariableDeclaration } from './nodes';
-import { VariableDeclarator } from './nodes';
-import { ConditionalExpression } from './nodes';
-import { BinaryExpression } from './nodes';
-import { CallExpression } from './nodes';
-import { DoWhileStatement } from './nodes';
-import { ExpressionStatement } from './nodes';
-import { ForStatement } from './nodes';
-import { ForInStatement } from './nodes';
-import { IfStatement } from './nodes';
-import { ArrayExpression } from './nodes';
-import { AssignmentExpression } from './nodes';
-import { CatchClause } from './nodes';
-import { FunctionExpression } from './nodes';
-import { StaticMemberExpression } from './nodes';
-import { ComputedMemberExpression } from './nodes';
-import { ObjectExpression } from './nodes';
-import { ReturnStatement } from './nodes';
-import { NewExpression } from './nodes';
-import { SequenceExpression } from './nodes';
-import { SwitchCase } from './nodes';
-import { SwitchStatement } from './nodes';
-import { ThrowStatement } from './nodes';
-import { TryStatement } from './nodes';
-import { UnaryExpression } from './nodes';
-import { UpdateExpression } from './nodes';
-import { Property } from './nodes';
-import { WhileStatement } from './nodes';
-import { Script } from './nodes';
+import { ArrayExpression, AssignmentExpression, BinaryExpression, BlockStatement, CallExpression, CatchClause, ComputedMemberExpression, ConditionalExpression, DoWhileStatement, ExpressionStatement, ForInStatement, ForStatement, FunctionDeclaration, FunctionExpression, IfStatement, NewExpression, ObjectExpression, Property, ReturnStatement, Script, SequenceExpression, StatementListItem, StaticMemberExpression, SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UpdateExpression, VariableDeclaration, VariableDeclarator, WhileStatement } from './nodes';
+import { MetaData } from './parser';
 import { Syntax } from './syntax';
 
 /**
@@ -84,8 +52,8 @@ interface TranspileOptions extends ParseOptions {
     operatorOverloading?: boolean;
 }
 
-function transpileTree(code: string, options: TranspileOptions = {}) {
-    const tree = esprimaParse(code, options, void 0);
+function transpileTree(code: string, options: TranspileOptions = {}, delegate?: ParseDelegate) {
+    const tree = esprimaParse(code, options, delegate);
     // console.log(JSON.stringify(tree, null, 2));
     if (typeof options.timeout === undefined) {
         options.timeout = 1000;
@@ -97,11 +65,16 @@ function transpileTree(code: string, options: TranspileOptions = {}) {
 /**
  * This is the function that we export.
  */
-export function transpile(code: string, options?: TranspileOptions) {
-    const tree = transpileTree(code, options);
-    const codeOut = generate(tree);
-    // console.log(codeOut);
-    return codeOut;
+export function transpile(code: string, transpileOptions?: TranspileOptions, delegate?: ParseDelegate, generateOptions?: GenerateOptions): string {
+    const tree = transpileTree(code, transpileOptions, delegate);
+    const generated = generate(tree, generateOptions);
+    if (typeof generated === 'string') {
+        return generated;
+    }
+    else {
+        // We drop the generated.map on the floor.
+        return generated.code;
+    }
 }
 
 function addInfiniteLoopProtection(statements: StatementListItem[], millis: number): StatementListItem[] {
@@ -132,7 +105,7 @@ function addInfiniteLoopProtection(statements: StatementListItem[], millis: numb
 /**
  * This code performs the re-writing of the AST for operator overloading.
  */
-function visit(node: { type: string } | null, options: TranspileOptions) {
+function visit(node: { type: string } | null, options: TranspileOptions): void {
     if (node && node.type) {
         switch (node.type) {
             case Syntax.BlockStatement: {
@@ -416,20 +389,20 @@ function visit(node: { type: string } | null, options: TranspileOptions) {
 /**
  * Determines whether a property name is callable on an object.
  */
-function specialMethod(x, name: string) {
+function specialMethod(x: any, name: string): boolean {
     return (x !== null) && (typeof x === 'object') && (typeof x[name] === 'function');
 }
 
-function binEval(lhs, rhs, lprop: string, rprop: string, fallback) {
-    var result;
+function binEval(lhs: any, rhs: any, lprop: string, rprop: string, fallback: (lhs: any, rhs: any) => any) {
+
     if (specialMethod(lhs, lprop)) {
-        result = lhs[lprop](rhs);
+        const result = lhs[lprop](rhs);
         if (typeof result !== 'undefined') {
             return result;
         }
         else {
             if (specialMethod(rhs, rprop)) {
-                result = rhs[rprop](lhs);
+                const result = rhs[rprop](lhs);
                 if (typeof result !== 'undefined') {
                     return result;
                 }
@@ -437,7 +410,7 @@ function binEval(lhs, rhs, lprop: string, rprop: string, fallback) {
         }
     }
     else if (specialMethod(rhs, rprop)) {
-        result = rhs[rprop](lhs);
+        const result = rhs[rprop](lhs);
         if (typeof result !== 'undefined') {
             return result;
         }
@@ -460,7 +433,7 @@ function compose<X, Y, Z>(g: (y: Y) => Z, f: (x: X) => Y) {
 /**
  *
  */
-export function add(p, q) {
+export function add(p: any, q: any) {
     return binEval(p, q, '__add__', '__radd__', function (a, b) {
         if (typeof a === 'function' && typeof b === 'function') {
             return compose(a, b);
@@ -475,8 +448,8 @@ export function mul(p, q) { return binEval(p, q, '__mul__', '__rmul__', function
 export function div(p, q) { return binEval(p, q, '__div__', '__rdiv__', function (a, b) { return a / b; }); }
 
 function mod(p, q) { return binEval(p, q, '__mod__', '__rmod__', function (a, b) { return a % b; }); }
-function bitwiseIOR(p, q) { return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) { return a | b; }); }
-function bitwiseXOR(p, q) { return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) { return a ^ b; }); }
+function bitwiseIOR(p: any, q: any) { return binEval(p, q, '__vbar__', '__rvbar__', function (a, b) { return a | b; }); }
+function bitwiseXOR(p: any, q: any) { return binEval(p, q, '__wedge__', '__rwedge__', function (a, b) { return a ^ b; }); }
 
 function lshift(p, q) { return binEval(p, q, '__lshift__', '__rlshift__', function (a, b) { return a << b; }); }
 function rshift(p, q) { return binEval(p, q, '__rshift__', '__rrshift__', function (a, b) { return a >> b; }); }
@@ -499,7 +472,7 @@ function exp<T>(x: T): T {
     }
 }
 
-export function neg(x) {
+export function neg(x: any) {
     if (specialMethod(x, '__neg__')) {
         return x['__neg__']();
     }
@@ -566,19 +539,19 @@ export const Ms = {
 };
 
 // For compatibility with esprima tests.
-export function parse(code, options?: ParseOptions, delegate?: (node, metadata: MetaData) => undefined) {
+export function parse(code: string, options?: ParseOptions, delegate?: ParseDelegate) {
     return esprimaParse(code, options, delegate);
 }
 
-export function parseScript(code, options, delegate) {
+export function parseScript(code: string, options: ParseOptions, delegate: ParseDelegate) {
     return esprimaParseScript(code, options, delegate);
 }
 
-export function parseModule(code, options, delegate) {
+export function parseModule(code: string, options: ParseOptions, delegate: ParseDelegate) {
     return esprimaParseModule(code, options, delegate);
 }
 
-export function tokenize(code, options, delegate) {
+export function tokenize(code: string, options, delegate: ParseDelegate) {
     return esprimaTokenize(code, options, delegate);
 }
 export { Syntax } from './syntax';

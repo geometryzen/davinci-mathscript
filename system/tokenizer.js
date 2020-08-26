@@ -1,6 +1,6 @@
 System.register(["./error-handler", "./scanner", "./token"], function (exports_1, context_1) {
     "use strict";
-    var error_handler_1, scanner_1, token_1, Reader, Tokenizer;
+    var error_handler_1, scanner_1, token_1, UNTRACKED_LOCATION, Reader, Tokenizer;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -15,6 +15,7 @@ System.register(["./error-handler", "./scanner", "./token"], function (exports_1
             }
         ],
         execute: function () {
+            UNTRACKED_LOCATION = { start: { line: -1, column: -1 }, end: { line: -1, column: -1 } };
             Reader = (function () {
                 function Reader() {
                     this.values = [];
@@ -45,11 +46,21 @@ System.register(["./error-handler", "./scanner", "./token"], function (exports_1
                             regex = false;
                             if (this.values[this.curly - 3] === 'function') {
                                 var check = this.values[this.curly - 4];
-                                regex = check ? !this.beforeFunctionExpression(check) : false;
+                                if (typeof check === 'string') {
+                                    regex = check ? !this.beforeFunctionExpression(check) : false;
+                                }
+                                else {
+                                    regex = false;
+                                }
                             }
                             else if (this.values[this.curly - 4] === 'function') {
                                 var check = this.values[this.curly - 5];
-                                regex = check ? !this.beforeFunctionExpression(check) : true;
+                                if (typeof check === 'string') {
+                                    regex = check ? !this.beforeFunctionExpression(check) : true;
+                                }
+                                else {
+                                    regex = true;
+                                }
                             }
                             break;
                         default:
@@ -108,15 +119,11 @@ System.register(["./error-handler", "./scanner", "./token"], function (exports_1
                             }
                         }
                         if (!this.scanner.eof()) {
-                            var loc = void 0;
-                            if (this.trackLoc) {
-                                loc = {
-                                    start: {
-                                        line: this.scanner.lineNumber,
-                                        column: this.scanner.index - this.scanner.lineStart
-                                    },
-                                    end: {}
-                                };
+                            var trackLoc = this.trackLoc;
+                            var loc = trackLoc ? { start: { line: 0, column: 0 }, end: { line: 0, column: 0 } } : UNTRACKED_LOCATION;
+                            if (trackLoc) {
+                                loc.start.line = this.scanner.lineNumber;
+                                loc.start.column = this.scanner.index - this.scanner.lineStart;
                             }
                             var startRegex = (this.scanner.source[this.scanner.index] === '/') && this.reader.isRegexStart();
                             var token = startRegex ? this.scanner.scanRegExp() : this.scanner.lex();
@@ -128,11 +135,9 @@ System.register(["./error-handler", "./scanner", "./token"], function (exports_1
                             if (this.trackRange) {
                                 entry.range = [token.start, token.end];
                             }
-                            if (this.trackLoc) {
-                                loc.end = {
-                                    line: this.scanner.lineNumber,
-                                    column: this.scanner.index - this.scanner.lineStart
-                                };
+                            if (trackLoc) {
+                                loc.end.line = this.scanner.lineNumber;
+                                loc.end.column = this.scanner.index - this.scanner.lineStart;
                                 entry.loc = loc;
                             }
                             if (token.type === 9) {

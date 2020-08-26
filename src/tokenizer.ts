@@ -1,27 +1,15 @@
 import { ErrorHandler } from './error-handler';
 import { Comment, Scanner, SourceLocation } from './scanner';
-import { Token, TokenName } from './token';
+import { IToken, RawToken, RawTokenValue, Token, TokenName } from './token';
 
-type ReaderEntry = string | null;
-
-export interface IToken {
-    type: string;
-    value: string;
-    regex?: {
-        pattern: string;
-        flags: string;
-    };
-    range?: [number, number];
-    loc?: SourceLocation;
-}
+const UNTRACKED_LOCATION: SourceLocation = { start: { line: -1, column: -1 }, end: { line: -1, column: -1 } };
 
 class Reader {
-    readonly values: ReaderEntry[];
+    readonly values: RawTokenValue[] = [];
     curly: number;
     paren: number;
 
     constructor() {
-        this.values = [];
         this.curly = this.paren = -1;
     }
 
@@ -40,7 +28,7 @@ class Reader {
 
     // Determine if forward slash (/) is an operator or part of a regular expression
     // https://github.com/mozilla/sweet.js/wiki/design
-    isRegexStart() {
+    isRegexStart(): boolean {
         const previous = this.values[this.values.length - 1];
         let regex = (previous !== null);
 
@@ -61,12 +49,22 @@ class Reader {
                 regex = false;
                 if (this.values[this.curly - 3] === 'function') {
                     // Anonymous function, e.g. function(){} /42
-                    const check = this.values[this.curly - 4];
-                    regex = check ? !this.beforeFunctionExpression(check) : false;
+                    const check: RawTokenValue = this.values[this.curly - 4];
+                    if (typeof check === 'string') {
+                        regex = check ? !this.beforeFunctionExpression(check) : false;
+                    }
+                    else {
+                        regex = false;
+                    }
                 } else if (this.values[this.curly - 4] === 'function') {
                     // Named function, e.g. function f(){} /42/
                     const check = this.values[this.curly - 5];
-                    regex = check ? !this.beforeFunctionExpression(check) : true;
+                    if (typeof check === 'string') {
+                        regex = check ? !this.beforeFunctionExpression(check) : true;
+                    }
+                    else {
+                        regex = true;
+                    }
                 }
                 break;
             default:
@@ -76,7 +74,7 @@ class Reader {
         return regex;
     }
 
-    push(token): void {
+    push(token: RawToken): void {
         if (token.type === Token.Punctuator || token.type === Token.Keyword) {
             if (token.value === '{') {
                 this.curly = this.values.length;
@@ -93,7 +91,7 @@ class Reader {
 
 /* tslint:disable:max-classes-per-file */
 
-interface Config {
+export interface Config {
     tolerant?: boolean;
     comment?: boolean;
     range?: boolean;
@@ -148,16 +146,13 @@ export class Tokenizer {
             }
 
             if (!this.scanner.eof()) {
-                let loc;
+                const trackLoc = this.trackLoc;
+                // Using the bogus UNTRACKED_LOCATION is an alternative to the casting if we used void 0 instead.
+                const loc: SourceLocation = trackLoc ? { start: { line: 0, column: 0 }, end: { line: 0, column: 0 } } : UNTRACKED_LOCATION;
 
-                if (this.trackLoc) {
-                    loc = {
-                        start: {
-                            line: this.scanner.lineNumber,
-                            column: this.scanner.index - this.scanner.lineStart
-                        },
-                        end: {}
-                    };
+                if (trackLoc) {
+                    loc.start.line = this.scanner.lineNumber;
+                    loc.start.column = this.scanner.index - this.scanner.lineStart
                 }
 
                 const startRegex = (this.scanner.source[this.scanner.index] === '/') && this.reader.isRegexStart();
@@ -171,11 +166,9 @@ export class Tokenizer {
                 if (this.trackRange) {
                     entry.range = [token.start, token.end];
                 }
-                if (this.trackLoc) {
-                    loc.end = {
-                        line: this.scanner.lineNumber,
-                        column: this.scanner.index - this.scanner.lineStart
-                    };
+                if (trackLoc) {
+                    loc.end.line = this.scanner.lineNumber;
+                    loc.end.column = this.scanner.index - this.scanner.lineStart
                     entry.loc = loc;
                 }
                 if (token.type === Token.RegularExpression) {

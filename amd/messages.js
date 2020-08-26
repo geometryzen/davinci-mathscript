@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Messages = void 0;
     exports.Messages = {
         BadImportCallArity: 'Unexpected token',
         BadGetterArity: 'Getter must not have any formal parameters',

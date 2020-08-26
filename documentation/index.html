@@ -75,13 +75,18 @@
 				</a>
 				<p>Open your Terminal.</p>
 				<p>Clone the davinci-mathscript repo.</p>
-				<pre><code>git <span class="hljs-keyword">clone</span> <span class="hljs-title">git</span>://github.com/geometryzen/davinci-mathscript.git</code></pre><p>Change to the repo directory.</p>
-				<pre><code><span class="hljs-built_in">cd</span> davinci-mathscript</code></pre><p>Run</p>
-				<pre><code>npm <span class="hljs-keyword">install</span></code></pre><p>to install the tooling dependencies (For this you need to have <a href="http://nodejs.org">Node.js</a> installed).</p>
+				<pre><code>git clone git:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/geometryzen/</span>davinci-mathscript.git</code></pre>
+				<p>Change to the repo directory.</p>
+				<pre><code><span class="hljs-built_in">cd</span> davinci-mathscript</code></pre>
 				<p>Run</p>
-				<pre><code><span class="hljs-keyword">bower </span>install</code></pre><p>to install the software dependencies (For this you need to have <a href="http://bower.io">Bower</a> installed).</p>
+				<pre><code>npm <span class="hljs-keyword">install</span></code></pre>
+				<p>to install the tooling dependencies (For this you need to have <a href="http://nodejs.org">Node.js</a> installed).</p>
 				<p>Run</p>
-				<pre><code><span class="hljs-attribute">grunt</span></code></pre><p>to compile the source using the TypeScript compiler (For this you need to have <a href="http://www.typescriptlang.org">TypeScript</a> installed) and to package the individual files into a single JavaScript file.</p>
+				<pre><code>bower <span class="hljs-keyword">install</span></code></pre>
+				<p>to install the software dependencies (For this you need to have <a href="http://bower.io">Bower</a> installed).</p>
+				<p>Run</p>
+				<pre><code><span class="hljs-attribute">grunt</span></code></pre>
+				<p>to compile the source using the TypeScript compiler (For this you need to have <a href="http://www.typescriptlang.org">TypeScript</a> installed) and to package the individual files into a single JavaScript file.</p>
 				<a href="#making-changes" id="making-changes" style="color: inherit; text-decoration: none;">
 					<h3>Making Changes</h3>
 				</a>
@@ -118,9 +123,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-is-external">
-						<a href="enums/jsxtoken.html" class="tsd-kind-icon">JSXToken</a>
-					</li>
 					<li class=" tsd-kind-enum tsd-is-external">
 						<a href="enums/token.html" class="tsd-kind-icon">Token</a>
 					</li>
@@ -449,13 +451,13 @@
 						<a href="interfaces/nodeinfo.html" class="tsd-kind-icon">Node<wbr>Info</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
+						<a href="interfaces/parsedelegate.html" class="tsd-kind-icon">Parse<wbr>Delegate</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/parseoptions.html" class="tsd-kind-icon">Parse<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/position.html" class="tsd-kind-icon">Position</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/rawjsxtoken.html" class="tsd-kind-icon">RawJSXToken</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/rawtoken.html" class="tsd-kind-icon">Raw<wbr>Token</a>
@@ -468,9 +470,6 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-is-external">
 						<a href="interfaces/templateelementvalue.html" class="tsd-kind-icon">Template<wbr>Element<wbr>Value</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="interfaces/tokenentry.html" class="tsd-kind-icon">Token<wbr>Entry</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/transpileoptions.html" class="tsd-kind-icon">Transpile<wbr>Options</a>
@@ -539,7 +538,7 @@
 						<a href="globals.html#propertyvalue" class="tsd-kind-icon">Property<wbr>Value</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="globals.html#readerentry" class="tsd-kind-icon">Reader<wbr>Entry</a>
+						<a href="globals.html#rawtokenvalue" class="tsd-kind-icon">Raw<wbr>Token<wbr>Value</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-is-external">
 						<a href="globals.html#statement" class="tsd-kind-icon">Statement</a>
@@ -692,6 +691,9 @@
 						<a href="globals.html#parentheses" class="tsd-kind-icon">parentheses</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-is-external">
+						<a href="globals.html#parse" class="tsd-kind-icon">parse</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-external">
 						<a href="globals.html#preserveblanklines" class="tsd-kind-icon">preserve<wbr>Blank<wbr>Lines</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-is-external">
@@ -766,7 +768,7 @@
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="globals.html#compose" class="tsd-kind-icon">compose</a>
 					</li>
-					<li class=" tsd-kind-function tsd-is-external">
+					<li class=" tsd-kind-function tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#deepcopy" class="tsd-kind-icon">deep<wbr>Copy</a>
 					</li>
 					<li class=" tsd-kind-function">
@@ -953,9 +955,6 @@
 						<a href="globals.html#parenthesize" class="tsd-kind-icon">parenthesize</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
-						<a href="globals.html#parse" class="tsd-kind-icon">parse</a>
-					</li>
-					<li class=" tsd-kind-function tsd-is-external">
 						<a href="globals.html#parsemodule" class="tsd-kind-icon">parse<wbr>Module</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-external">
@@ -1037,6 +1036,9 @@
 						<a href="globals.html#syntax" class="tsd-kind-icon">Syntax</a>
 					</li>
 					<li class=" tsd-kind-object-literal tsd-is-external">
+						<a href="globals.html#untracked_location" class="tsd-kind-icon">UNTRACKED_<wbr>LOCATION</a>
+					</li>
+					<li class=" tsd-kind-object-literal tsd-is-external">
 						<a href="globals.html#xhtmlentities" class="tsd-kind-icon">XHTMLEntities</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
@@ -1065,6 +1067,5 @@
 </footer>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

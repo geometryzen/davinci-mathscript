@@ -2,7 +2,7 @@ import { assert } from './assert';
 import { Character } from './character';
 import { ErrorHandler } from './error-handler';
 import { Messages } from './messages';
-import { Token } from './token';
+import { RawToken, Token } from './token';
 
 function hexValue(ch: string): number {
     return '0123456789abcdef'.indexOf(ch.toLowerCase());
@@ -30,22 +30,6 @@ export interface Comment {
     loc: SourceLocation;
 }
 
-export interface RawToken {
-    type: Token;
-    value: string | number;
-    pattern?: string;
-    flags?: string;
-    regex?: RegExp | null;
-    octal?: boolean;
-    cooked?: string;
-    head?: boolean;
-    tail?: boolean;
-    lineNumber: number;
-    lineStart: number;
-    start: number;
-    end: number;
-}
-
 interface ScannerState {
     index: number;
     lineNumber: number;
@@ -61,7 +45,7 @@ export class Scanner {
     index: number;
     lineNumber: number;
     lineStart: number;
-    curlyStack: string[];
+    curlyStack: ('{' | '${')[];
 
     private readonly length: number;
 
@@ -1115,8 +1099,8 @@ export class Scanner {
                 // avoid throwing on regular expressions that are only valid in
                 // combination with the "u" flag.
                 .replace(
-                /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
-                astralSubstitute
+                    /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
+                    astralSubstitute
                 );
         }
 

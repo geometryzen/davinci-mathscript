@@ -48,11 +48,11 @@ if (!isArray) {
     };
 }
 
-function deepCopy(obj) {
-    var ret = {}, key, val;
-    for (key in obj) {
+function deepCopy<T extends {}>(obj: T): T {
+    const ret: T = {} as T
+    for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
-            val = obj[key];
+            const val = obj[key];
             if (typeof val === 'object' && val !== null) {
                 ret[key] = deepCopy(val);
             } else {
@@ -116,18 +116,18 @@ function lowerBound(array, func) {
 }
 ignoreJSHintError(lowerBound);
 
-objectCreate = Object.create || (function() {
+objectCreate = Object.create || (function () {
     function F() {
         // Do nothing.
     }
 
-    return function(o) {
+    return function (o) {
         F.prototype = o;
         return new F();
     };
 })();
 
-objectKeys = Object.keys || function(o) {
+objectKeys = Object.keys || function (o) {
     var keys = [], key;
     for (key in o) {
         if (o.hasOwnProperty(key)) {
@@ -303,6 +303,11 @@ VisitorOption = {
     Remove: REMOVE
 };
 
+interface Comment {
+    range: number[];
+    extendedRange: number[];
+}
+
 function Reference(parent, key) {
     this.parent = parent;
     this.key = key;
@@ -365,7 +370,7 @@ Controller.prototype.path = function path() {
 
 // API:
 // return type of current node
-Controller.prototype.type = function() {
+Controller.prototype.type = function () {
     var node = this.current();
     return node.type || this.__current.wrap;
 };
@@ -414,23 +419,23 @@ Controller.prototype.notify = function notify(flag) {
 
 // API:
 // skip child nodes of current node
-Controller.prototype.skip = function() {
+Controller.prototype.skip = function () {
     this.notify(SKIP);
 };
 
 // API:
 // break traversals
-Controller.prototype['break'] = function() {
+Controller.prototype['break'] = function () {
     this.notify(BREAK);
 };
 
 // API:
 // remove node
-Controller.prototype.remove = function() {
+Controller.prototype.remove = function () {
     this.notify(REMOVE);
 };
 
-Controller.prototype.__initialize = function(root, visitor) {
+Controller.prototype.__initialize = function (root, visitor) {
     this.visitor = visitor;
     this.root = root;
     this.__worklist = [];
@@ -718,7 +723,7 @@ function replace(root, visitor) {
     return controller.replace(root, visitor);
 }
 
-function extendCommentRange(comment, tokens) {
+function extendCommentRange(comment: Comment, tokens) {
     var target;
 
     target = upperBound(tokens, function search(token) {
@@ -739,9 +744,13 @@ function extendCommentRange(comment, tokens) {
     return comment;
 }
 
-function attachComments(tree, providedComments, tokens) {
+function attachComments(tree, providedComments: Comment[], tokens) {
     // At first, we should calculate extended comment ranges.
-    var comments = [], comment, len, i, cursor;
+    const comments: Comment[] = []
+    let comment: Comment
+    let len
+    let i
+    let cursor: number;
 
     if (!tree.range) {
         throw new Error('attachComments needs range information');
@@ -767,7 +776,7 @@ function attachComments(tree, providedComments, tokens) {
     // This is based on John Freeman's implementation.
     cursor = 0;
     traverse(tree, {
-        enter: function(node) {
+        enter: function (node) {
             var comment;
 
             while (cursor < comments.length) {
@@ -800,7 +809,7 @@ function attachComments(tree, providedComments, tokens) {
 
     cursor = 0;
     traverse(tree, {
-        leave: function(node) {
+        leave: function (node) {
             var comment;
 
             while (cursor < comments.length) {

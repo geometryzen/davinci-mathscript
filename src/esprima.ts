@@ -25,25 +25,34 @@
 import { CommentHandler } from './comment-handler';
 import { JSXParser } from './jsx-parser';
 import { Parser, MetaData } from './parser';
-import { IToken, Tokenizer } from './tokenizer';
+import { Tokenizer, Config } from './tokenizer';
 import { Module, Script } from './nodes';
+import { IToken } from './token';
 
 export interface ParseOptions {
     comment?: boolean;
     attachComment?: boolean;
     sourceType?: 'module' | 'script';
     jsx?: boolean;
+    range?: boolean;
+    loc?: boolean;
+    tokens?: boolean;
+    tolerant?: boolean;
+    source?: string;
 }
 
-export function parse(code: string, options?: ParseOptions, delegate?: (node, metadata: MetaData) => void): Module | Script {
+export interface ParseDelegate {
+    (node: IToken, metadata?: MetaData): IToken;
+}
+
+export function parse(code: string, options?: ParseOptions, delegate?: ParseDelegate): Module | Script {
     let commentHandler: CommentHandler | null = null;
-    const proxyDelegate = (node, metadata: MetaData) => {
-        if (delegate) {
-            delegate(node, metadata);
-        }
+    const proxyDelegate: ParseDelegate = (node: IToken, metadata: MetaData) => {
+        const token: IToken = delegate ? delegate(node, metadata) : node;
         if (commentHandler) {
             commentHandler.visit(node, metadata);
         }
+        return token;
     };
 
     let parserDelegate = (typeof delegate === 'function') ? proxyDelegate : null;
@@ -88,17 +97,17 @@ export function parse(code: string, options?: ParseOptions, delegate?: (node, me
     return program;
 }
 
-export function parseModule(code: string, options: ParseOptions = {}, delegate?): Module {
+export function parseModule(code: string, options: ParseOptions = {}, delegate?: ParseDelegate): Module {
     options.sourceType = 'module';
     return parse(code, options, delegate);
 }
 
-export function parseScript(code: string, options: ParseOptions = {}, delegate): Script {
+export function parseScript(code: string, options: ParseOptions = {}, delegate: ParseDelegate): Script {
     options.sourceType = 'script';
     return parse(code, options, delegate);
 }
 
-export function tokenize(code: string, options, delegate): IToken[] {
+export function tokenize(code: string, options: Config, delegate?: ParseDelegate): IToken[] {
     const tokenizer = new Tokenizer(code, options);
 
     const tokens: IToken[] = [];

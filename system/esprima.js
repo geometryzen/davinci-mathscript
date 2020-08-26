@@ -5,12 +5,11 @@ System.register(["./comment-handler", "./jsx-parser", "./parser", "./tokenizer",
     function parse(code, options, delegate) {
         var commentHandler = null;
         var proxyDelegate = function (node, metadata) {
-            if (delegate) {
-                delegate(node, metadata);
-            }
+            var token = delegate ? delegate(node, metadata) : node;
             if (commentHandler) {
                 commentHandler.visit(node, metadata);
             }
+            return token;
         };
         var parserDelegate = (typeof delegate === 'function') ? proxyDelegate : null;
         var collectComment = false;

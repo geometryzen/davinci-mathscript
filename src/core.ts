@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2015-2017 David Holmes <david.geo.holmes@gmail.com>
+  Copyright (C) 2015-2020 David Holmes <david.geo.holmes@gmail.com>
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
@@ -22,4 +22,4 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-export const VERSION = '1.3.1';
+export const VERSION = '1.3.4';

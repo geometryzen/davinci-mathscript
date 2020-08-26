@@ -1,1 +1,0 @@
-module.exports = require("npm:des.js@1.0.1/lib/des.js");

@@ -1,1 +1,0 @@
-module.exports = require("npm:parse-asn1@5.1.6/index.js");

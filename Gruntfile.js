@@ -196,7 +196,7 @@ module.exports = function (grunt) {
         },
 
         tslint: {
-            src: ["src/davinci-mathscript/**/*.ts"],
+            src: ["src/*.ts"],
             options: {
                 configuration: 'tslint.json'
             }

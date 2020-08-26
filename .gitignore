@@ -1,4 +1,8 @@
+/bower_components
 /node_modules
-/vendor
+/jspm_packages
+/documentation
+/amd
+/system
 
 .DS_Store

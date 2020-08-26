@@ -1,1 +1,0 @@
-define("a",{name:"a",a:"else"}),define("main",["a"],function(e){console.log(e)});

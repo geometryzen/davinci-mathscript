@@ -55,7 +55,7 @@
     "grunt-typescript": "^0.8.0",
     "jasmine-core": "^2.6.4",
     "jspm": "^0.16.55",
-    "karma": "0.13.22",
+    "karma": "6.4.1",
     "karma-chrome-launcher": "0.1.12",
     "karma-jasmine": "0.3.8",
     "karma-jspm": "2.2.1",

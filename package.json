@@ -60,7 +60,7 @@
     "karma-jasmine": "0.3.8",
     "karma-jspm": "2.2.1",
     "karma-phantomjs-launcher": "0.2.3",
-    "karma-systemjs": "0.8.2",
+    "karma-systemjs": "0.16.0",
     "phantomjs": "1.9.20",
     "phantomjs-polyfill": "^0.0.2",
     "q": "1.4.1",
